@@ -11,6 +11,8 @@
 hotfire: firmware to be run during hotfire testing
 
 terminal: firmware to allow terminal access to all PCB hardware 
+
+blink: blinks status LED to test programmer and board setup
 </p>
 
 <p><b>Working Directory Structure</b></p>
