@@ -37,6 +37,7 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 main.c \
+mod/commands/commands.c \
 lib/Core/Src/stm32h7xx_it.c \
 lib/Core/Src/stm32h7xx_hal_msp.c \
 lib/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c \
@@ -121,7 +122,9 @@ C_INCLUDES =  \
 -Ilib/Drivers/STM32H7xx_HAL_Driver/Inc \
 -Ilib/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy \
 -Ilib/Drivers/CMSIS/Device/ST/STM32H7xx/Include \
--Ilib/Drivers/CMSIS/Include
+-Ilib/Drivers/CMSIS/Include \
+-Imod/commands/
+
 
 
 # compile gcc flags
