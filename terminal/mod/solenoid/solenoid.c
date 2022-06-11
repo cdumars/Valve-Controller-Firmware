@@ -49,7 +49,7 @@ GPIO_TypeDef* solenoid_port_map[] = {GPIOE, GPIOE, GPIOE, /* Solenoid GPIO  */
 psol_GPIO_handle -> GPIOx    = solenoid_port_map[solenoid_num-1];
 
 /* Pin Setting Mapping */
-psol_GPIO_handle -> GPIO_pin = solenoid_pin_map[solenoid_num-1];
+psol_GPIO_handle -> GPIO_pin = 1 << solenoid_pin_map[solenoid_num-1];
 
 } /* solenoid_map */
 

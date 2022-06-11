@@ -54,7 +54,8 @@ int main
  Local Variables                                                                  
 ------------------------------------------------------------------------------*/
 uint8_t data; /* USB Incoming Data Buffer */
-
+uint8_t sol_subcommand; /* Solenoid subcommand code */
+uint8_t command_status; /* UART timeout status */
 
 /*------------------------------------------------------------------------------
  MCU Initialization                                                                  
@@ -71,21 +72,34 @@ UART4_Init(); /* USB UART */
 while (1)
 	{
 	/* Read data from UART reciever */
-	uint8_t command_status = HAL_UART_Receive(&huart4, &data, 1, 1);
+	command_status = HAL_UART_Receive(&huart4, &data, 1, 1);
 
 	/* Parse command input if HAL_UART_Receive doesn't timeout */
-	if (command_status != HAL_TIMEOUT )
+	if ( command_status != HAL_TIMEOUT )
 		{
 		switch(data)
 			{
-			/* Ping Command */
+			/* Ping Command -----------------------------------------------------*/
 			case PING_OP:
 				ping(&huart4);
 				break;
 
-			/* Connect Command */
+			/* Connect Command --------------------------------------------------*/
 			case CONNECT_OP:
 				ping(&huart4);
+				break;
+
+			/* Solenoid Command -------------------------------------------------*/
+			case SOL_OP:
+				command_status = HAL_UART_Receive(&huart4, &sol_subcommand, 1, 1);
+				if ( command_status != HAL_TIMEOUT )
+					{
+					solenoid_cmd_execute(sol_subcommand);
+					}
+				else
+					{
+					/* Do nothing */
+					}
 				break;
 
 			default:
