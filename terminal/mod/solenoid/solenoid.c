@@ -38,9 +38,11 @@ void solenoid_map
  Local Variables                                                                     
 ------------------------------------------------------------------------------*/
 uint8_t solenoid_pin_map[] =        {2, 3, 4, 0, 1, 2};    /* Solenoid bit 
-                                                             shifts         */
-GPIO_TypeDef* solenoid_port_map[] = {GPIOE, GPIOE, GPIOE, /* Solenoid GPIO  */ 
-                                     GPIOA, GPIOA, GPIOA};
+                                                             shifts          */
+GPIO_TypeDef* solenoid_port_map[] = {SOL1_PORT, SOL2_PORT, /* Solenoid GPIO  */
+                                     SOL3_PORT, SOL4_PORT, 
+                                     SOL5_PORT, SOL6_PORT};
+
 
 /*------------------------------------------------------------------------------
  Mapping                                                                     
@@ -225,6 +227,8 @@ void solenoid_reset
 	)
 {
 // Call HAL_GPIO_WritePin for all pins
+HAL_GPIO_WritePin(SOL1_PORT, SOL1_PIN|SOL2_PIN|SOL3_PIN, GPIO_PIN_RESET);
+HAL_GPIO_WritePin(SOL4_PORT, SOL4_PIN|SOL5_PIN|SOL6_PIN, GPIO_PIN_RESET);
 } /* solenoid_reset */
 
 
