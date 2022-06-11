@@ -193,9 +193,20 @@ void solenoid_toggle
 	uint8_t solenoid_num  /* Solenoid number to actuate */
 	)
 {
-// Map solenoid number --> GPIOx typdef
-// Map solenoid number --> uint16_t GPIO pin
-// Call HAL_GPIO_TogglePin
+/*------------------------------------------------------------------------------
+ Local Variables                                                                     
+------------------------------------------------------------------------------*/
+struct sol_GPIO_handle solenoid_on_GPIO_handle;
+
+/*------------------------------------------------------------------------------
+ Actuation                                                                     
+------------------------------------------------------------------------------*/
+/* Solenoid number to GPIO port/pin mapping */
+solenoid_map(&solenoid_on_GPIO_handle, solenoid_num);
+
+/* HAL GPIO Driver Call */
+HAL_GPIO_TogglePin(solenoid_on_GPIO_handle.GPIOx,
+                       solenoid_on_GPIO_handle.GPIO_pin);
 } /* solenoid_toggle */
 
 
