@@ -20,6 +20,43 @@
 /*******************************************************************************
 *                                                                              *
 * PROCEDURE:                                                                   * 
+* 		solenoid_map                                                           *
+*                                                                              *
+* DESCRIPTION:                                                                 * 
+* 		Maps a solenoid number to a microcontroller port and pin number        * 
+*                                                                              *
+*******************************************************************************/
+void solenoid_map
+	(
+	struct sol_GPIO_handle* psol_GPIO_handle, /* Pointer to GPIO port and pin 
+                                                 configuration for target 
+                                                 solenoid                     */
+	uint8_t solenoid_num /* Solenoid number to actuate */ 
+	)
+{
+/*------------------------------------------------------------------------------
+ Local Variables                                                                     
+------------------------------------------------------------------------------*/
+uint8_t solenoid_pin_map[] =        {2, 3, 4, 0, 1, 2};    /* Solenoid bit 
+                                                             shifts         */
+GPIO_TypeDef* solenoid_port_map[] = {GPIOE, GPIOE, GPIOE, /* Solenoid GPIO  */ 
+                                     GPIOA, GPIOA, GPIOA};
+
+/*------------------------------------------------------------------------------
+ Mapping                                                                     
+------------------------------------------------------------------------------*/
+/* Port Setting Mapping */
+psol_GPIO_handle -> GPIOx    = solenoid_port_map[solenoid_num-1];
+
+/* Pin Setting Mapping */
+psol_GPIO_handle -> GPIO_pin = solenoid_pin_map[solenoid_num-1];
+
+} /* solenoid_map */
+
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   * 
 * 		solenoid_cmd_execute                                                   *
 *                                                                              *
 * DESCRIPTION:                                                                 * 
@@ -29,7 +66,53 @@
 void solenoid_cmd_execute
 	(
 	uint8_t solenoid_cmd_opcode  /* Solenoid actuation code */
-	); /* solenoid_cmd_execute */
+	)
+{
+/*------------------------------------------------------------------------------
+ Local Variables                                                                     
+------------------------------------------------------------------------------*/
+uint8_t solenoid_bitmask = 0x07; /* Solenoid bits: 0000 0111 */
+uint8_t solenoid_base_code; /* Subcommand base code */
+uint8_t solenoid_number; /* Solenoid number to actuate */
+
+/*------------------------------------------------------------------------------
+ Command Input Processing 
+------------------------------------------------------------------------------*/
+// Extract Solenoid base code
+solenoid_base_code = (~solenoid_bitmask) & solenoid_cmd_opcode;
+
+// Extract Solenoid number
+solenoid_number = solenoid_bitmask & solenoid_cmd_opcode;
+
+/*------------------------------------------------------------------------------
+ Call Solenoid API Function 
+------------------------------------------------------------------------------*/
+switch(solenoid_base_code)
+	{
+	/* Solenoid On */
+	case SOL_ON_BASE_CODE:
+		solenoid_on(solenoid_number);
+		break;
+
+	/* Solenoid Off */
+	case SOL_OFF_BASE_CODE:
+		solenoid_off(solenoid_number);
+		break;
+
+	/* Solenoid Toggle */
+	case SOL_TOGGLE_BASE_CODE:
+		solenoid_toggle(solenoid_number);
+		break;
+
+	/* Solenoid Reset */
+	case SOL_RESET_CODE:
+		solenoid_reset();
+		break;
+
+	default:
+		/* Do nothing */
+	} 
+} /* solenoid_cmd_execute */
 
 
 /*******************************************************************************
@@ -44,7 +127,12 @@ void solenoid_cmd_execute
 void solenoid_on
 	(
 	uint8_t solenoid_num  /* Solenoid number to actuate */
-	); /* solenoid_on */
+	)
+{
+// Map solenoid number --> GPIOx typdef
+// Map solenoid number --> uint16_t GPIO pin
+// Call HAL_GPIO_WritePin
+} /* solenoid_on */
 
 
 /*******************************************************************************
@@ -59,7 +147,12 @@ void solenoid_on
 void solenoid_off
 	(
 	uint8_t solenoid_num  /* Solenoid number to actuate */
-	); /* solenoid_off */
+	)
+{
+// Map solenoid number --> GPIOx typdef
+// Map solenoid number --> uint16_t GPIO pin
+// Call HAL_GPIO_WritePin
+} /* solenoid_off */
 
 
 /*******************************************************************************
@@ -74,7 +167,12 @@ void solenoid_off
 void solenoid_toggle
 	(
 	uint8_t solenoid_num  /* Solenoid number to actuate */
-	); /* solenoid_toggle */
+	)
+{
+// Map solenoid number --> GPIOx typdef
+// Map solenoid number --> uint16_t GPIO pin
+// Call HAL_GPIO_TogglePin
+} /* solenoid_toggle */
 
 
 /*******************************************************************************
@@ -89,7 +187,10 @@ void solenoid_toggle
 void solenoid_reset
 	(
 	void
-	); /* solenoid_reset */
+	)
+{
+// Call HAL_GPIO_WritePin for all pins
+} /* solenoid_reset */
 
 
 /*******************************************************************************

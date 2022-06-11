@@ -30,10 +30,32 @@ extern "C" {
 #define SOL5_PIN   GPIO_PIN_1
 #define SOL6_PIN   GPIO_PIN_2
 
+/* Solenoid Subcommand Codes */
+#define SOL_ON_BASE_CODE	    0x00
+#define SOL_OFF_BASE_CODE	    0x08
+#define SOL_TOGGLE_BASE_CODE	0x10
+#define SOL_RESET_CODE	        0x18
+
+
+/*------------------------------------------------------------------------------
+ Types                                                                     
+------------------------------------------------------------------------------*/
+struct sol_GPIO_handle {
+	GPIO_TypeDef* GPIOx;    /* GPIO Port */
+	uint16_t      GPIO_pin; /* Solenoid GPIO Pin */
+};
 
 /*------------------------------------------------------------------------------
  Function Prototypes 
 ------------------------------------------------------------------------------*/
+void solenoid_map
+	(
+	struct sol_GPIO_handle* sol_GPIO_config, /* Pointer to GPIO port and pin 
+                                                configuration for target 
+                                                solenoid                      */
+	uint8_t solenoid_num /* Solenoid number to actuate */ 
+	); /* solenoid_map */
+
 void solenoid_cmd_execute
 	(
 	uint8_t solenoid_cmd_opcode  /* Solenoid actuation code */
