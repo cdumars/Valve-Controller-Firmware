@@ -1,17 +1,17 @@
 /*******************************************************************************
 *
-* FILE: 
+* FILE:
 * 		main.c
 *
-* DESCRIPTION: 
-* 		Processes commands recieved from a host PC, provides fine control over 
+* DESCRIPTION:
+* 		Processes commands recieved from a host PC, provides fine control over
 *       valve controller hardware resources
 *
 *******************************************************************************/
 
 
 /*------------------------------------------------------------------------------
- Includes                                                                     
+ Includes
 ------------------------------------------------------------------------------*/
 #include "main.h"
 #include "commands.h"
@@ -19,23 +19,23 @@
 
 
 /*------------------------------------------------------------------------------
- Global Variables                                                                  
+ Global Variables
 ------------------------------------------------------------------------------*/
 
 
 /*------------------------------------------------------------------------------
- Typedefs                                                                  
+ Typedefs
 ------------------------------------------------------------------------------*/
 
 
 /*------------------------------------------------------------------------------
- MCU Peripheral Handlers                                                                  
+ MCU Peripheral Handlers
 ------------------------------------------------------------------------------*/
 UART_HandleTypeDef huart4;
 
 
 /*------------------------------------------------------------------------------
- Function prototypes                                                          
+ Function prototypes
 ------------------------------------------------------------------------------*/
 void SystemClock_Config(void); /* Clock configuration */
 static void GPIO_Init(void); /* GPIO Initialization */
@@ -43,7 +43,7 @@ static void UART4_Init(void); /* UART Initialization  */
 
 
 /*------------------------------------------------------------------------------
- Application entry point                                                      
+ Application entry point
 ------------------------------------------------------------------------------*/
 int main
 	(
@@ -51,14 +51,14 @@ int main
 	)
 {
 /*------------------------------------------------------------------------------
- Local Variables                                                                  
+ Local Variables
 ------------------------------------------------------------------------------*/
 uint8_t data; /* USB Incoming Data Buffer */
 uint8_t sol_subcommand; /* Solenoid subcommand code */
 uint8_t command_status; /* UART timeout status */
 
 /*------------------------------------------------------------------------------
- MCU Initialization                                                                  
+ MCU Initialization
 ------------------------------------------------------------------------------*/
 HAL_Init(); /* Reset peripherals, initialize flash interface and Systick. */
 SystemClock_Config(); /* System clock */
@@ -67,7 +67,7 @@ UART4_Init(); /* USB UART */
 
 
 /*------------------------------------------------------------------------------
- Event Loop                                                                  
+ Event Loop
 ------------------------------------------------------------------------------*/
 while (1)
 	{
@@ -105,8 +105,9 @@ while (1)
 
 			default:
 				/* Do nothing */
-			} 
-		} 
+            break;
+			}
+		}
 	else /* USB connection times out */
 		{
 		/* Do nothing */
@@ -116,10 +117,10 @@ while (1)
 
 /*******************************************************************************
 *                                                                              *
-* PROCEDURE:                                                                   * 
+* PROCEDURE:                                                                   *
 * 		SystemClock_Config                                                     *
 *                                                                              *
-* DESCRIPTION:                                                                 * 
+* DESCRIPTION:                                                                 *
 * 		Initializes the microcontroller clock. Enables peripheral clocks and   *
 *       sets prescalers                                                        *
 *                                                                              *
@@ -189,7 +190,7 @@ else /* RCC Configuration okay */
 * PROCEDURE NAME:                                                              *
 * 		UART_Init                                                              *
 *                                                                              *
-* DESCRIPTION:                                                                 * 
+* DESCRIPTION:                                                                 *
 * 		Initializes the UART interface used for USB communication with a host  *
 *       PC                                                                     *
 *                                                                              *
@@ -237,9 +238,9 @@ if (HAL_UARTEx_DisableFifoMode(&huart4) != HAL_OK)
 /*******************************************************************************
 *                                                                              *
 * PROCEDURE:                                                                   *
-* 		GPIO_Init                                                              * 
+* 		GPIO_Init                                                              *
 *                                                                              *
-* DESCRIPTION:                                                                 * 
+* DESCRIPTION:                                                                 *
 * 		Initializes all GPIO pins and sets alternate functions                 *
 *                                                                              *
 *******************************************************************************/
