@@ -48,7 +48,7 @@ int main(void)
   {
       // Blink LED
       HAL_GPIO_TogglePin(GPIOA, STATUS);
-      HAL_Delay(200);
+      HAL_Delay(400);
   }
 }
 
