@@ -23,19 +23,21 @@ extern "C" {
 ------------------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
 
-
 /*------------------------------------------------------------------------------
- MCU Pin Assignments                                                                     
+ Macros  
 ------------------------------------------------------------------------------*/
-#define STATUS_PIN    GPIO_PIN_15
-#define EXCEPT_PIN    GPIO_PIN_13
 
+/* General MCU HAL related macros */
+#define DEF_BUFFER_SIZE            ( 16  ) /* Default size of buffer arrays   */
 
-/*------------------------------------------------------------------------------
- MCU Port Assignments                                                          
-------------------------------------------------------------------------------*/
-#define STATUS_PORT    GPIOA
-#define EXCEPT_PORT    GPIOD
+/* Timeouts */
+#ifndef SDR_DEBUG
+	#define HAL_DEFAULT_TIMEOUT    ( 10  ) /* Default timeout for polling 
+											   operations                     */
+#else
+	/* Disable timeouts when debugging */
+	#define HAL_DEFAULT_TIMEOUT    ( 0xFFFFFFFF )  
+#endif /* SDR_DEBUG */
 
 
 /*------------------------------------------------------------------------------
