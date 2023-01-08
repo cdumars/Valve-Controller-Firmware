@@ -33,6 +33,9 @@ LIB_DIR = ../../lib
 # Module Path
 MOD_DIR = ../../mod
 
+# MCU Initialization Path
+INIT_DIR = ../../init
+
 ################################################################
 # source
 ################################################################
@@ -40,7 +43,7 @@ MOD_DIR = ../../mod
 # C sources
 C_SOURCES =                                                          \
 main.c                                                               \
-init.c                                                               \
+$(INIT_DIR)/init.c                                                   \
 $(MOD_DIR)/commands/commands.c                                       \
 $(MOD_DIR)/solenoid/solenoid.c                                       \
 $(MOD_DIR)/usb/usb.c                                                 \
@@ -127,7 +130,8 @@ AS_INCLUDES =
 
 # C includes
 C_INCLUDES =  \
--I. \
+-I.                                                    \
+-I$(INIT_DIR)                                          \
 -I$(LIB_DIR)                                           \
 -I$(LIB_DIR)/Core/Inc                                  \
 -I$(LIB_DIR)/Drivers/STM32H7xx_HAL_Driver/Inc          \
