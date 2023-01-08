@@ -47,8 +47,9 @@ $(INIT_DIR)/init.c                                                   \
 $(MOD_DIR)/commands/commands.c                                       \
 $(MOD_DIR)/solenoid/solenoid.c                                       \
 $(MOD_DIR)/usb/usb.c                                                 \
-$(LIB_DIR)/Core/Src/stm32h7xx_it.c                                   \
-$(LIB_DIR)/Core/Src/stm32h7xx_hal_msp.c                              \
+$(INIT_DIR)/config/Src/stm32h7xx_it.c                                \
+$(INIT_DIR)/config/Src/stm32h7xx_hal_msp.c                           \
+$(INIT_DIR)/config/Src/system_stm32h7xx.c                            \
 $(LIB_DIR)/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c   \
 $(LIB_DIR)/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.c      \
 $(LIB_DIR)/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c   \
@@ -68,8 +69,7 @@ $(LIB_DIR)/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr_ex.c   \
 $(LIB_DIR)/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.c          \
 $(LIB_DIR)/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.c      \
 $(LIB_DIR)/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c   \
-$(LIB_DIR)/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c     \
-$(LIB_DIR)/Core/Src/system_stm32h7xx.c  
+$(LIB_DIR)/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_exti.c     
 
 # ASM sources
 ASM_SOURCES =  \
@@ -132,8 +132,8 @@ AS_INCLUDES =
 C_INCLUDES =  \
 -I.                                                    \
 -I$(INIT_DIR)                                          \
+-I$(INIT_DIR)/config/Inc                               \
 -I$(LIB_DIR)                                           \
--I$(LIB_DIR)/Core/Inc                                  \
 -I$(LIB_DIR)/Drivers/STM32H7xx_HAL_Driver/Inc          \
 -I$(LIB_DIR)/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy   \
 -I$(LIB_DIR)/Drivers/CMSIS/Device/ST/STM32H7xx/Include \
