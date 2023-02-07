@@ -87,7 +87,7 @@ RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_HSI;
 RCC_ClkInitStruct.SYSCLKDivider  = RCC_SYSCLK_DIV1;
 RCC_ClkInitStruct.AHBCLKDivider  = RCC_HCLK_DIV1;
 RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV1;
-RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV1;
+RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV2;
 RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV1;
 RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV1;
 
@@ -118,34 +118,34 @@ void USB_UART_Init
 	)
 {
 /* UART handler instance */
-huart4.Instance = UART4;
+huart3.Instance = USART3;
 
 /* Initialization settings */
-huart4.Init.BaudRate               = 9600;
-huart4.Init.WordLength             = UART_WORDLENGTH_8B;
-huart4.Init.StopBits               = UART_STOPBITS_1;
-huart4.Init.Parity                 = UART_PARITY_NONE;
-huart4.Init.Mode                   = UART_MODE_TX_RX;
-huart4.Init.HwFlowCtl              = UART_HWCONTROL_NONE;
-huart4.Init.OverSampling           = UART_OVERSAMPLING_16;
-huart4.Init.OneBitSampling         = UART_ONE_BIT_SAMPLE_DISABLE;
-huart4.Init.ClockPrescaler         = UART_PRESCALER_DIV1;
-huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+huart3.Init.BaudRate               = 921600;
+huart3.Init.WordLength             = UART_WORDLENGTH_8B;
+huart3.Init.StopBits               = UART_STOPBITS_1;
+huart3.Init.Parity                 = UART_PARITY_NONE;
+huart3.Init.Mode                   = UART_MODE_TX_RX;
+huart3.Init.HwFlowCtl              = UART_HWCONTROL_NONE;
+huart3.Init.OverSampling           = UART_OVERSAMPLING_16;
+huart3.Init.OneBitSampling         = UART_ONE_BIT_SAMPLE_DISABLE;
+huart3.Init.ClockPrescaler         = UART_PRESCALER_DIV1;
+huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
 
 /* Write to registers and call error handler if initialization fails */
-if (HAL_UART_Init(&huart4) != HAL_OK)
+if ( HAL_UART_Init( &huart3 ) != HAL_OK )
 	{
 	Error_Handler();
 	}
-if (HAL_UARTEx_SetTxFifoThreshold(&huart4, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+if ( HAL_UARTEx_SetTxFifoThreshold( &huart3, UART_TXFIFO_THRESHOLD_1_8 ) != HAL_OK )
 	{
 	Error_Handler();
 	}
-if (HAL_UARTEx_SetRxFifoThreshold(&huart4, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+if ( HAL_UARTEx_SetRxFifoThreshold( &huart3, UART_RXFIFO_THRESHOLD_1_8 ) != HAL_OK )
 	{
 	Error_Handler();
 	}
-if (HAL_UARTEx_DisableFifoMode(&huart4) != HAL_OK)
+if ( HAL_UARTEx_DisableFifoMode( &huart3 ) != HAL_OK )
 	{
 	Error_Handler();
 	}
