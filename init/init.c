@@ -197,7 +197,7 @@ HAL_GPIO_Init( EXCEPT_GPIO_PORT, &GPIO_InitStruct );
 
 /*------------------------ SOLENOID MCU PINS ---------------------------------*/
 
-/*Configure GPIO pin Output Levels */
+/* Configure GPIO pin Output Levels */
 HAL_GPIO_WritePin( SOL1_GPIO_PORT, SOL1_PIN|SOL2_PIN|SOL3_PIN, GPIO_PIN_RESET );
 HAL_GPIO_WritePin( SOL4_GPIO_PORT, SOL4_PIN|SOL5_PIN|SOL6_PIN, GPIO_PIN_RESET );
 
@@ -214,6 +214,14 @@ GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
 GPIO_InitStruct.Pull  = GPIO_NOPULL;
 GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 HAL_GPIO_Init( SOL4_GPIO_PORT, &GPIO_InitStruct);
+
+/*----------------------- MAIN VALVE MCU PINS --------------------------------*/
+
+/* Encoder pins */
+GPIO_InitStruct.Pin  = LOX_ENC_A_PIN | LOX_ENC_B_PIN;
+GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+GPIO_InitStruct.Pull = GPIO_NOPULL;
+HAL_GPIO_Init( LOX_ENC_GPIO_PORT, &GPIO_InitStruct );
 
 } /* GPIO_Init */
 
