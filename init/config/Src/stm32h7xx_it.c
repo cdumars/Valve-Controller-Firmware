@@ -186,7 +186,33 @@ if ( __HAL_GPIO_EXTI_GET_FLAG( LOX_ENC_B_PIN ) )
     __HAL_GPIO_EXTI_CLEAR_FLAG( LOX_ENC_B_PIN );
     lox_channelB_ISR(); 
     }
+
+/* Fuel Encoder A Signal Interrupt */
+if ( __HAL_GPIO_EXTI_GET_FLAG( KER_ENC_A_PIN ) )
+    {
+    __HAL_GPIO_EXTI_CLEAR_FLAG( KER_ENC_A_PIN );
+    fuel_channelA_ISR();
+    }
 } /* EXTI9_5_IRQHandler */
+
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   *
+* 		EXTI15_10_IRQHandler                                                     *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+*     This function handles EXTI line[15:10] interrupts. Calls the valve       *
+*     encoder ISRs depending on which pin generated the interrupt              *
+*                                                                              *
+*******************************************************************************/
+void EXTI15_10_IRQHandler
+    (
+    void
+    )
+{
+fuel_channelB_ISR();
+} /* EXTI15_10_IRQHandler */
 
 
 /*******************************************************************************

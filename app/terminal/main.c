@@ -23,6 +23,7 @@
 #include "commands.h"
 #include "solenoid.h"
 #include "usb.h"
+#include "valve.h"
 
 
 /*------------------------------------------------------------------------------

@@ -217,13 +217,27 @@ HAL_GPIO_Init( SOL4_GPIO_PORT, &GPIO_InitStruct);
 
 /*----------------------- MAIN VALVE MCU PINS --------------------------------*/
 
-/* Encoder pins */
+/* LOX Encoder */
 GPIO_InitStruct.Pin  = LOX_ENC_A_PIN | LOX_ENC_B_PIN;
 GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
 GPIO_InitStruct.Pull = GPIO_NOPULL;
 HAL_GPIO_Init( LOX_ENC_GPIO_PORT, &GPIO_InitStruct );
-HAL_NVIC_SetPriority( EXTI9_5_IRQn, 0, 0 );
-HAL_NVIC_EnableIRQ( EXTI9_5_IRQn );
+
+/* Fuel Encoder */
+GPIO_InitStruct.Pin  = KER_ENC_A_PIN;
+GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+GPIO_InitStruct.Pull = GPIO_NOPULL;
+HAL_GPIO_Init( GPIOC, &GPIO_InitStruct );
+GPIO_InitStruct.Pin  = KER_ENC_B_PIN;
+GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+GPIO_InitStruct.Pull = GPIO_NOPULL;
+HAL_GPIO_Init( GPIOD, &GPIO_InitStruct );
+
+/* EXTI Init */
+HAL_NVIC_SetPriority( EXTI9_5_IRQn,   0, 0 );
+HAL_NVIC_EnableIRQ  ( EXTI9_5_IRQn         );
+HAL_NVIC_SetPriority( EXTI15_10_IRQn, 0, 0 );
+HAL_NVIC_EnableIRQ  ( EXTI15_10_IRQn       );
 
 } /* GPIO_Init */
 
