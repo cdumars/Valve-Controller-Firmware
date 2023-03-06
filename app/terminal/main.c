@@ -22,6 +22,7 @@
 /*  Module Layer */
 #include "commands.h"
 #include "solenoid.h"
+#include "sensor.h"
 #include "usb.h"
 #include "valve.h"
 
@@ -78,16 +79,21 @@ while (1)
 			{
 			/* Ping Command -----------------------------------------------------*/
 			case PING_OP:
+				{
 				ping();
 				break;
+				} /* PING_OP */
 
 			/* Connect Command --------------------------------------------------*/
 			case CONNECT_OP:
+				{
 				ping();
 				break;
+				} /* CONNECT_OP */
 
 			/* Solenoid Command -------------------------------------------------*/
 			case SOL_OP:
+				{
 				usb_status = usb_receive( &subcommand, 
 				                          sizeof( subcommand ), 
 										  HAL_DEFAULT_TIMEOUT );
@@ -101,7 +107,25 @@ while (1)
 					Error_Handler();
 					}
 				break;
+				} /* SOL_OP */
 
+			/* Sensor Command ---------------------------------------------------*/
+			case SENSOR_OP:
+				{
+				usb_status = usb_receive( &subcommand, 
+				                          sizeof( subcommand ),
+										  HAL_DEFAULT_TIMEOUT );
+				if ( usb_status == USB_OK )
+					{
+					sensor_cmd_execute( subcommand );
+					}
+				else
+					{
+					Error_Handler();
+					}
+				} /* SENSOR_OP */
+
+			/* Unrecognized Command ---------------------------------------------*/
 			default:
 				{
 				/* Unrecognized command code */
