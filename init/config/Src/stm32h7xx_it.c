@@ -13,10 +13,14 @@
 #include "main.h"
 #include "stm32h7xx_it.h"
 
+/* Project Includes */
+#include "valve.h"
+#include "sdr_pin_defines_L0005.h"
+
 
 /*******************************************************************************
 *           Cortex Processor Interruption and Exception Handlers               *
-/******************************************************************************/
+*******************************************************************************/
 
 /**
   * @brief This function handles Non maskable interrupt.
@@ -153,14 +157,36 @@ void SysTick_Handler(void)
 /* please refer to the startup file (startup_stm32h7xx.s).                    */
 /******************************************************************************/
 
-/**
-  * @brief This function handles EXTI line[9:5] interrupts.
-  */
-void EXTI9_5_IRQHandler( void )
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   *
+* 		EXTI9_5_IRQHandler                                                       *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+*     This function handles EXTI line[9:5] interrupts. Calls the valve encoder *
+*     ISRs depending on which pin generated the interrupt                      *
+*                                                                              *
+*******************************************************************************/
+void EXTI9_5_IRQHandler
+  ( 
+  void 
+  )
 {
-HAL_GPIO_EXTI_IRQHandler( GPIO_PIN_8 );
-HAL_GPIO_EXTI_IRQHandler( GPIO_PIN_9 );
-}
+/* LOX Encoder A Signal interrupt */
+if ( __HAL_GPIO_EXTI_GET_FLAG( LOX_ENC_A_PIN ) )
+    {
+    __HAL_GPIO_EXTI_CLEAR_FLAG( LOX_ENC_A_PIN );
+    lox_channelA_ISR(); 
+    }
+
+/* LOX Encoder B Signal interrupt */
+if ( __HAL_GPIO_EXTI_GET_FLAG( LOX_ENC_B_PIN ) )
+    {
+    __HAL_GPIO_EXTI_CLEAR_FLAG( LOX_ENC_B_PIN );
+    lox_channelB_ISR(); 
+    }
+} /* EXTI9_5_IRQHandler */
 
 
 /*******************************************************************************
