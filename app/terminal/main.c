@@ -47,12 +47,14 @@ int main
 uint8_t    command;        /* SDEC command code    */
 uint8_t    subcommand;     /* SDEC subcommand code */
 USB_STATUS usb_status;     /* UART/USB status      */
+SENSOR_STATUS sensor_status;
 
 
 /*------------------------------------------------------------------------------
  Initializations 
 ------------------------------------------------------------------------------*/
 usb_status = USB_OK;
+sensor_status = SENSOR_OK;
 
 
 /*------------------------------------------------------------------------------
@@ -117,12 +119,17 @@ while (1)
 										  HAL_DEFAULT_TIMEOUT );
 				if ( usb_status == USB_OK )
 					{
-					sensor_cmd_execute( subcommand );
+					sensor_status = sensor_cmd_execute( subcommand );
+					if ( sensor_status != SENSOR_OK )
+						{
+						Error_Handler();
+						}
 					}
 				else
 					{
 					Error_Handler();
 					}
+				break;
 				} /* SENSOR_OP */
 
 			/* Unrecognized Command ---------------------------------------------*/
@@ -132,8 +139,8 @@ while (1)
 				Error_Handler();
 				break;
 				}
-			}
-		}
+			} /* switch( command ) */
+		} /* if ( usb_status == USB_OK )*/
 	else /* USB connection times out */
 		{
 		/* Do nothing */
