@@ -18,6 +18,12 @@
  Function Prototypes 
 ------------------------------------------------------------------------------*/
 
+/* TIM Post MSP Initialization */
+void HAL_TIM_MspPostInit
+    (
+    TIM_HandleTypeDef *htim
+    );
+
 
 /*------------------------------------------------------------------------------
  Procedures 
@@ -40,6 +46,84 @@ void HAL_MspInit
 __HAL_RCC_SYSCFG_CLK_ENABLE();
 } /* HAL_MspInit */
 
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   *
+*       HAL_TIM_BASE_MspInit                                                   *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+*       Initializes the base timer MSP                                         *
+*                                                                              *
+*******************************************************************************/
+void HAL_TIM_Base_MspInit
+    (
+    TIM_HandleTypeDef* htim_base
+    )
+{
+if( htim_base->Instance == TIM15 )
+    {
+    /* Peripheral clock enable */
+    __HAL_RCC_TIM15_CLK_ENABLE();
+    }
+} /* HAL_TIM_Base_MspInit */
+
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   *
+*       HAL_TIM_MspPostInit                                                    *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+*       Timer Post MSP Initialization                                          *
+*                                                                              *
+*******************************************************************************/
+void HAL_TIM_MspPostInit
+    (
+    TIM_HandleTypeDef* htim
+    )
+{
+GPIO_InitTypeDef GPIO_InitStruct = {0};
+if( htim->Instance == TIM15 )
+    {
+    /* GPIO Clock Enable */
+    __HAL_RCC_GPIOE_CLK_ENABLE();
+
+    /* TIM15 GPIO Configuration
+    PE5     ------> TIM15_CH1
+    PE6     ------> TIM15_CH2 */
+    GPIO_InitStruct.Pin       = GPIO_PIN_5|GPIO_PIN_6;
+    GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull      = GPIO_NOPULL;
+    GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF4_TIM15;
+    HAL_GPIO_Init( GPIOE, &GPIO_InitStruct );
+    }
+
+} /* HAL_TIM_MspPostInit */
+
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   *
+*       HAL_TIM_Base_MspDeInit                                                 *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+*       Base Timer MSP Deinitialization                                        *
+*                                                                              *
+*******************************************************************************/
+void HAL_TIM_Base_MspDeInit
+    (
+    TIM_HandleTypeDef* htim_base
+    )
+{
+if( htim_base->Instance == TIM15 )
+    {
+    /* Peripheral clock disable */
+    __HAL_RCC_TIM15_CLK_DISABLE();
+    }
+} /* HAL_TIM_Base_MspDeInit */
+ 
 
 /*******************************************************************************
 *                                                                              *

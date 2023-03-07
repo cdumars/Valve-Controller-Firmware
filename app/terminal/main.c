@@ -30,6 +30,7 @@
 /*------------------------------------------------------------------------------
  Global Variables
 ------------------------------------------------------------------------------*/
+TIM_HandleTypeDef  htim15; /* Valve control PWM signals     */
 UART_HandleTypeDef huart3; /* UART to engine controller/usb */
 
 
@@ -60,10 +61,11 @@ sensor_status = SENSOR_OK;
 /*------------------------------------------------------------------------------
  MCU Initialization
 ------------------------------------------------------------------------------*/
-HAL_Init();           /* CMSIS HAL    */
-SystemClock_Config(); /* System clock */
-GPIO_Init();          /* GPIO         */
-USB_UART_Init();      /* USB UART     */
+HAL_Init          ();   /* CMSIS HAL            */
+SystemClock_Config();   /* System clock         */
+GPIO_Init         ();   /* GPIO                 */
+USB_UART_Init     ();   /* USB UART             */
+Valve_TIM_Init    ();   /* Valve control timers */
 
 
 /*------------------------------------------------------------------------------
