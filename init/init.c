@@ -328,6 +328,16 @@ HAL_NVIC_EnableIRQ  ( EXTI9_5_IRQn         );
 HAL_NVIC_SetPriority( EXTI15_10_IRQn, 0, 0 );
 HAL_NVIC_EnableIRQ  ( EXTI15_10_IRQn       );
 
+/* Enable and direction pins */
+GPIO_InitStruct.Pin  = LOX_EN_PIN | KER_EN_PIN | LOX_DIR_PIN;
+GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+GPIO_InitStruct.Pull = GPIO_NOPULL;
+HAL_GPIO_Init( LOX_EN_GPIO_PORT, &GPIO_InitStruct );
+GPIO_InitStruct.Pin  = KER_DIR_PIN;
+GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+GPIO_InitStruct.Pull = GPIO_NOPULL;
+HAL_GPIO_Init( KER_DIR_GPIO_PORT, &GPIO_InitStruct );
+
 } /* GPIO_Init */
 
 
