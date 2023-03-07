@@ -211,6 +211,7 @@ void EXTI15_10_IRQHandler
     void
     )
 {
+__HAL_GPIO_EXTI_CLEAR_FLAG( KER_ENC_B_PIN );
 fuel_channelB_ISR();
 } /* EXTI15_10_IRQHandler */
 
