@@ -19,7 +19,7 @@
 #include "main.h"
 #include "init.h"
 
-/*  Module Layer */
+/* Module Layer */
 #include "commands.h"
 #include "led.h"
 #include "solenoid.h"
@@ -32,7 +32,8 @@
  Global Variables
 ------------------------------------------------------------------------------*/
 //TIM_HandleTypeDef  htim15; /* Valve control PWM signals     */
-UART_HandleTypeDef huart3; /* UART to engine controller/usb */
+UART_HandleTypeDef huart1; /* UART to USB               */
+UART_HandleTypeDef huart3; /* UART to engine controller */
 
 
 /*------------------------------------------------------------------------------
@@ -62,10 +63,11 @@ usb_status = USB_OK;
 /*------------------------------------------------------------------------------
  MCU Initialization
 ------------------------------------------------------------------------------*/
-HAL_Init          ();   /* CMSIS HAL            */
-SystemClock_Config();   /* System clock         */
-GPIO_Init         ();   /* GPIO                 */
-USB_UART_Init     ();   /* USB UART             */
+HAL_Init          ();   /* CMSIS HAL              */
+SystemClock_Config();   /* System clock           */
+GPIO_Init         ();   /* GPIO                   */
+USB_UART_Init     ();   /* USB UART               */
+Valve_UART_Init   ();   /* Engine Controller UART */
 //Valve_TIM_Init    ();   /* Valve control timers */
 
 

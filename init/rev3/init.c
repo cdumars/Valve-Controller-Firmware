@@ -52,11 +52,14 @@ RCC_OscInitTypeDef RCC_OscInitStruct = {0};
 RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
 /* Supply configuration update enable */
-HAL_PWREx_ConfigSupply(PWR_LDO_SUPPLY);
+HAL_PWREx_ConfigSupply( PWR_LDO_SUPPLY );
 
 /* Configure the main internal regulator output voltage */
 __HAL_PWR_VOLTAGESCALING_CONFIG( PWR_REGULATOR_VOLTAGE_SCALE3 );
 while( !__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY) ){}
+
+/* Macro to configure the PLL clock source */
+__HAL_RCC_PLL_PLLSOURCE_CONFIG( RCC_PLLSOURCE_HSI );
 
 /* Initializes the RCC Oscillators according to the specified parameters
    in the RCC_OscInitTypeDef structure. */
@@ -64,6 +67,7 @@ RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_HSI;
 RCC_OscInitStruct.HSIState            = RCC_HSI_DIV1;
 RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
 RCC_OscInitStruct.PLL.PLLState        = RCC_PLL_NONE;
+RCC_OscInitStruct.PLL.PLLSource       = RCC_PLLSOURCE_HSI;
 if ( HAL_RCC_OscConfig( &RCC_OscInitStruct ) != HAL_OK )
 	{
 	Error_Handler();
@@ -89,15 +93,62 @@ if ( HAL_RCC_ClockConfig( &RCC_ClkInitStruct, FLASH_LATENCY_1 ) != HAL_OK )
 
 /*******************************************************************************
 *                                                                              *
-* PROCEDURE NAME:                                                              *
+* PROCEDURE:                                                                   *
 * 		USB_UART_Init                                                          *
 *                                                                              *
 * DESCRIPTION:                                                                 *
-* 		Initializes the UART interface used for USB communication with a host  *
-*       PC                                                                     *
+* 		Initializes the UART peripheral used for USB communication with a PC   *
 *                                                                              *
 *******************************************************************************/
-void USB_UART_Init 
+void USB_UART_Init
+	(
+	void
+	)
+{
+/* UART Configuration settings */
+huart1.Instance                    = USART1;
+huart1.Init.BaudRate               = 921600;
+huart1.Init.WordLength             = UART_WORDLENGTH_8B;
+huart1.Init.StopBits               = UART_STOPBITS_1;
+huart1.Init.Parity                 = UART_PARITY_NONE;
+huart1.Init.Mode                   = UART_MODE_TX_RX;
+huart1.Init.HwFlowCtl              = UART_HWCONTROL_NONE;
+huart1.Init.OverSampling           = UART_OVERSAMPLING_16;
+huart1.Init.OneBitSampling         = UART_ONE_BIT_SAMPLE_DISABLE;
+huart1.Init.ClockPrescaler         = UART_PRESCALER_DIV1;
+huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+
+/* Initialize the peripheral */
+if ( HAL_UART_Init( &(USB_HUART) ) != HAL_OK )
+	{
+	Error_Handler();
+	}
+if ( HAL_UARTEx_SetTxFifoThreshold( &(USB_HUART), UART_TXFIFO_THRESHOLD_1_8 ) != HAL_OK )
+	{
+	Error_Handler();
+	}
+if ( HAL_UARTEx_SetRxFifoThreshold( &(USB_HUART), UART_RXFIFO_THRESHOLD_1_8 ) != HAL_OK )
+	{
+	Error_Handler();
+	}
+if ( HAL_UARTEx_DisableFifoMode( &(USB_HUART) ) != HAL_OK )
+	{
+	Error_Handler();
+	}
+} /* USB_UART_Init */
+
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE NAME:                                                              *
+* 		Valve_UART_Init                                                        *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+* 		Initializes the UART interface used for processing valve actuation     *
+*       commands from the liquid engine controller                             *
+*                                                                              *
+*******************************************************************************/
+void Valve_UART_Init 
 	(
 	void
 	)
@@ -156,6 +207,7 @@ GPIO_InitTypeDef GPIO_InitStruct = {0};
 
 /* GPIO Ports Clock Enable */
 __HAL_RCC_GPIOA_CLK_ENABLE();
+__HAL_RCC_GPIOB_CLK_ENABLE();
 __HAL_RCC_GPIOC_CLK_ENABLE();
 __HAL_RCC_GPIOD_CLK_ENABLE();
 __HAL_RCC_GPIOE_CLK_ENABLE();

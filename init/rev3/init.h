@@ -32,10 +32,11 @@ extern "C" {
 /*------------------------------------------------------------------------------
  Function prototypes                                                          
 ------------------------------------------------------------------------------*/
-void SystemClock_Config( void ); /* Clock configuration  */
-void GPIO_Init         ( void ); /* GPIO Initialization  */
-void Valve_TIM_Init    ( void ); /* Valve control timers */
-void USB_UART_Init     ( void ); /* UART Initialization  */
+void SystemClock_Config( void ); /* Clock configuration                    */
+void GPIO_Init         ( void ); /* GPIO Initialization                    */
+//void Valve_TIM_Init    ( void ); /* Valve control timers */
+void USB_UART_Init     ( void ); /* USB UART Initialization                */
+void Valve_UART_Init   ( void ); /* Engine Controller UART Initialization  */
 
 
 #ifdef __cplusplus
