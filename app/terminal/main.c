@@ -75,6 +75,7 @@ Valve_TIM_Init    ();   /* Valve control timers */
 /* Sensor module */
 sensor_init();
 
+valve_open_ox_valve();
 
 /*------------------------------------------------------------------------------
  Event Loop
