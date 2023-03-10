@@ -83,12 +83,20 @@ void Error_Handler(void);
 #define ENCD2_B_Pin GPIO_PIN_15
 #define ENCD2_B_GPIO_Port GPIOD
 #define ENCD2_B_EXTI_IRQn EXTI15_10_IRQn
+#define SBV2_DIR_Pin GPIO_PIN_7
+#define SBV2_DIR_GPIO_Port GPIOC
 #define ENCD1_A_Pin GPIO_PIN_8
 #define ENCD1_A_GPIO_Port GPIOC
 #define ENCD1_A_EXTI_IRQn EXTI9_5_IRQn
 #define ENCD1_B_Pin GPIO_PIN_9
 #define ENCD1_B_GPIO_Port GPIOC
 #define ENCD1_B_EXTI_IRQn EXTI9_5_IRQn
+#define SBV1_EN_Pin GPIO_PIN_8
+#define SBV1_EN_GPIO_Port GPIOA
+#define SBV2_EN_Pin GPIO_PIN_11
+#define SBV2_EN_GPIO_Port GPIOA
+#define SBV1_DIR_Pin GPIO_PIN_12
+#define SBV1_DIR_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

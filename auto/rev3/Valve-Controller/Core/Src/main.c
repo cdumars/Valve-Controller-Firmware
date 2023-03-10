@@ -273,10 +273,14 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, SOL1_Pin|SOL2_Pin|SOL3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, SOL4_Pin|SOL5_Pin|SOL6_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, SOL4_Pin|SOL5_Pin|SOL6_Pin|SBV1_EN_Pin
+                          |SBV2_EN_Pin|SBV1_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, STATUS_G_Pin|STATUS_R_Pin|STATUS_B_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(SBV2_DIR_GPIO_Port, SBV2_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : SOL1_Pin SOL2_Pin SOL3_Pin */
   GPIO_InitStruct.Pin = SOL1_Pin|SOL2_Pin|SOL3_Pin;
@@ -285,8 +289,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : SOL4_Pin SOL5_Pin SOL6_Pin */
-  GPIO_InitStruct.Pin = SOL4_Pin|SOL5_Pin|SOL6_Pin;
+  /*Configure GPIO pins : SOL4_Pin SOL5_Pin SOL6_Pin SBV1_EN_Pin
+                           SBV2_EN_Pin SBV1_DIR_Pin */
+  GPIO_InitStruct.Pin = SOL4_Pin|SOL5_Pin|SOL6_Pin|SBV1_EN_Pin
+                          |SBV2_EN_Pin|SBV1_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -310,6 +316,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SBV2_DIR_Pin */
+  GPIO_InitStruct.Pin = SBV2_DIR_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(SBV2_DIR_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : ENCD1_A_Pin ENCD1_B_Pin */
   GPIO_InitStruct.Pin = ENCD1_A_Pin|ENCD1_B_Pin;

@@ -272,11 +272,25 @@ GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
 GPIO_InitStruct.Pull = GPIO_NOPULL;
 HAL_GPIO_Init( LOX_ENC_GPIO_PORT, &GPIO_InitStruct );
 
-/* EXTI interrupt init*/
+/* EXTI interrupt init */
 HAL_NVIC_SetPriority( EXTI9_5_IRQn  , 0, 0 );
 HAL_NVIC_EnableIRQ  ( EXTI9_5_IRQn         );
 HAL_NVIC_SetPriority( EXTI15_10_IRQn, 0, 0 );
 HAL_NVIC_EnableIRQ  ( EXTI15_10_IRQn       );
+
+/* Driver Pins */
+HAL_GPIO_WritePin( LOX_EN_GPIO_PORT , LOX_EN_PIN , GPIO_PIN_SET   );
+HAL_GPIO_WritePin( KER_EN_GPIO_PORT , KER_EN_PIN , GPIO_PIN_SET   );
+HAL_GPIO_WritePin( LOX_DIR_GPIO_PORT, LOX_DIR_PIN, GPIO_PIN_RESET );
+HAL_GPIO_WritePin( KER_DIR_GPIO_PORT, KER_DIR_PIN, GPIO_PIN_RESET );
+GPIO_InitStruct.Pin  = LOX_DIR_PIN | LOX_EN_PIN | KER_EN_PIN;
+GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+GPIO_InitStruct.Pull = GPIO_NOPULL;
+HAL_GPIO_Init( LOX_DIR_GPIO_PORT, &GPIO_InitStruct );
+GPIO_InitStruct.Pin  = KER_DIR_PIN; 
+GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+GPIO_InitStruct.Pull = GPIO_NOPULL;
+HAL_GPIO_Init( KER_DIR_GPIO_PORT, &GPIO_InitStruct );
 
 } /* GPIO_Init */
 
