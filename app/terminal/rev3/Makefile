@@ -49,6 +49,7 @@ $(MOD_DIR)/led/led.c                                                 \
 $(MOD_DIR)/solenoid/solenoid.c                                       \
 $(MOD_DIR)/sensor/sensor.c                                           \
 $(MOD_DIR)/usb/usb.c                                                 \
+$(MOD_DIR)/valve/valve.c                                             \
 $(INIT_DIR)/config/Src/stm32h7xx_it.c                                \
 $(INIT_DIR)/config/Src/stm32h7xx_hal_msp.c                           \
 $(INIT_DIR)/config/Src/system_stm32h7xx.c                            \

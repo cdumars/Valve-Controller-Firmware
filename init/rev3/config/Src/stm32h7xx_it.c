@@ -19,6 +19,8 @@
 ------------------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32h7xx_it.h"
+#include "sdr_pin_defines_L0005.h"
+#include "valve.h"
 
 
 /*------------------------------------------------------------------------------
@@ -201,6 +203,67 @@ HAL_IncTick();
  For the available peripheral interrupt handler names,                      
  please refer to the startup file (startup_stm32h7xx.s).                    
 ------------------------------------------------------------------------------*/
+
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   *
+* 		EXTI9_5_IRQHandler                                                     *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+*       This function handles EXTI line[9:5] interrupts used for the LOX main  *
+*       valve encoder                                                          *
+*                                                                              *
+*******************************************************************************/
+void EXTI9_5_IRQHandler
+    (
+    void
+    )
+{
+/* LOX Encoder A Signal interrupt */
+if ( __HAL_GPIO_EXTI_GET_FLAG( LOX_ENC_A_PIN ) )
+    {
+    __HAL_GPIO_EXTI_CLEAR_FLAG( LOX_ENC_A_PIN );
+    lox_channelA_ISR();
+    }
+
+/* LOX Encoder B Signal interrupt */
+if ( __HAL_GPIO_EXTI_GET_FLAG( LOX_ENC_B_PIN ) )
+    {
+    __HAL_GPIO_EXTI_CLEAR_FLAG( LOX_ENC_B_PIN );
+    lox_channelB_ISR();
+    }
+} /* EXTI9_5_IRQHandler */
+
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   *
+* 		EXTI15_10_IRQHandler                                                   *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+*       This function handles EXTI line[15:10] interrupts.                     *
+*                                                                              *
+*******************************************************************************/
+void EXTI15_10_IRQHandler
+    (
+    void
+    )
+{
+/* Fuel Encoder A signal interrupt */
+if ( __HAL_GPIO_EXTI_GET_FLAG( KER_ENC_A_PIN ) )
+    {
+    __HAL_GPIO_EXTI_CLEAR_FLAG( KER_ENC_A_PIN );
+    fuel_channelA_ISR();
+    }
+
+/* Fuel Encoder B signal interrupt */
+if ( __HAL_GPIO_EXTI_GET_FLAG( KER_ENC_B_PIN ) )
+    {
+    __HAL_GPIO_EXTI_CLEAR_FLAG( KER_ENC_B_PIN );
+    fuel_channelB_ISR();
+    }
+} /* EXTI15_10_IRQHandler */
 
 
 /*******************************************************************************

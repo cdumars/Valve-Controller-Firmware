@@ -257,6 +257,26 @@ GPIO_InitStruct.Pin  = USB_DETECT_PIN;
 GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 GPIO_InitStruct.Pull = GPIO_NOPULL;
 HAL_GPIO_Init( USB_DETECT_GPIO_PORT, &GPIO_InitStruct );
+  
+/*-------------------------- Servo MCU PINS -----------------------------------*/
+
+/* Main Fuel Valve Encoder */
+GPIO_InitStruct.Pin  = KER_ENC_A_PIN | KER_ENC_B_PIN ;
+GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+GPIO_InitStruct.Pull = GPIO_NOPULL;
+HAL_GPIO_Init( KER_ENC_GPIO_PORT, &GPIO_InitStruct);
+
+/* Main LOX Valve Encoder */
+GPIO_InitStruct.Pin  = LOX_ENC_A_PIN | LOX_ENC_B_PIN;
+GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+GPIO_InitStruct.Pull = GPIO_NOPULL;
+HAL_GPIO_Init( LOX_ENC_GPIO_PORT, &GPIO_InitStruct );
+
+/* EXTI interrupt init*/
+HAL_NVIC_SetPriority( EXTI9_5_IRQn  , 0, 0 );
+HAL_NVIC_EnableIRQ  ( EXTI9_5_IRQn         );
+HAL_NVIC_SetPriority( EXTI15_10_IRQn, 0, 0 );
+HAL_NVIC_EnableIRQ  ( EXTI15_10_IRQn       );
 
 } /* GPIO_Init */
 

@@ -23,9 +23,9 @@
 #include "commands.h"
 #include "led.h"
 #include "solenoid.h"
-//#include "sensor.h"
+#include "sensor.h"
 #include "usb.h"
-//#include "valve.h"
+#include "valve.h"
 
 
 /*------------------------------------------------------------------------------
@@ -50,14 +50,14 @@ int main
 uint8_t       command;        /* SDEC command code          */
 uint8_t       subcommand;     /* SDEC subcommand code       */
 USB_STATUS    usb_status;     /* UART/USB status            */
-/* SENSOR_STATUS sensor_status; */  /* Sensor module return codes */
+SENSOR_STATUS sensor_status;  /* Sensor module return codes */
 
 
 /*------------------------------------------------------------------------------
  Initializations 
 ------------------------------------------------------------------------------*/
-usb_status = USB_OK;
-//sensor_status = SENSOR_OK;
+usb_status    = USB_OK;
+sensor_status = SENSOR_OK;
 
 
 /*------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ Valve_UART_Init   ();   /* Engine Controller UART */
 ------------------------------------------------------------------------------*/
 
 /* Sensor module */
-//sensor_init();
+sensor_init();
 
 
 /*------------------------------------------------------------------------------
@@ -129,7 +129,6 @@ while (1)
 					} /* SOL_OP */
 
 				/* Sensor Command -----------------------------------------------*/
-				/* 
 				case SENSOR_OP:
 					{
 					usb_status = usb_receive( &subcommand, 
@@ -148,7 +147,7 @@ while (1)
 						Error_Handler();
 						}
 					break;
-					}*/ /* SENSOR_OP */
+					} /* SENSOR_OP */
 
 				/* Unrecognized Command -----------------------------------------*/
 				default:

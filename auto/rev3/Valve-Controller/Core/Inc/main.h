@@ -75,6 +75,20 @@ void Error_Handler(void);
 #define STATUS_R_GPIO_Port GPIOD
 #define STATUS_B_Pin GPIO_PIN_10
 #define STATUS_B_GPIO_Port GPIOD
+#define USB_DETECT_Pin GPIO_PIN_13
+#define USB_DETECT_GPIO_Port GPIOD
+#define ENCD2_A_Pin GPIO_PIN_14
+#define ENCD2_A_GPIO_Port GPIOD
+#define ENCD2_A_EXTI_IRQn EXTI15_10_IRQn
+#define ENCD2_B_Pin GPIO_PIN_15
+#define ENCD2_B_GPIO_Port GPIOD
+#define ENCD2_B_EXTI_IRQn EXTI15_10_IRQn
+#define ENCD1_A_Pin GPIO_PIN_8
+#define ENCD1_A_GPIO_Port GPIOC
+#define ENCD1_A_EXTI_IRQn EXTI9_5_IRQn
+#define ENCD1_B_Pin GPIO_PIN_9
+#define ENCD1_B_GPIO_Port GPIOC
+#define ENCD1_B_EXTI_IRQn EXTI9_5_IRQn
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
