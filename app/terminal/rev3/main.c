@@ -84,89 +84,99 @@ Valve_UART_Init   ();   /* Engine Controller UART */
 ------------------------------------------------------------------------------*/
 while (1)
 	{
-	/* Read data from UART reciever */
-	usb_status = usb_receive( &command, sizeof( command ), HAL_DEFAULT_TIMEOUT );
-
-	/* Parse command input if HAL_UART_Receive doesn't timeout */
-	if ( usb_status == USB_OK )
+	if ( usb_detect() )
 		{
-		switch( command )
+		/* Read data from UART reciever */
+		usb_status = usb_receive( &command         , 
+		                          sizeof( command ), 
+								  HAL_DEFAULT_TIMEOUT );
+
+		/* Parse command input if HAL_UART_Receive doesn't timeout */
+		if ( usb_status == USB_OK )
 			{
-			/* Ping Command -----------------------------------------------------*/
-			case PING_OP:
+			switch( command )
 				{
-				ping();
-				break;
-				} /* PING_OP */
-
-			/* Connect Command --------------------------------------------------*/
-			case CONNECT_OP:
-				{
-				ping();
-				break;
-				} /* CONNECT_OP */
-
-			/* Solenoid Command -------------------------------------------------*/
-			case SOL_OP:
-				{
-				usb_status = usb_receive( &subcommand, 
-				                          sizeof( subcommand ), 
-										  HAL_DEFAULT_TIMEOUT );
-				if ( usb_status == USB_OK )
+				/* Ping Command -------------------------------------------------*/
+				case PING_OP:
 					{
-					solenoid_cmd_execute( subcommand );
-					}
-				else
-					{
-					/* Do nothing */
-					Error_Handler();
-					}
-				break;
-				} /* SOL_OP */
+					ping();
+					break;
+					} /* PING_OP */
 
-			/* Sensor Command ---------------------------------------------------*/
-			/* 
-			case SENSOR_OP:
-				{
-				usb_status = usb_receive( &subcommand, 
-				                          sizeof( subcommand ),
-										  HAL_DEFAULT_TIMEOUT );
-				if ( usb_status == USB_OK )
+				/* Connect Command ----------------------------------------------*/
+				case CONNECT_OP:
 					{
-					sensor_status = sensor_cmd_execute( subcommand );
-					if ( sensor_status != SENSOR_OK )
+					ping();
+					break;
+					} /* CONNECT_OP */
+
+				/* Solenoid Command ---------------------------------------------*/
+				case SOL_OP:
+					{
+					usb_status = usb_receive( &subcommand, 
+											sizeof( subcommand ), 
+											HAL_DEFAULT_TIMEOUT );
+					if ( usb_status == USB_OK )
+						{
+						solenoid_cmd_execute( subcommand );
+						}
+					else
+						{
+						/* Do nothing */
+						Error_Handler();
+						}
+					break;
+					} /* SOL_OP */
+
+				/* Sensor Command -----------------------------------------------*/
+				/* 
+				case SENSOR_OP:
+					{
+					usb_status = usb_receive( &subcommand, 
+											sizeof( subcommand ),
+											HAL_DEFAULT_TIMEOUT );
+					if ( usb_status == USB_OK )
+						{
+						sensor_status = sensor_cmd_execute( subcommand );
+						if ( sensor_status != SENSOR_OK )
+							{
+							Error_Handler();
+							}
+						}
+					else
 						{
 						Error_Handler();
 						}
-					}
-				else
-					{
-					Error_Handler();
-					}
-				break;
-				}*/ /* SENSOR_OP */
+					break;
+					}*/ /* SENSOR_OP */
 
-			/* Unrecognized Command ---------------------------------------------*/
-			default:
-				{
-				/* Unrecognized command code */
-				Error_Handler();
-				break;
-				}
-			} /* switch( command ) */
-		} /* if ( usb_status == USB_OK )*/
-	else /* USB connection times out */
-		{
-		/* Do nothing */
-		}
+				/* Unrecognized Command -----------------------------------------*/
+				default:
+					{
+					/* Unrecognized command code */
+					Error_Handler();
+					break;
+					}
+				} /* switch( command ) */
+			} /* if ( usb_status == USB_OK )*/
+		else /* USB connection times out */
+			{
+			/* Do nothing */
+			}
+		} /* if ( usb_detect() )*/
 	}
 } /* main */
 
 
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   *
+* 		Error_Handler                                                          *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+* 		Handles software errors by turing the status LED red                   *
+*                                                                              *
+*******************************************************************************/
 void Error_Handler(void)
 {
   __disable_irq();
@@ -175,20 +185,7 @@ void Error_Handler(void)
 	{
 	/* Application hangs */
 	}
-}
-
-#ifdef  USE_FULL_ASSERT
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t *file, uint32_t line)
-{
-}
-#endif /* USE_FULL_ASSERT */
+} /* Error_Handler */
 
 
 /*******************************************************************************

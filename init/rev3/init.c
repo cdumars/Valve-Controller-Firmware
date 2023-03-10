@@ -249,6 +249,15 @@ GPIO_InitStruct.Pull  = GPIO_NOPULL;
 GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 HAL_GPIO_Init( SOL4_GPIO_PORT, &GPIO_InitStruct);
 
+
+/*--------------------------- USB MCU PINS ------------------------------------*/
+
+/* USB Detect pin */
+GPIO_InitStruct.Pin  = USB_DETECT_PIN;
+GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+GPIO_InitStruct.Pull = GPIO_NOPULL;
+HAL_GPIO_Init( USB_DETECT_GPIO_PORT, &GPIO_InitStruct );
+
 } /* GPIO_Init */
 
 
