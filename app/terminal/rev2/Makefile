@@ -28,13 +28,13 @@ OPT = -Og
 BUILD_DIR = build
 
 # library Path
-LIB_DIR = ../../lib
+LIB_DIR = ../../../lib
 
 # Module Path
-MOD_DIR = ../../mod
+MOD_DIR = ../../../mod
 
 # MCU Initialization Path
-INIT_DIR = ../../init/rev2
+INIT_DIR = ../../../init/rev2
 
 ################################################################
 # source
