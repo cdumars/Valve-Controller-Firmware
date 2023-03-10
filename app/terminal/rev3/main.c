@@ -31,9 +31,10 @@
 /*------------------------------------------------------------------------------
  Global Variables
 ------------------------------------------------------------------------------*/
-//TIM_HandleTypeDef  htim15; /* Valve control PWM signals     */
-UART_HandleTypeDef huart1; /* UART to USB               */
-UART_HandleTypeDef huart3; /* UART to engine controller */
+TIM_HandleTypeDef  htim2;  /* Fuel main valve control PWM signals */
+TIM_HandleTypeDef  htim15; /* LOX main valve control PWM signals  */
+UART_HandleTypeDef huart1; /* UART to USB                         */
+UART_HandleTypeDef huart3; /* UART to engine controller           */
 
 
 /*------------------------------------------------------------------------------
@@ -63,12 +64,13 @@ sensor_status = SENSOR_OK;
 /*------------------------------------------------------------------------------
  MCU Initialization
 ------------------------------------------------------------------------------*/
-HAL_Init          ();   /* CMSIS HAL              */
-SystemClock_Config();   /* System clock           */
-GPIO_Init         ();   /* GPIO                   */
-USB_UART_Init     ();   /* USB UART               */
-Valve_UART_Init   ();   /* Engine Controller UART */
-//Valve_TIM_Init    ();   /* Valve control timers */
+HAL_Init           ();   /* CMSIS HAL               */
+SystemClock_Config ();   /* System clock            */
+GPIO_Init          ();   /* GPIO                    */
+USB_UART_Init      ();   /* USB UART                */
+Valve_UART_Init    ();   /* Engine Controller UART  */
+LOX_Valve_TIM_Init ();   /* LOX Valve control timer */
+Fuel_Valve_TIM_Init();   /* Fuel Valve control timer */
 
 
 /*------------------------------------------------------------------------------
@@ -77,6 +79,15 @@ Valve_UART_Init   ();   /* Engine Controller UART */
 
 /* Sensor module */
 sensor_init();
+
+/* Indicate successful initialization with green status LED */
+led_set_color( LED_GREEN );
+
+/* Valves */
+valve_open_ox_valve   ();
+valve_close_ox_valve  ();
+valve_open_fuel_valve ();
+valve_close_fuel_valve();
 
 
 /*------------------------------------------------------------------------------

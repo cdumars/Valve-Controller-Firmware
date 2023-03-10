@@ -20,6 +20,17 @@
 
 
 /*------------------------------------------------------------------------------
+ Function Prototypes 
+------------------------------------------------------------------------------*/
+
+/* TIM HAL Post MSP Initialization */
+void HAL_TIM_MspPostInit
+    (
+    TIM_HandleTypeDef *htim
+    );
+
+
+/*------------------------------------------------------------------------------
  Procedures 
 ------------------------------------------------------------------------------*/
 
@@ -30,7 +41,7 @@
 * 		HAL_MspInit                                                            *
 *                                                                              *
 * DESCRIPTION:                                                                 *
-*     Initializes the Global MSP.                                              *
+*       Initializes the Global MSP.                                            *
 *                                                                              *
 *******************************************************************************/
 void HAL_MspInit
@@ -41,6 +52,116 @@ void HAL_MspInit
 /* Enable RCC clock source */
 __HAL_RCC_SYSCFG_CLK_ENABLE();
 } /* HAL_MspInit */
+
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   *
+* 		HAL_TIM_Base_MspInit                                                   *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+*       Initializes the base timer MSP.                                        *
+*                                                                              *
+*******************************************************************************/
+void HAL_TIM_Base_MspInit
+    (
+    TIM_HandleTypeDef* htim_base
+    )
+{
+/* Fuel Main Valve timer */
+if     ( htim_base->Instance == TIM2  )
+    {
+    /* Peripheral clock enable */
+    __HAL_RCC_TIM2_CLK_ENABLE();
+    }
+/* LOX Main Valve Timer */
+else if( htim_base->Instance == TIM15 )
+    {
+    /* Peripheral clock enable */
+    __HAL_RCC_TIM15_CLK_ENABLE();
+    }
+} /* HAL_TIM_Base_MspInit */
+
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   *
+* 		HAL_TIM_MspPostInit                                                    *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+*       HAL TIM Post-MSP Initialization.                                       *
+*                                                                              *
+*******************************************************************************/
+void HAL_TIM_MspPostInit
+    (
+    TIM_HandleTypeDef* htim
+    )
+{
+/* Init structs */
+GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+/* Initializations */
+
+/* Main Fuel valve timer */
+if ( htim->Instance == TIM2 )
+    {
+    /* GPIOA Clock enable */
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+
+    /* TIM2 GPIO Configuration
+    PA3     ------> TIM2_CH4 */
+    GPIO_InitStruct.Pin       = GPIO_PIN_3;
+    GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull      = GPIO_NOPULL;
+    GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
+    HAL_GPIO_Init( GPIOA, &GPIO_InitStruct );
+    }
+/* Main OX valve timer */
+else if( htim->Instance == TIM15 )
+    {
+    /* GPIOE Clock enable */
+    __HAL_RCC_GPIOE_CLK_ENABLE();
+
+    /* TIM15 GPIO Configuration
+    PE5     ------> TIM15_CH1 */
+    GPIO_InitStruct.Pin       = GPIO_PIN_5;
+    GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull      = GPIO_NOPULL;
+    GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF4_TIM15;
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+    }
+} /* HAL_TIM_MspPostInit */
+
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   *
+* 		HAL_TIM_Base_MspDeInit                                                 *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+*       HAL Base TIM De-initialization.                                        *
+*                                                                              *
+*******************************************************************************/
+void HAL_TIM_Base_MspDeInit
+    (
+    TIM_HandleTypeDef* htim_base
+    )
+{
+/* Main fuel valve timer */
+if ( htim_base->Instance == TIM2 )
+    {
+    /* Peripheral clock disable */
+    __HAL_RCC_TIM2_CLK_DISABLE();
+    }
+/* Main OX valve timer */
+else if ( htim_base->Instance == TIM15 )
+    {
+    /* Peripheral clock disable */
+    __HAL_RCC_TIM15_CLK_DISABLE();
+    }
+} /* HAL_TIM_Base_MspDeInit */
 
 
 /*******************************************************************************
