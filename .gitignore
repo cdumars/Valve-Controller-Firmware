@@ -1,3 +1,4 @@
 # Build files
-app/blink/build/*
+app/blink/rev2/build/*
+app/blink/rev3/build/*
 app/terminal/build/*

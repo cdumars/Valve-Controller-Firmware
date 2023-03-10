@@ -32,7 +32,7 @@ OPT = -Og
 BUILD_DIR = build
 
 # Library path
-LIB_DIR = ../../lib
+LIB_DIR = ../../../lib
 
 ######################################
 # source
