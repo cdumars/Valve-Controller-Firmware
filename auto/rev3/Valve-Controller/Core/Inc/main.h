@@ -65,6 +65,10 @@ void Error_Handler(void);
 #define SOL2_GPIO_Port GPIOE
 #define SOL3_Pin GPIO_PIN_4
 #define SOL3_GPIO_Port GPIOE
+#define LOX_PG_Pin GPIO_PIN_0
+#define LOX_PG_GPIO_Port GPIOC
+#define FUEL_PG_Pin GPIO_PIN_1
+#define FUEL_PG_GPIO_Port GPIOC
 #define SOL4_Pin GPIO_PIN_0
 #define SOL4_GPIO_Port GPIOA
 #define SOL5_Pin GPIO_PIN_1

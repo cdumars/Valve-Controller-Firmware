@@ -338,6 +338,14 @@ GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 GPIO_InitStruct.Pull = GPIO_NOPULL;
 HAL_GPIO_Init( KER_DIR_GPIO_PORT, &GPIO_InitStruct );
 
+/*----------------------- PHOTOGATE MCU PINS --------------------------------*/
+
+/* LOX and Fuel photogate inputs */
+GPIO_InitStruct.Pin  = LOX_PHOTOGATE_PIN | FUEL_PHOTOGATE_PIN;
+GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+GPIO_InitStruct.Pull = GPIO_NOPULL;
+HAL_GPIO_Init( PHOTOGATE_GPIO_PORT, &GPIO_InitStruct );
+
 } /* GPIO_Init */
 
 
