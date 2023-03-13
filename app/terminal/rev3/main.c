@@ -49,8 +49,6 @@ int main
  Local Variables
 ------------------------------------------------------------------------------*/
 uint8_t       command;        /* SDEC command code          */
-uint8_t       subcommand;     /* SDEC subcommand code       */
-SENSOR_STATUS sensor_status;  /* Sensor module return codes */
 USB_STATUS    usb_status;     /* UART/USB status            */
 VALVE_STATUS  valve_status;   /* Valve module return codes  */
 
@@ -58,7 +56,6 @@ VALVE_STATUS  valve_status;   /* Valve module return codes  */
 /*------------------------------------------------------------------------------
  Initializations 
 ------------------------------------------------------------------------------*/
-sensor_status = SENSOR_OK;
 usb_status    = USB_OK;
 valve_status  = VALVE_OK;
 
@@ -101,101 +98,214 @@ while (1)
 		/* Parse command input if HAL_UART_Receive doesn't timeout */
 		if ( usb_status == USB_OK )
 			{
-			switch( command )
-				{
-				/* Ping Command -------------------------------------------------*/
-				case PING_OP:
-					{
-					ping();
-					break;
-					} /* PING_OP */
+			command_handler( command, CMD_SOURCE_USB );
+			} 
 
-				/* Connect Command ----------------------------------------------*/
-				case CONNECT_OP:
-					{
-					ping();
-					break;
-					} /* CONNECT_OP */
-
-				/* Solenoid Command ---------------------------------------------*/
-				case SOL_OP:
-					{
-					usb_status = usb_receive( &subcommand, 
-											sizeof( subcommand ), 
-											HAL_DEFAULT_TIMEOUT );
-					if ( usb_status == USB_OK )
-						{
-						solenoid_cmd_execute( subcommand );
-						}
-					else
-						{
-						/* Do nothing */
-						Error_Handler();
-						}
-					break;
-					} /* SOL_OP */
-
-				/* Sensor Command -----------------------------------------------*/
-				case SENSOR_OP:
-					{
-					usb_status = usb_receive( &subcommand, 
-											sizeof( subcommand ),
-											HAL_DEFAULT_TIMEOUT );
-					if ( usb_status == USB_OK )
-						{
-						sensor_status = sensor_cmd_execute( subcommand );
-						if ( sensor_status != SENSOR_OK )
-							{
-							Error_Handler();
-							}
-						}
-					else
-						{
-						Error_Handler();
-						}
-					break;
-					} /* SENSOR_OP */
-
-				/* Valve command ------------------------------------------------*/
-				case VALVE_OP:
-					{
-					/* Get subcommand */
-					usb_status = usb_receive( &subcommand, 
-					                          sizeof( subcommand ),
-											  HAL_DEFAULT_TIMEOUT );
-
-					/* Execute subcommand */
-					if ( usb_status != USB_OK )
-						{
-						Error_Handler();
-						}
-					else
-						{
-						valve_status = valve_cmd_execute( subcommand );
-						if ( valve_status != VALVE_OK )
-							{
-							Error_Handler();
-							}
-						}
-					break;
-					} /* VALVE_OP */
-
-				/* Unrecognized Command -----------------------------------------*/
-				default:
-					{
-					/* Unrecognized command code */
-					Error_Handler();
-					break;
-					}
-				} /* switch( command ) */
-			} /* if ( usb_status == USB_OK )*/
-		else /* USB connection times out */
+		/* Poll data from valve control interface */
+		valve_status = valve_receive( &command         , 
+		                              sizeof( command ),
+									  HAL_DEFAULT_TIMEOUT );
+		
+		/* Execute command if valid */
+		if ( valve_status == VALVE_OK )
 			{
-			/* Do nothing */
+			command_handler( command, CMD_SOURCE_VALVE );
 			}
+
 		} /* if ( usb_detect() )*/
 	}
 } /* main */
+
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   *
+* 		command_handler                                                        *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+* 		Processes commands from the SDEC terminal                              *
+*                                                                              *
+*******************************************************************************/
+void command_handler
+	(
+	uint8_t    command,     /* sdec command                              */
+	CMD_SOURCE cmd_source   /* Determines which serial interface is used */
+	)
+{
+/*------------------------------------------------------------------------------
+ Local Variables
+------------------------------------------------------------------------------*/
+SENSOR_STATUS sensor_status;    /* Return codes from sensor API */
+USB_STATUS    usb_status;       /* Return codes from USB API    */
+VALVE_STATUS  valve_status;     /* Return codes from valve API  */
+uint8_t       subcommand;       /* SDEC subcommands             */
+
+
+/*------------------------------------------------------------------------------
+ Initializations 
+------------------------------------------------------------------------------*/
+sensor_status = SENSOR_OK;
+usb_status    = USB_OK;
+valve_status  = VALVE_OK;
+subcommand    = 0;
+
+
+/*------------------------------------------------------------------------------
+ Implementation 
+------------------------------------------------------------------------------*/
+switch( command )
+	{
+	/* Ping Command ----------------------------------------------------------*/
+	case PING_OP:
+		{
+		ping();
+		break;
+		} /* PING_OP */
+
+	/* Connect Command -------------------------------------------------------*/
+	case CONNECT_OP:
+		{
+		ping();
+		break;
+		} /* CONNECT_OP */
+
+	/* Solenoid Command ------------------------------------------------------*/
+	case SOL_OP:
+		{
+		/* Get subcommand */
+		if ( cmd_source == CMD_SOURCE_USB )
+			{
+			usb_status = usb_receive( &subcommand, 
+									sizeof( subcommand ), 
+									HAL_DEFAULT_TIMEOUT );
+			if ( usb_status == USB_OK )
+				{
+				solenoid_cmd_execute( subcommand );
+				}
+			else
+				{
+				/* Do nothing */
+				Error_Handler();
+				}
+			}
+		else
+			{
+			valve_status = valve_receive( &subcommand         , 
+			                              sizeof( subcommand ), 
+										  HAL_DEFAULT_TIMEOUT );
+			if ( valve_status == VALVE_OK )
+				{
+				solenoid_cmd_execute( subcommand );
+				}
+			else
+				{
+				Error_Handler();
+				}
+			
+			}
+		break;
+		} /* SOL_OP */
+
+	/* Sensor Command --------------------------------------------------------*/
+	case SENSOR_OP:
+		{
+		if ( cmd_source == CMD_SOURCE_USB )
+			{
+			usb_status = usb_receive( &subcommand, 
+									sizeof( subcommand ),
+									HAL_DEFAULT_TIMEOUT );
+			if ( usb_status == USB_OK )
+				{
+				sensor_status = sensor_cmd_execute( subcommand );
+				if ( sensor_status != SENSOR_OK )
+					{
+					Error_Handler();
+					}
+				}
+			else
+				{
+				Error_Handler();
+				}
+			}
+		else
+			{
+			valve_status = valve_receive( &subcommand         , 
+			                              sizeof( subcommand ), 
+										  HAL_DEFAULT_TIMEOUT );
+			if ( valve_status == VALVE_OK )
+				{
+				sensor_status = sensor_cmd_execute( subcommand );
+				if ( sensor_status != SENSOR_OK )
+					{
+					Error_Handler();
+					}
+				}
+			else
+				{
+				Error_Handler();
+				}
+			}
+		break;
+		} /* SENSOR_OP */
+
+	/* Valve command ---------------------------------------------------------*/
+	case VALVE_OP:
+		{
+		if ( cmd_source == CMD_SOURCE_USB )
+			{
+			/* Get subcommand */
+			usb_status = usb_receive( &subcommand         , 
+									sizeof( subcommand ),
+									HAL_DEFAULT_TIMEOUT );
+
+			/* Execute subcommand */
+			if ( usb_status != USB_OK )
+				{
+				Error_Handler();
+				}
+			else
+				{
+				valve_status = valve_cmd_execute( subcommand );
+				if ( valve_status != VALVE_OK )
+					{
+					Error_Handler();
+					}
+				}
+			}
+		else
+			{
+			/* Get subcommand */
+			valve_status = valve_receive( &subcommand         , 
+			                              sizeof( subcommand ), 
+										  HAL_DEFAULT_TIMEOUT );
+			
+			/* Execute subcommand */
+			if ( valve_status != VALVE_OK )
+				{
+				Error_Handler();
+				}
+			else
+				{
+				valve_status = valve_cmd_execute( subcommand );
+				if ( valve_status != VALVE_OK )
+					{
+					Error_Handler();
+					}
+				}
+			}
+		break;
+		} /* VALVE_OP */
+
+	/* Unrecognized Command -----------------------------------------*/
+	default:
+		{
+		/* Unrecognized command code */
+		Error_Handler();
+		break;
+		}
+	} /* switch( command ) */
+
+} /* command handler */
 
 
 /*******************************************************************************

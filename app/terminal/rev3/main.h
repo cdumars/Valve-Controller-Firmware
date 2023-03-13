@@ -23,6 +23,7 @@ extern "C" {
 ------------------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
 
+
 /*------------------------------------------------------------------------------
  Macros  
 ------------------------------------------------------------------------------*/
@@ -41,10 +42,28 @@ extern "C" {
 
 
 /*------------------------------------------------------------------------------
+ Typdefs 
+------------------------------------------------------------------------------*/
+
+/* Serial interface source for receiving command data */
+typedef enum _CMD_SOURCE
+	{
+	CMD_SOURCE_USB,
+	CMD_SOURCE_VALVE
+	} CMD_SOURCE;
+
+/*------------------------------------------------------------------------------
  Function prototypes                                                          
 ------------------------------------------------------------------------------*/
 void Error_Handler      ( void                    );
 void HAL_TIM_MspPostInit( TIM_HandleTypeDef *htim );
+
+/* Processes commands from the SDEC terminal */
+void command_handler
+	(
+	uint8_t    command,     /* sdec command                              */
+	CMD_SOURCE cmd_source   /* Determines which serial interface is used */
+	);
 
 
 #ifdef __cplusplus
