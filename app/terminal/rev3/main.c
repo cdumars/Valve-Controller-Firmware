@@ -158,14 +158,14 @@ switch( command )
 	/* Ping Command ----------------------------------------------------------*/
 	case PING_OP:
 		{
-		ping();
+		ping( cmd_source );
 		break;
 		} /* PING_OP */
 
 	/* Connect Command -------------------------------------------------------*/
 	case CONNECT_OP:
 		{
-		ping();
+		ping( cmd_source );
 		break;
 		} /* CONNECT_OP */
 
@@ -216,7 +216,7 @@ switch( command )
 									HAL_DEFAULT_TIMEOUT );
 			if ( usb_status == USB_OK )
 				{
-				sensor_status = sensor_cmd_execute( subcommand );
+				sensor_status = sensor_cmd_execute( subcommand, cmd_source );
 				if ( sensor_status != SENSOR_OK )
 					{
 					Error_Handler();
@@ -234,7 +234,7 @@ switch( command )
 										  HAL_DEFAULT_TIMEOUT );
 			if ( valve_status == VALVE_OK )
 				{
-				sensor_status = sensor_cmd_execute( subcommand );
+				sensor_status = sensor_cmd_execute( subcommand, cmd_source );
 				if ( sensor_status != SENSOR_OK )
 					{
 					Error_Handler();
