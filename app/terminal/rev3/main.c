@@ -50,15 +50,17 @@ int main
 ------------------------------------------------------------------------------*/
 uint8_t       command;        /* SDEC command code          */
 uint8_t       subcommand;     /* SDEC subcommand code       */
-USB_STATUS    usb_status;     /* UART/USB status            */
 SENSOR_STATUS sensor_status;  /* Sensor module return codes */
+USB_STATUS    usb_status;     /* UART/USB status            */
+VALVE_STATUS  valve_status;   /* Valve module return codes  */
 
 
 /*------------------------------------------------------------------------------
  Initializations 
 ------------------------------------------------------------------------------*/
-usb_status    = USB_OK;
 sensor_status = SENSOR_OK;
+usb_status    = USB_OK;
+valve_status  = VALVE_OK;
 
 
 /*------------------------------------------------------------------------------
@@ -82,12 +84,6 @@ sensor_init();
 
 /* Indicate successful initialization with green status LED */
 led_set_color( LED_GREEN );
-
-/* Valves */
-valve_open_ox_valve   ();
-valve_close_ox_valve  ();
-valve_open_fuel_valve ();
-valve_close_fuel_valve();
 
 
 /*------------------------------------------------------------------------------
@@ -159,6 +155,30 @@ while (1)
 						}
 					break;
 					} /* SENSOR_OP */
+
+				/* Valve command ------------------------------------------------*/
+				case VALVE_OP:
+					{
+					/* Get subcommand */
+					usb_status = usb_receive( &subcommand, 
+					                          sizeof( subcommand ),
+											  HAL_DEFAULT_TIMEOUT );
+
+					/* Execute subcommand */
+					if ( usb_status != USB_OK )
+						{
+						Error_Handler();
+						}
+					else
+						{
+						valve_status = valve_cmd_execute( subcommand );
+						if ( valve_status != VALVE_OK )
+							{
+							Error_Handler();
+							}
+						}
+					break;
+					} /* VALVE_OP */
 
 				/* Unrecognized Command -----------------------------------------*/
 				default:
