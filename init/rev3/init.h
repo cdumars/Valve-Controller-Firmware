@@ -32,6 +32,11 @@ extern "C" {
 /*------------------------------------------------------------------------------
  Function prototypes                                                          
 ------------------------------------------------------------------------------*/
+
+/* HAL Init */
+void HAL_TIM_MspPostInit( TIM_HandleTypeDef *htim );
+
+/* MCU Initialization Functions */
 void SystemClock_Config ( void ); /* Clock configuration                      */
 void GPIO_Init          ( void ); /* GPIO Initialization                      */
 void Fuel_Valve_TIM_Init( void ); /* Main fuel valve control timer            */

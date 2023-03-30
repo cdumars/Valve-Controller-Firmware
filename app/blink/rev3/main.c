@@ -31,6 +31,10 @@ Project Includes
 /*------------------------------------------------------------------------------
 Global Variables                                                                  
 ------------------------------------------------------------------------------*/
+TIM_HandleTypeDef  htim2;  /* Fuel main valve control PWM signals */
+TIM_HandleTypeDef  htim15; /* LOX main valve control PWM signals  */
+UART_HandleTypeDef huart1; /* UART to USB                         */
+UART_HandleTypeDef huart3; /* UART to engine controller           */
 
 
 /*------------------------------------------------------------------------------
