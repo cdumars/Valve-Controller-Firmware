@@ -139,6 +139,7 @@ SENSOR_STATUS sensor_status;    /* Return codes from sensor API */
 USB_STATUS    usb_status;       /* Return codes from USB API    */
 VALVE_STATUS  valve_status;     /* Return codes from valve API  */
 uint8_t       subcommand;       /* SDEC subcommands             */
+uint8_t       firmware_code;    /* Firmware identifying code    */
 
 
 /*------------------------------------------------------------------------------
@@ -148,6 +149,7 @@ sensor_status = SENSOR_OK;
 usb_status    = USB_OK;
 valve_status  = VALVE_OK;
 subcommand    = 0;
+firmware_code = FIRMWARE_TERMINAL;
 
 
 /*------------------------------------------------------------------------------
@@ -165,7 +167,11 @@ switch( command )
 	/* Connect Command -------------------------------------------------------*/
 	case CONNECT_OP:
 		{
+		/* Board identifier */
 		ping( cmd_source );
+
+		/* Firmware identifier */
+		usb_transmit( &firmware_code, sizeof( uint8_t ), HAL_DEFAULT_TIMEOUT );
 		break;
 		} /* CONNECT_OP */
 
