@@ -82,6 +82,11 @@ sensor_init();
 /* Indicate successful initialization with green status LED */
 led_set_color( LED_GREEN );
 
+// Test
+valve_enable_valves();
+HAL_Delay( 5 );
+valve_calibrate_valves();
+
 
 /*------------------------------------------------------------------------------
  Event Loop
@@ -102,15 +107,19 @@ while (1)
 			} 
 
 		/* Poll data from valve control interface */
+		/* 
 		valve_status = valve_receive( &command         , 
 		                              sizeof( command ),
 									  HAL_DEFAULT_TIMEOUT );
+									  */
 		
 		/* Execute command if valid */
+		/*
 		if ( valve_status == VALVE_OK )
 			{
 			command_handler( command, CMD_SOURCE_VALVE );
 			}
+			*/
 
 		} /* if ( usb_detect() )*/
 	}
@@ -306,7 +315,7 @@ switch( command )
 	default:
 		{
 		/* Unrecognized command code */
-		Error_Handler();
+//		Error_Handler();
 		break;
 		}
 	} /* switch( command ) */

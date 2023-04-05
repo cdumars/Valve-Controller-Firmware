@@ -33,7 +33,7 @@ extern "C" {
 
 /* Timeouts */
 #ifndef SDR_DEBUG
-	#define HAL_DEFAULT_TIMEOUT    ( 10  ) /* Default timeout for polling 
+	#define HAL_DEFAULT_TIMEOUT    ( 1  ) /* Default timeout for polling 
 											   operations                     */
 #else
 	/* Disable timeouts when debugging */
