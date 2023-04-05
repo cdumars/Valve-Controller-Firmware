@@ -82,11 +82,6 @@ sensor_init();
 /* Indicate successful initialization with green status LED */
 led_set_color( LED_GREEN );
 
-// Test
-valve_enable_valves();
-HAL_Delay( 5 );
-valve_calibrate_valves();
-
 
 /*------------------------------------------------------------------------------
  Event Loop
