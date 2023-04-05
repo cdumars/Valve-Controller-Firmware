@@ -50,14 +50,14 @@ int main
 ------------------------------------------------------------------------------*/
 uint8_t       command;        /* SDEC command code          */
 USB_STATUS    usb_status;     /* UART/USB status            */
-VALVE_STATUS  valve_status;   /* Valve module return codes  */
+//VALVE_STATUS  valve_status;   /* Valve module return codes  */
 
 
 /*------------------------------------------------------------------------------
  Initializations 
 ------------------------------------------------------------------------------*/
 usb_status    = USB_OK;
-valve_status  = VALVE_OK;
+//valve_status  = VALVE_OK;
 
 
 /*------------------------------------------------------------------------------

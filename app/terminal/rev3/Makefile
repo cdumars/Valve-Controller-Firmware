@@ -125,6 +125,7 @@ C_DEFS =           \
 -DUSE_HAL_DRIVER   \
 -DVALVE_CONTROLLER \
 -DL0005_REV3       \
+-DTERMINAL         \
 -DSTM32H750xx
 
 
