@@ -157,7 +157,7 @@ switch( command )
 		ping( cmd_source );
 
 		/* Firmware identifier */
-		valve_transmit( &firmware_code, sizeof( uint8_t ), HAL_DEFAULT_TIMEOUT );
+//		valve_transmit( &firmware_code, sizeof( uint8_t ), HAL_DEFAULT_TIMEOUT );
 		break;
 		} /* CONNECT_OP */
 
