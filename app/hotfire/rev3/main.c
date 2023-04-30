@@ -211,14 +211,14 @@ switch( command )
 		/* Execute subcommand */
 		if ( valve_status != VALVE_OK )
 			{
-			Error_Handler();
+		//	Error_Handler();
 			}
 		else
 			{
 			valve_status = valve_cmd_execute( subcommand );
 			if ( valve_status != VALVE_OK )
 				{
-				Error_Handler();
+			//	Error_Handler();
 				}
 			}
 		break;
