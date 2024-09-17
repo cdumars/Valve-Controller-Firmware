@@ -1,0 +1,204 @@
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccAEpIX2.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"commands.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "../../../mod/commands/commands.c"
+  19              		.section	.text.ping,"ax",%progbits
+  20              		.align	1
+  21              		.global	ping
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	ping:
+  27              	.LVL0:
+  28              	.LFB144:
+   1:../../../mod/commands/commands.c **** /*******************************************************************************
+   2:../../../mod/commands/commands.c **** *
+   3:../../../mod/commands/commands.c **** * FILE: 
+   4:../../../mod/commands/commands.c **** * 		commands.c
+   5:../../../mod/commands/commands.c **** *
+   6:../../../mod/commands/commands.c **** * DESCRIPTION: 
+   7:../../../mod/commands/commands.c **** * 		Contains general command functions common to all embedded controllers
+   8:../../../mod/commands/commands.c **** *
+   9:../../../mod/commands/commands.c **** *******************************************************************************/
+  10:../../../mod/commands/commands.c **** 
+  11:../../../mod/commands/commands.c **** 
+  12:../../../mod/commands/commands.c **** /*------------------------------------------------------------------------------
+  13:../../../mod/commands/commands.c ****  Standard Includes                                                               
+  14:../../../mod/commands/commands.c **** ------------------------------------------------------------------------------*/
+  15:../../../mod/commands/commands.c **** #include <stdbool.h>
+  16:../../../mod/commands/commands.c **** 
+  17:../../../mod/commands/commands.c **** /*------------------------------------------------------------------------------
+  18:../../../mod/commands/commands.c ****  Project Includes                                                               
+  19:../../../mod/commands/commands.c **** ------------------------------------------------------------------------------*/
+  20:../../../mod/commands/commands.c **** #include "main.h"
+  21:../../../mod/commands/commands.c **** #include "commands.h"
+  22:../../../mod/commands/commands.c **** #ifdef USE_RS485
+  23:../../../mod/commands/commands.c ****     #include "rs485.h"
+  24:../../../mod/commands/commands.c **** #endif
+  25:../../../mod/commands/commands.c **** #include "usb.h"
+  26:../../../mod/commands/commands.c **** #ifdef VALVE_CONTROLLER
+  27:../../../mod/commands/commands.c ****     #include "valve.h"
+  28:../../../mod/commands/commands.c **** #endif
+  29:../../../mod/commands/commands.c **** 
+  30:../../../mod/commands/commands.c **** 
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccAEpIX2.s 			page 2
+
+
+  31:../../../mod/commands/commands.c **** /*------------------------------------------------------------------------------
+  32:../../../mod/commands/commands.c ****  Procedures 
+  33:../../../mod/commands/commands.c **** ------------------------------------------------------------------------------*/
+  34:../../../mod/commands/commands.c **** 
+  35:../../../mod/commands/commands.c **** 
+  36:../../../mod/commands/commands.c **** /*******************************************************************************
+  37:../../../mod/commands/commands.c **** *                                                                              *
+  38:../../../mod/commands/commands.c **** * PROCEDURE:                                                                   * 
+  39:../../../mod/commands/commands.c **** * 		ping                                                                   *
+  40:../../../mod/commands/commands.c **** *                                                                              *
+  41:../../../mod/commands/commands.c **** * DESCRIPTION:                                                                 * 
+  42:../../../mod/commands/commands.c **** * 		Sends a 1 byte response back to host PC to signal a functioning        * 
+  43:../../../mod/commands/commands.c **** *       serial connection                                                      *
+  44:../../../mod/commands/commands.c **** *                                                                              *
+  45:../../../mod/commands/commands.c **** *******************************************************************************/
+  46:../../../mod/commands/commands.c **** void ping
+  47:../../../mod/commands/commands.c ****     (
+  48:../../../mod/commands/commands.c ****     #ifndef VALVE_CONTROLLER
+  49:../../../mod/commands/commands.c ****         void
+  50:../../../mod/commands/commands.c ****     #else
+  51:../../../mod/commands/commands.c ****         CMD_SOURCE cmd_source
+  52:../../../mod/commands/commands.c ****     #endif
+  53:../../../mod/commands/commands.c ****     )
+  54:../../../mod/commands/commands.c **** {
+  29              		.loc 1 54 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 54 1 is_stmt 0 view .LVU1
+  34 0000 00B5     		push	{lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 4
+  37              		.cfi_offset 14, -4
+  38 0002 83B0     		sub	sp, sp, #12
+  39              	.LCFI1:
+  40              		.cfi_def_cfa_offset 16
+  55:../../../mod/commands/commands.c **** /*------------------------------------------------------------------------------
+  56:../../../mod/commands/commands.c ****  Local variables                                                                     
+  57:../../../mod/commands/commands.c **** ------------------------------------------------------------------------------*/
+  58:../../../mod/commands/commands.c **** uint8_t    response;   /* A0002 Response Code */
+  41              		.loc 1 58 1 is_stmt 1 view .LVU2
+  59:../../../mod/commands/commands.c **** 
+  60:../../../mod/commands/commands.c **** 
+  61:../../../mod/commands/commands.c **** /*------------------------------------------------------------------------------
+  62:../../../mod/commands/commands.c ****  Initializations 
+  63:../../../mod/commands/commands.c **** ------------------------------------------------------------------------------*/
+  64:../../../mod/commands/commands.c **** response = PING_RESPONSE_CODE; /* Code specific to board and revision */
+  42              		.loc 1 64 1 view .LVU3
+  43              		.loc 1 64 10 is_stmt 0 view .LVU4
+  44 0004 0723     		movs	r3, #7
+  45 0006 8DF80730 		strb	r3, [sp, #7]
+  65:../../../mod/commands/commands.c **** 
+  66:../../../mod/commands/commands.c **** 
+  67:../../../mod/commands/commands.c **** /*------------------------------------------------------------------------------
+  68:../../../mod/commands/commands.c ****  Command Implementation                                                         
+  69:../../../mod/commands/commands.c **** ------------------------------------------------------------------------------*/
+  70:../../../mod/commands/commands.c **** #ifdef VALVE_CONTROLLER 
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccAEpIX2.s 			page 3
+
+
+  71:../../../mod/commands/commands.c ****     if ( cmd_source == CMD_SOURCE_USB )
+  46              		.loc 1 71 5 is_stmt 1 view .LVU5
+  47              		.loc 1 71 8 is_stmt 0 view .LVU6
+  48 000a 40B9     		cbnz	r0, .L2
+  72:../../../mod/commands/commands.c ****         {
+  73:../../../mod/commands/commands.c ****         usb_transmit( &response         , 
+  49              		.loc 1 73 9 is_stmt 1 view .LVU7
+  50 000c 0122     		movs	r2, #1
+  51 000e 1146     		mov	r1, r2
+  52 0010 0DEB0300 		add	r0, sp, r3
+  53              	.LVL1:
+  54              		.loc 1 73 9 is_stmt 0 view .LVU8
+  55 0014 FFF7FEFF 		bl	usb_transmit
+  56              	.LVL2:
+  57              	.L1:
+  74:../../../mod/commands/commands.c ****                       sizeof( response ), 
+  75:../../../mod/commands/commands.c ****                       HAL_DEFAULT_TIMEOUT );
+  76:../../../mod/commands/commands.c ****         }
+  77:../../../mod/commands/commands.c ****     else
+  78:../../../mod/commands/commands.c ****         {
+  79:../../../mod/commands/commands.c ****         valve_transmit( &response         , 
+  80:../../../mod/commands/commands.c ****                         sizeof( response ), 
+  81:../../../mod/commands/commands.c ****                         HAL_DEFAULT_TIMEOUT );
+  82:../../../mod/commands/commands.c ****         }
+  83:../../../mod/commands/commands.c **** #endif
+  84:../../../mod/commands/commands.c **** #ifdef ENGINE_CONTROLLER
+  85:../../../mod/commands/commands.c ****     #if defined( USE_RS485 )
+  86:../../../mod/commands/commands.c ****         rs485_transmit( &response, sizeof( response ), RS485_DEFAULT_TIMEOUT );
+  87:../../../mod/commands/commands.c ****     #else
+  88:../../../mod/commands/commands.c ****         usb_transmit( &response, sizeof( response ), HAL_DEFAULT_TIMEOUT );
+  89:../../../mod/commands/commands.c ****     #endif
+  90:../../../mod/commands/commands.c **** #endif /* #ifdef ENGINE_CONTROLLER */
+  91:../../../mod/commands/commands.c **** 
+  92:../../../mod/commands/commands.c **** } /* ping */
+  58              		.loc 1 92 1 view .LVU9
+  59 0018 03B0     		add	sp, sp, #12
+  60              	.LCFI2:
+  61              		.cfi_remember_state
+  62              		.cfi_def_cfa_offset 4
+  63              		@ sp needed
+  64 001a 5DF804FB 		ldr	pc, [sp], #4
+  65              	.LVL3:
+  66              	.L2:
+  67              	.LCFI3:
+  68              		.cfi_restore_state
+  79:../../../mod/commands/commands.c ****                         sizeof( response ), 
+  69              		.loc 1 79 9 is_stmt 1 view .LVU10
+  70 001e 0122     		movs	r2, #1
+  71 0020 1146     		mov	r1, r2
+  72 0022 0DF10700 		add	r0, sp, #7
+  73              	.LVL4:
+  79:../../../mod/commands/commands.c ****                         sizeof( response ), 
+  74              		.loc 1 79 9 is_stmt 0 view .LVU11
+  75 0026 FFF7FEFF 		bl	valve_transmit
+  76              	.LVL5:
+  77              		.loc 1 92 1 view .LVU12
+  78 002a F5E7     		b	.L1
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccAEpIX2.s 			page 4
+
+
+  79              		.cfi_endproc
+  80              	.LFE144:
+  82              		.text
+  83              	.Letext0:
+  84              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+  85              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+  86              		.file 4 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.3.1/includ
+  87              		.file 5 "./main.h"
+  88              		.file 6 "../../../mod/usb/usb.h"
+  89              		.file 7 "../../../mod/valve/valve.h"
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccAEpIX2.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 commands.c
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccAEpIX2.s:20     .text.ping:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccAEpIX2.s:26     .text.ping:00000000 ping
+
+UNDEFINED SYMBOLS
+usb_transmit
+valve_transmit

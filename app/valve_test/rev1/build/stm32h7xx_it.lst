@@ -1,0 +1,663 @@
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"stm32h7xx_it.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "../../../init/rev3/config/Src/stm32h7xx_it.c"
+  19              		.section	.text.NMI_Handler,"ax",%progbits
+  20              		.align	1
+  21              		.global	NMI_Handler
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	NMI_Handler:
+  27              	.LFB144:
+   1:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*******************************************************************************
+   2:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+   3:../../../init/rev3/config/Src/stm32h7xx_it.c **** * FILE:                                                                        *
+   4:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		stm32h7xx_it.c                                                         *
+   5:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+   6:../../../init/rev3/config/Src/stm32h7xx_it.c **** * DESCRIPTION:                                                                 *
+   7:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		Contains interrupt service routines from the microcontroller interrupt *
+   8:../../../init/rev3/config/Src/stm32h7xx_it.c **** *       vector table                                                           *
+   9:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+  10:../../../init/rev3/config/Src/stm32h7xx_it.c **** *******************************************************************************/
+  11:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+  12:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*------------------------------------------------------------------------------
+  13:../../../init/rev3/config/Src/stm32h7xx_it.c ****  Standard Includes                                                              
+  14:../../../init/rev3/config/Src/stm32h7xx_it.c **** ------------------------------------------------------------------------------*/
+  15:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+  16:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+  17:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*------------------------------------------------------------------------------
+  18:../../../init/rev3/config/Src/stm32h7xx_it.c ****  Project Includes                                                               
+  19:../../../init/rev3/config/Src/stm32h7xx_it.c **** ------------------------------------------------------------------------------*/
+  20:../../../init/rev3/config/Src/stm32h7xx_it.c **** #include "main.h"
+  21:../../../init/rev3/config/Src/stm32h7xx_it.c **** #include "stm32h7xx_it.h"
+  22:../../../init/rev3/config/Src/stm32h7xx_it.c **** #include "sdr_pin_defines_L0005.h"
+  23:../../../init/rev3/config/Src/stm32h7xx_it.c **** #include "valve.h"
+  24:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+  25:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+  26:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*------------------------------------------------------------------------------
+  27:../../../init/rev3/config/Src/stm32h7xx_it.c ****  Cortex Processor Interruption and Exception Handlers          
+  28:../../../init/rev3/config/Src/stm32h7xx_it.c **** ------------------------------------------------------------------------------*/
+  29:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+  30:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+  31:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*******************************************************************************
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s 			page 2
+
+
+  32:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+  33:../../../init/rev3/config/Src/stm32h7xx_it.c **** * PROCEDURE:                                                                   *
+  34:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		NMI_Handler                                                            *
+  35:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+  36:../../../init/rev3/config/Src/stm32h7xx_it.c **** * DESCRIPTION:                                                                 *
+  37:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		Non-maskable interrupt                                                 *
+  38:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+  39:../../../init/rev3/config/Src/stm32h7xx_it.c **** *******************************************************************************/
+  40:../../../init/rev3/config/Src/stm32h7xx_it.c **** void NMI_Handler
+  41:../../../init/rev3/config/Src/stm32h7xx_it.c ****     (
+  42:../../../init/rev3/config/Src/stm32h7xx_it.c ****     void
+  43:../../../init/rev3/config/Src/stm32h7xx_it.c ****     )
+  44:../../../init/rev3/config/Src/stm32h7xx_it.c **** {
+  28              		.loc 1 44 1 view -0
+  29              		.cfi_startproc
+  30              		@ Volatile: function does not return.
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34              	.L2:
+  45:../../../init/rev3/config/Src/stm32h7xx_it.c **** while (1)
+  35              		.loc 1 45 1 view .LVU1
+  46:../../../init/rev3/config/Src/stm32h7xx_it.c ****     {
+  47:../../../init/rev3/config/Src/stm32h7xx_it.c ****     }
+  36              		.loc 1 47 5 view .LVU2
+  45:../../../init/rev3/config/Src/stm32h7xx_it.c **** while (1)
+  37              		.loc 1 45 7 view .LVU3
+  38 0000 FEE7     		b	.L2
+  39              		.cfi_endproc
+  40              	.LFE144:
+  42              		.section	.text.HardFault_Handler,"ax",%progbits
+  43              		.align	1
+  44              		.global	HardFault_Handler
+  45              		.syntax unified
+  46              		.thumb
+  47              		.thumb_func
+  49              	HardFault_Handler:
+  50              	.LFB145:
+  48:../../../init/rev3/config/Src/stm32h7xx_it.c **** } /* NMI_Handler */
+  49:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+  50:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+  51:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*******************************************************************************
+  52:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+  53:../../../init/rev3/config/Src/stm32h7xx_it.c **** * PROCEDURE:                                                                   *
+  54:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		HardFault_Handler                                                      *
+  55:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+  56:../../../init/rev3/config/Src/stm32h7xx_it.c **** * DESCRIPTION:                                                                 *
+  57:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		Hard fault exception                                                   *
+  58:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+  59:../../../init/rev3/config/Src/stm32h7xx_it.c **** *******************************************************************************/
+  60:../../../init/rev3/config/Src/stm32h7xx_it.c **** void HardFault_Handler
+  61:../../../init/rev3/config/Src/stm32h7xx_it.c ****     (
+  62:../../../init/rev3/config/Src/stm32h7xx_it.c ****     void
+  63:../../../init/rev3/config/Src/stm32h7xx_it.c ****     )
+  64:../../../init/rev3/config/Src/stm32h7xx_it.c **** {
+  51              		.loc 1 64 1 view -0
+  52              		.cfi_startproc
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s 			page 3
+
+
+  53              		@ Volatile: function does not return.
+  54              		@ args = 0, pretend = 0, frame = 0
+  55              		@ frame_needed = 0, uses_anonymous_args = 0
+  56              		@ link register save eliminated.
+  57              	.L4:
+  65:../../../init/rev3/config/Src/stm32h7xx_it.c **** while (1)
+  58              		.loc 1 65 1 view .LVU5
+  66:../../../init/rev3/config/Src/stm32h7xx_it.c ****     {
+  67:../../../init/rev3/config/Src/stm32h7xx_it.c ****     }
+  59              		.loc 1 67 5 view .LVU6
+  65:../../../init/rev3/config/Src/stm32h7xx_it.c **** while (1)
+  60              		.loc 1 65 7 view .LVU7
+  61 0000 FEE7     		b	.L4
+  62              		.cfi_endproc
+  63              	.LFE145:
+  65              		.section	.text.MemManage_Handler,"ax",%progbits
+  66              		.align	1
+  67              		.global	MemManage_Handler
+  68              		.syntax unified
+  69              		.thumb
+  70              		.thumb_func
+  72              	MemManage_Handler:
+  73              	.LFB146:
+  68:../../../init/rev3/config/Src/stm32h7xx_it.c **** } /* HardFault_Handler */
+  69:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+  70:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+  71:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*******************************************************************************
+  72:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+  73:../../../init/rev3/config/Src/stm32h7xx_it.c **** * PROCEDURE:                                                                   *
+  74:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		MemManage_Handler                                                      *
+  75:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+  76:../../../init/rev3/config/Src/stm32h7xx_it.c **** * DESCRIPTION:                                                                 *
+  77:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		Memory management fault                                                *
+  78:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+  79:../../../init/rev3/config/Src/stm32h7xx_it.c **** *******************************************************************************/
+  80:../../../init/rev3/config/Src/stm32h7xx_it.c **** void MemManage_Handler
+  81:../../../init/rev3/config/Src/stm32h7xx_it.c ****     (
+  82:../../../init/rev3/config/Src/stm32h7xx_it.c ****     void
+  83:../../../init/rev3/config/Src/stm32h7xx_it.c ****     )
+  84:../../../init/rev3/config/Src/stm32h7xx_it.c **** {
+  74              		.loc 1 84 1 view -0
+  75              		.cfi_startproc
+  76              		@ Volatile: function does not return.
+  77              		@ args = 0, pretend = 0, frame = 0
+  78              		@ frame_needed = 0, uses_anonymous_args = 0
+  79              		@ link register save eliminated.
+  80              	.L6:
+  85:../../../init/rev3/config/Src/stm32h7xx_it.c **** while (1)
+  81              		.loc 1 85 1 view .LVU9
+  86:../../../init/rev3/config/Src/stm32h7xx_it.c ****     {
+  87:../../../init/rev3/config/Src/stm32h7xx_it.c ****     }
+  82              		.loc 1 87 5 view .LVU10
+  85:../../../init/rev3/config/Src/stm32h7xx_it.c **** while (1)
+  83              		.loc 1 85 7 view .LVU11
+  84 0000 FEE7     		b	.L6
+  85              		.cfi_endproc
+  86              	.LFE146:
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s 			page 4
+
+
+  88              		.section	.text.BusFault_Handler,"ax",%progbits
+  89              		.align	1
+  90              		.global	BusFault_Handler
+  91              		.syntax unified
+  92              		.thumb
+  93              		.thumb_func
+  95              	BusFault_Handler:
+  96              	.LFB147:
+  88:../../../init/rev3/config/Src/stm32h7xx_it.c **** } /* MemManage_Handler */
+  89:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+  90:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+  91:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*******************************************************************************
+  92:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+  93:../../../init/rev3/config/Src/stm32h7xx_it.c **** * PROCEDURE:                                                                   *
+  94:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		BusFault_Handler                                                       *
+  95:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+  96:../../../init/rev3/config/Src/stm32h7xx_it.c **** * DESCRIPTION:                                                                 *
+  97:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		Pre-fetch fault, memory access fault                                   *
+  98:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+  99:../../../init/rev3/config/Src/stm32h7xx_it.c **** *******************************************************************************/
+ 100:../../../init/rev3/config/Src/stm32h7xx_it.c **** void BusFault_Handler
+ 101:../../../init/rev3/config/Src/stm32h7xx_it.c ****     (
+ 102:../../../init/rev3/config/Src/stm32h7xx_it.c ****     void
+ 103:../../../init/rev3/config/Src/stm32h7xx_it.c ****     )
+ 104:../../../init/rev3/config/Src/stm32h7xx_it.c **** {
+  97              		.loc 1 104 1 view -0
+  98              		.cfi_startproc
+  99              		@ Volatile: function does not return.
+ 100              		@ args = 0, pretend = 0, frame = 0
+ 101              		@ frame_needed = 0, uses_anonymous_args = 0
+ 102              		@ link register save eliminated.
+ 103              	.L8:
+ 105:../../../init/rev3/config/Src/stm32h7xx_it.c **** while (1)
+ 104              		.loc 1 105 1 view .LVU13
+ 106:../../../init/rev3/config/Src/stm32h7xx_it.c ****     {
+ 107:../../../init/rev3/config/Src/stm32h7xx_it.c ****     }
+ 105              		.loc 1 107 5 view .LVU14
+ 105:../../../init/rev3/config/Src/stm32h7xx_it.c **** while (1)
+ 106              		.loc 1 105 7 view .LVU15
+ 107 0000 FEE7     		b	.L8
+ 108              		.cfi_endproc
+ 109              	.LFE147:
+ 111              		.section	.text.UsageFault_Handler,"ax",%progbits
+ 112              		.align	1
+ 113              		.global	UsageFault_Handler
+ 114              		.syntax unified
+ 115              		.thumb
+ 116              		.thumb_func
+ 118              	UsageFault_Handler:
+ 119              	.LFB148:
+ 108:../../../init/rev3/config/Src/stm32h7xx_it.c **** } /* BusFault_Handler */
+ 109:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 110:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 111:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*******************************************************************************
+ 112:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 113:../../../init/rev3/config/Src/stm32h7xx_it.c **** * PROCEDURE:                                                                   *
+ 114:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		UsageFault_Handler                                                     *
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s 			page 5
+
+
+ 115:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 116:../../../init/rev3/config/Src/stm32h7xx_it.c **** * DESCRIPTION:                                                                 *
+ 117:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		Handles undefined instructions or illegal states                       *
+ 118:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 119:../../../init/rev3/config/Src/stm32h7xx_it.c **** *******************************************************************************/
+ 120:../../../init/rev3/config/Src/stm32h7xx_it.c **** void UsageFault_Handler
+ 121:../../../init/rev3/config/Src/stm32h7xx_it.c ****     (
+ 122:../../../init/rev3/config/Src/stm32h7xx_it.c ****     void
+ 123:../../../init/rev3/config/Src/stm32h7xx_it.c ****     )
+ 124:../../../init/rev3/config/Src/stm32h7xx_it.c **** {
+ 120              		.loc 1 124 1 view -0
+ 121              		.cfi_startproc
+ 122              		@ Volatile: function does not return.
+ 123              		@ args = 0, pretend = 0, frame = 0
+ 124              		@ frame_needed = 0, uses_anonymous_args = 0
+ 125              		@ link register save eliminated.
+ 126              	.L10:
+ 125:../../../init/rev3/config/Src/stm32h7xx_it.c **** while (1)
+ 127              		.loc 1 125 1 view .LVU17
+ 126:../../../init/rev3/config/Src/stm32h7xx_it.c ****     {
+ 127:../../../init/rev3/config/Src/stm32h7xx_it.c ****     }
+ 128              		.loc 1 127 5 view .LVU18
+ 125:../../../init/rev3/config/Src/stm32h7xx_it.c **** while (1)
+ 129              		.loc 1 125 7 view .LVU19
+ 130 0000 FEE7     		b	.L10
+ 131              		.cfi_endproc
+ 132              	.LFE148:
+ 134              		.section	.text.SVC_Handler,"ax",%progbits
+ 135              		.align	1
+ 136              		.global	SVC_Handler
+ 137              		.syntax unified
+ 138              		.thumb
+ 139              		.thumb_func
+ 141              	SVC_Handler:
+ 142              	.LFB149:
+ 128:../../../init/rev3/config/Src/stm32h7xx_it.c **** } /* UsageFault_Handler */
+ 129:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 130:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 131:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*******************************************************************************
+ 132:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 133:../../../init/rev3/config/Src/stm32h7xx_it.c **** * PROCEDURE:                                                                   *
+ 134:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		SVC_Handler                                                            *
+ 135:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 136:../../../init/rev3/config/Src/stm32h7xx_it.c **** * DESCRIPTION:                                                                 *
+ 137:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		Handles system service call via SWI instruction                        *
+ 138:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 139:../../../init/rev3/config/Src/stm32h7xx_it.c **** *******************************************************************************/
+ 140:../../../init/rev3/config/Src/stm32h7xx_it.c **** void SVC_Handler
+ 141:../../../init/rev3/config/Src/stm32h7xx_it.c ****     (
+ 142:../../../init/rev3/config/Src/stm32h7xx_it.c ****     void
+ 143:../../../init/rev3/config/Src/stm32h7xx_it.c ****     )
+ 144:../../../init/rev3/config/Src/stm32h7xx_it.c **** {
+ 143              		.loc 1 144 1 view -0
+ 144              		.cfi_startproc
+ 145              		@ args = 0, pretend = 0, frame = 0
+ 146              		@ frame_needed = 0, uses_anonymous_args = 0
+ 147              		@ link register save eliminated.
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s 			page 6
+
+
+ 145:../../../init/rev3/config/Src/stm32h7xx_it.c **** } /* SVC_Handler */
+ 148              		.loc 1 145 1 view .LVU21
+ 149 0000 7047     		bx	lr
+ 150              		.cfi_endproc
+ 151              	.LFE149:
+ 153              		.section	.text.DebugMon_Handler,"ax",%progbits
+ 154              		.align	1
+ 155              		.global	DebugMon_Handler
+ 156              		.syntax unified
+ 157              		.thumb
+ 158              		.thumb_func
+ 160              	DebugMon_Handler:
+ 161              	.LFB150:
+ 146:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 147:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 148:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*******************************************************************************
+ 149:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 150:../../../init/rev3/config/Src/stm32h7xx_it.c **** * PROCEDURE:                                                                   *
+ 151:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		DebugMon_Handler                                                       *
+ 152:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 153:../../../init/rev3/config/Src/stm32h7xx_it.c **** * DESCRIPTION:                                                                 *
+ 154:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		Handles the debug monitor                                              *
+ 155:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 156:../../../init/rev3/config/Src/stm32h7xx_it.c **** *******************************************************************************/
+ 157:../../../init/rev3/config/Src/stm32h7xx_it.c **** void DebugMon_Handler
+ 158:../../../init/rev3/config/Src/stm32h7xx_it.c ****     (
+ 159:../../../init/rev3/config/Src/stm32h7xx_it.c ****     void
+ 160:../../../init/rev3/config/Src/stm32h7xx_it.c ****     )
+ 161:../../../init/rev3/config/Src/stm32h7xx_it.c **** {
+ 162              		.loc 1 161 1 view -0
+ 163              		.cfi_startproc
+ 164              		@ args = 0, pretend = 0, frame = 0
+ 165              		@ frame_needed = 0, uses_anonymous_args = 0
+ 166              		@ link register save eliminated.
+ 162:../../../init/rev3/config/Src/stm32h7xx_it.c **** } /* DebugMon_Handler */
+ 167              		.loc 1 162 1 view .LVU23
+ 168 0000 7047     		bx	lr
+ 169              		.cfi_endproc
+ 170              	.LFE150:
+ 172              		.section	.text.PendSV_Handler,"ax",%progbits
+ 173              		.align	1
+ 174              		.global	PendSV_Handler
+ 175              		.syntax unified
+ 176              		.thumb
+ 177              		.thumb_func
+ 179              	PendSV_Handler:
+ 180              	.LFB151:
+ 163:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 164:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 165:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*******************************************************************************
+ 166:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 167:../../../init/rev3/config/Src/stm32h7xx_it.c **** * PROCEDURE:                                                                   *
+ 168:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		PendSV_Handler                                                         *
+ 169:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 170:../../../init/rev3/config/Src/stm32h7xx_it.c **** * DESCRIPTION:                                                                 *
+ 171:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		Handles the Pendable request for system service                        *
+ 172:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s 			page 7
+
+
+ 173:../../../init/rev3/config/Src/stm32h7xx_it.c **** *******************************************************************************/
+ 174:../../../init/rev3/config/Src/stm32h7xx_it.c **** void PendSV_Handler
+ 175:../../../init/rev3/config/Src/stm32h7xx_it.c ****     (
+ 176:../../../init/rev3/config/Src/stm32h7xx_it.c ****     void
+ 177:../../../init/rev3/config/Src/stm32h7xx_it.c ****     )
+ 178:../../../init/rev3/config/Src/stm32h7xx_it.c **** {
+ 181              		.loc 1 178 1 view -0
+ 182              		.cfi_startproc
+ 183              		@ args = 0, pretend = 0, frame = 0
+ 184              		@ frame_needed = 0, uses_anonymous_args = 0
+ 185              		@ link register save eliminated.
+ 179:../../../init/rev3/config/Src/stm32h7xx_it.c **** } /* PendSV_Handler */
+ 186              		.loc 1 179 1 view .LVU25
+ 187 0000 7047     		bx	lr
+ 188              		.cfi_endproc
+ 189              	.LFE151:
+ 191              		.section	.text.SysTick_Handler,"ax",%progbits
+ 192              		.align	1
+ 193              		.global	SysTick_Handler
+ 194              		.syntax unified
+ 195              		.thumb
+ 196              		.thumb_func
+ 198              	SysTick_Handler:
+ 199              	.LFB152:
+ 180:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 181:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 182:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*******************************************************************************
+ 183:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 184:../../../init/rev3/config/Src/stm32h7xx_it.c **** * PROCEDURE:                                                                   *
+ 185:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		SysTick_Handler                                                        *
+ 186:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 187:../../../init/rev3/config/Src/stm32h7xx_it.c **** * DESCRIPTION:                                                                 *
+ 188:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		Handles the system tick timer                                          *
+ 189:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 190:../../../init/rev3/config/Src/stm32h7xx_it.c **** *******************************************************************************/
+ 191:../../../init/rev3/config/Src/stm32h7xx_it.c **** void SysTick_Handler
+ 192:../../../init/rev3/config/Src/stm32h7xx_it.c ****     (
+ 193:../../../init/rev3/config/Src/stm32h7xx_it.c ****     void
+ 194:../../../init/rev3/config/Src/stm32h7xx_it.c ****     )
+ 195:../../../init/rev3/config/Src/stm32h7xx_it.c **** {
+ 200              		.loc 1 195 1 view -0
+ 201              		.cfi_startproc
+ 202              		@ args = 0, pretend = 0, frame = 0
+ 203              		@ frame_needed = 0, uses_anonymous_args = 0
+ 204 0000 08B5     		push	{r3, lr}
+ 205              	.LCFI0:
+ 206              		.cfi_def_cfa_offset 8
+ 207              		.cfi_offset 3, -8
+ 208              		.cfi_offset 14, -4
+ 196:../../../init/rev3/config/Src/stm32h7xx_it.c **** HAL_IncTick();
+ 209              		.loc 1 196 1 view .LVU27
+ 210 0002 FFF7FEFF 		bl	HAL_IncTick
+ 211              	.LVL0:
+ 197:../../../init/rev3/config/Src/stm32h7xx_it.c **** } /* SysTick_Handler */
+ 212              		.loc 1 197 1 is_stmt 0 view .LVU28
+ 213 0006 08BD     		pop	{r3, pc}
+ 214              		.cfi_endproc
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s 			page 8
+
+
+ 215              	.LFE152:
+ 217              		.section	.text.EXTI9_5_IRQHandler,"ax",%progbits
+ 218              		.align	1
+ 219              		.global	EXTI9_5_IRQHandler
+ 220              		.syntax unified
+ 221              		.thumb
+ 222              		.thumb_func
+ 224              	EXTI9_5_IRQHandler:
+ 225              	.LFB153:
+ 198:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 199:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 200:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*------------------------------------------------------------------------------
+ 201:../../../init/rev3/config/Src/stm32h7xx_it.c ****  STM32H7xx Peripheral Interrupt Handlers                                    
+ 202:../../../init/rev3/config/Src/stm32h7xx_it.c ****  Add here the Interrupt Handlers for the used peripherals.                  
+ 203:../../../init/rev3/config/Src/stm32h7xx_it.c ****  For the available peripheral interrupt handler names,                      
+ 204:../../../init/rev3/config/Src/stm32h7xx_it.c ****  please refer to the startup file (startup_stm32h7xx.s).                    
+ 205:../../../init/rev3/config/Src/stm32h7xx_it.c **** ------------------------------------------------------------------------------*/
+ 206:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 207:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 208:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*******************************************************************************
+ 209:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 210:../../../init/rev3/config/Src/stm32h7xx_it.c **** * PROCEDURE:                                                                   *
+ 211:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		EXTI9_5_IRQHandler                                                     *
+ 212:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 213:../../../init/rev3/config/Src/stm32h7xx_it.c **** * DESCRIPTION:                                                                 *
+ 214:../../../init/rev3/config/Src/stm32h7xx_it.c **** *       This function handles EXTI line[9:5] interrupts used for the LOX main  *
+ 215:../../../init/rev3/config/Src/stm32h7xx_it.c **** *       valve encoder                                                          *
+ 216:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 217:../../../init/rev3/config/Src/stm32h7xx_it.c **** *******************************************************************************/
+ 218:../../../init/rev3/config/Src/stm32h7xx_it.c **** void EXTI9_5_IRQHandler
+ 219:../../../init/rev3/config/Src/stm32h7xx_it.c ****     (
+ 220:../../../init/rev3/config/Src/stm32h7xx_it.c ****     void
+ 221:../../../init/rev3/config/Src/stm32h7xx_it.c ****     )
+ 222:../../../init/rev3/config/Src/stm32h7xx_it.c **** {
+ 226              		.loc 1 222 1 is_stmt 1 view -0
+ 227              		.cfi_startproc
+ 228              		@ args = 0, pretend = 0, frame = 0
+ 229              		@ frame_needed = 0, uses_anonymous_args = 0
+ 230 0000 08B5     		push	{r3, lr}
+ 231              	.LCFI1:
+ 232              		.cfi_def_cfa_offset 8
+ 233              		.cfi_offset 3, -8
+ 234              		.cfi_offset 14, -4
+ 223:../../../init/rev3/config/Src/stm32h7xx_it.c **** /* LOX Encoder A Signal interrupt */
+ 224:../../../init/rev3/config/Src/stm32h7xx_it.c **** if ( __HAL_GPIO_EXTI_GET_FLAG( LOX_ENC_A_PIN ) )
+ 235              		.loc 1 224 1 view .LVU30
+ 236              		.loc 1 224 6 is_stmt 0 view .LVU31
+ 237 0002 4FF0B043 		mov	r3, #1476395008
+ 238 0006 D3F88830 		ldr	r3, [r3, #136]
+ 239              		.loc 1 224 4 view .LVU32
+ 240 000a 13F4807F 		tst	r3, #256
+ 241 000e 07D1     		bne	.L20
+ 242              	.L17:
+ 225:../../../init/rev3/config/Src/stm32h7xx_it.c ****     {
+ 226:../../../init/rev3/config/Src/stm32h7xx_it.c ****     __HAL_GPIO_EXTI_CLEAR_FLAG( LOX_ENC_A_PIN );
+ 227:../../../init/rev3/config/Src/stm32h7xx_it.c ****     lox_channelA_ISR();
+ 228:../../../init/rev3/config/Src/stm32h7xx_it.c ****     }
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s 			page 9
+
+
+ 229:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 230:../../../init/rev3/config/Src/stm32h7xx_it.c **** /* LOX Encoder B Signal interrupt */
+ 231:../../../init/rev3/config/Src/stm32h7xx_it.c **** if ( __HAL_GPIO_EXTI_GET_FLAG( LOX_ENC_B_PIN ) )
+ 243              		.loc 1 231 1 is_stmt 1 view .LVU33
+ 244              		.loc 1 231 6 is_stmt 0 view .LVU34
+ 245 0010 4FF0B043 		mov	r3, #1476395008
+ 246 0014 D3F88830 		ldr	r3, [r3, #136]
+ 247              		.loc 1 231 4 view .LVU35
+ 248 0018 13F4007F 		tst	r3, #512
+ 249 001c 09D1     		bne	.L21
+ 250              	.L16:
+ 232:../../../init/rev3/config/Src/stm32h7xx_it.c ****     {
+ 233:../../../init/rev3/config/Src/stm32h7xx_it.c ****     __HAL_GPIO_EXTI_CLEAR_FLAG( LOX_ENC_B_PIN );
+ 234:../../../init/rev3/config/Src/stm32h7xx_it.c ****     lox_channelB_ISR();
+ 235:../../../init/rev3/config/Src/stm32h7xx_it.c ****     }
+ 236:../../../init/rev3/config/Src/stm32h7xx_it.c **** } /* EXTI9_5_IRQHandler */
+ 251              		.loc 1 236 1 view .LVU36
+ 252 001e 08BD     		pop	{r3, pc}
+ 253              	.L20:
+ 226:../../../init/rev3/config/Src/stm32h7xx_it.c ****     lox_channelA_ISR();
+ 254              		.loc 1 226 5 is_stmt 1 view .LVU37
+ 255 0020 4FF0B043 		mov	r3, #1476395008
+ 256 0024 4FF48072 		mov	r2, #256
+ 257 0028 C3F88820 		str	r2, [r3, #136]
+ 227:../../../init/rev3/config/Src/stm32h7xx_it.c ****     }
+ 258              		.loc 1 227 5 view .LVU38
+ 259 002c FFF7FEFF 		bl	lox_channelA_ISR
+ 260              	.LVL1:
+ 261 0030 EEE7     		b	.L17
+ 262              	.L21:
+ 233:../../../init/rev3/config/Src/stm32h7xx_it.c ****     lox_channelB_ISR();
+ 263              		.loc 1 233 5 view .LVU39
+ 264 0032 4FF0B043 		mov	r3, #1476395008
+ 265 0036 4FF40072 		mov	r2, #512
+ 266 003a C3F88820 		str	r2, [r3, #136]
+ 234:../../../init/rev3/config/Src/stm32h7xx_it.c ****     }
+ 267              		.loc 1 234 5 view .LVU40
+ 268 003e FFF7FEFF 		bl	lox_channelB_ISR
+ 269              	.LVL2:
+ 270              		.loc 1 236 1 is_stmt 0 view .LVU41
+ 271 0042 ECE7     		b	.L16
+ 272              		.cfi_endproc
+ 273              	.LFE153:
+ 275              		.section	.text.EXTI15_10_IRQHandler,"ax",%progbits
+ 276              		.align	1
+ 277              		.global	EXTI15_10_IRQHandler
+ 278              		.syntax unified
+ 279              		.thumb
+ 280              		.thumb_func
+ 282              	EXTI15_10_IRQHandler:
+ 283              	.LFB154:
+ 237:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 238:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 239:../../../init/rev3/config/Src/stm32h7xx_it.c **** /*******************************************************************************
+ 240:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 241:../../../init/rev3/config/Src/stm32h7xx_it.c **** * PROCEDURE:                                                                   *
+ 242:../../../init/rev3/config/Src/stm32h7xx_it.c **** * 		EXTI15_10_IRQHandler                                                   *
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s 			page 10
+
+
+ 243:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 244:../../../init/rev3/config/Src/stm32h7xx_it.c **** * DESCRIPTION:                                                                 *
+ 245:../../../init/rev3/config/Src/stm32h7xx_it.c **** *       This function handles EXTI line[15:10] interrupts.                     *
+ 246:../../../init/rev3/config/Src/stm32h7xx_it.c **** *                                                                              *
+ 247:../../../init/rev3/config/Src/stm32h7xx_it.c **** *******************************************************************************/
+ 248:../../../init/rev3/config/Src/stm32h7xx_it.c **** void EXTI15_10_IRQHandler
+ 249:../../../init/rev3/config/Src/stm32h7xx_it.c ****     (
+ 250:../../../init/rev3/config/Src/stm32h7xx_it.c ****     void
+ 251:../../../init/rev3/config/Src/stm32h7xx_it.c ****     )
+ 252:../../../init/rev3/config/Src/stm32h7xx_it.c **** {
+ 284              		.loc 1 252 1 is_stmt 1 view -0
+ 285              		.cfi_startproc
+ 286              		@ args = 0, pretend = 0, frame = 0
+ 287              		@ frame_needed = 0, uses_anonymous_args = 0
+ 288 0000 08B5     		push	{r3, lr}
+ 289              	.LCFI2:
+ 290              		.cfi_def_cfa_offset 8
+ 291              		.cfi_offset 3, -8
+ 292              		.cfi_offset 14, -4
+ 253:../../../init/rev3/config/Src/stm32h7xx_it.c **** /* Fuel Encoder A signal interrupt */
+ 254:../../../init/rev3/config/Src/stm32h7xx_it.c **** if ( __HAL_GPIO_EXTI_GET_FLAG( KER_ENC_A_PIN ) )
+ 293              		.loc 1 254 1 view .LVU43
+ 294              		.loc 1 254 6 is_stmt 0 view .LVU44
+ 295 0002 4FF0B043 		mov	r3, #1476395008
+ 296 0006 D3F88830 		ldr	r3, [r3, #136]
+ 297              		.loc 1 254 4 view .LVU45
+ 298 000a 13F4804F 		tst	r3, #16384
+ 299 000e 07D1     		bne	.L26
+ 300              	.L23:
+ 255:../../../init/rev3/config/Src/stm32h7xx_it.c ****     {
+ 256:../../../init/rev3/config/Src/stm32h7xx_it.c ****     __HAL_GPIO_EXTI_CLEAR_FLAG( KER_ENC_A_PIN );
+ 257:../../../init/rev3/config/Src/stm32h7xx_it.c ****     fuel_channelA_ISR();
+ 258:../../../init/rev3/config/Src/stm32h7xx_it.c ****     }
+ 259:../../../init/rev3/config/Src/stm32h7xx_it.c **** 
+ 260:../../../init/rev3/config/Src/stm32h7xx_it.c **** /* Fuel Encoder B signal interrupt */
+ 261:../../../init/rev3/config/Src/stm32h7xx_it.c **** if ( __HAL_GPIO_EXTI_GET_FLAG( KER_ENC_B_PIN ) )
+ 301              		.loc 1 261 1 is_stmt 1 view .LVU46
+ 302              		.loc 1 261 6 is_stmt 0 view .LVU47
+ 303 0010 4FF0B043 		mov	r3, #1476395008
+ 304 0014 D3F88830 		ldr	r3, [r3, #136]
+ 305              		.loc 1 261 4 view .LVU48
+ 306 0018 13F4004F 		tst	r3, #32768
+ 307 001c 09D1     		bne	.L27
+ 308              	.L22:
+ 262:../../../init/rev3/config/Src/stm32h7xx_it.c ****     {
+ 263:../../../init/rev3/config/Src/stm32h7xx_it.c ****     __HAL_GPIO_EXTI_CLEAR_FLAG( KER_ENC_B_PIN );
+ 264:../../../init/rev3/config/Src/stm32h7xx_it.c ****     fuel_channelB_ISR();
+ 265:../../../init/rev3/config/Src/stm32h7xx_it.c ****     }
+ 266:../../../init/rev3/config/Src/stm32h7xx_it.c **** } /* EXTI15_10_IRQHandler */
+ 309              		.loc 1 266 1 view .LVU49
+ 310 001e 08BD     		pop	{r3, pc}
+ 311              	.L26:
+ 256:../../../init/rev3/config/Src/stm32h7xx_it.c ****     fuel_channelA_ISR();
+ 312              		.loc 1 256 5 is_stmt 1 view .LVU50
+ 313 0020 4FF0B043 		mov	r3, #1476395008
+ 314 0024 4FF48042 		mov	r2, #16384
+ 315 0028 C3F88820 		str	r2, [r3, #136]
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s 			page 11
+
+
+ 257:../../../init/rev3/config/Src/stm32h7xx_it.c ****     }
+ 316              		.loc 1 257 5 view .LVU51
+ 317 002c FFF7FEFF 		bl	fuel_channelA_ISR
+ 318              	.LVL3:
+ 319 0030 EEE7     		b	.L23
+ 320              	.L27:
+ 263:../../../init/rev3/config/Src/stm32h7xx_it.c ****     fuel_channelB_ISR();
+ 321              		.loc 1 263 5 view .LVU52
+ 322 0032 4FF0B043 		mov	r3, #1476395008
+ 323 0036 4FF40042 		mov	r2, #32768
+ 324 003a C3F88820 		str	r2, [r3, #136]
+ 264:../../../init/rev3/config/Src/stm32h7xx_it.c ****     }
+ 325              		.loc 1 264 5 view .LVU53
+ 326 003e FFF7FEFF 		bl	fuel_channelB_ISR
+ 327              	.LVL4:
+ 328              		.loc 1 266 1 is_stmt 0 view .LVU54
+ 329 0042 ECE7     		b	.L22
+ 330              		.cfi_endproc
+ 331              	.LFE154:
+ 333              		.text
+ 334              	.Letext0:
+ 335              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 336              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 337              		.file 4 "../../../lib/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h"
+ 338              		.file 5 "../../../mod/valve/valve.h"
+ 339              		.file 6 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h"
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 stm32h7xx_it.c
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:20     .text.NMI_Handler:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:26     .text.NMI_Handler:00000000 NMI_Handler
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:43     .text.HardFault_Handler:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:49     .text.HardFault_Handler:00000000 HardFault_Handler
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:66     .text.MemManage_Handler:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:72     .text.MemManage_Handler:00000000 MemManage_Handler
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:89     .text.BusFault_Handler:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:95     .text.BusFault_Handler:00000000 BusFault_Handler
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:112    .text.UsageFault_Handler:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:118    .text.UsageFault_Handler:00000000 UsageFault_Handler
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:135    .text.SVC_Handler:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:141    .text.SVC_Handler:00000000 SVC_Handler
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:154    .text.DebugMon_Handler:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:160    .text.DebugMon_Handler:00000000 DebugMon_Handler
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:173    .text.PendSV_Handler:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:179    .text.PendSV_Handler:00000000 PendSV_Handler
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:192    .text.SysTick_Handler:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:198    .text.SysTick_Handler:00000000 SysTick_Handler
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:218    .text.EXTI9_5_IRQHandler:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:224    .text.EXTI9_5_IRQHandler:00000000 EXTI9_5_IRQHandler
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:276    .text.EXTI15_10_IRQHandler:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccGmiwok.s:282    .text.EXTI15_10_IRQHandler:00000000 EXTI15_10_IRQHandler
+
+UNDEFINED SYMBOLS
+HAL_IncTick
+lox_channelA_ISR
+lox_channelB_ISR
+fuel_channelA_ISR
+fuel_channelB_ISR

@@ -1,0 +1,1250 @@
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"solenoid.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "../../../mod/solenoid/solenoid.c"
+  19              		.section	.text.solenoid_map,"ax",%progbits
+  20              		.align	1
+  21              		.global	solenoid_map
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	solenoid_map:
+  27              	.LVL0:
+  28              	.LFB144:
+   1:../../../mod/solenoid/solenoid.c **** /*******************************************************************************
+   2:../../../mod/solenoid/solenoid.c **** *
+   3:../../../mod/solenoid/solenoid.c **** * FILE:
+   4:../../../mod/solenoid/solenoid.c **** * 		solenoid.c
+   5:../../../mod/solenoid/solenoid.c **** *
+   6:../../../mod/solenoid/solenoid.c **** * DESCRIPTION:
+   7:../../../mod/solenoid/solenoid.c **** * 		Basic solenoid actuation API
+   8:../../../mod/solenoid/solenoid.c **** *
+   9:../../../mod/solenoid/solenoid.c **** *******************************************************************************/
+  10:../../../mod/solenoid/solenoid.c **** 
+  11:../../../mod/solenoid/solenoid.c **** 
+  12:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+  13:../../../mod/solenoid/solenoid.c ****  Includes
+  14:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+  15:../../../mod/solenoid/solenoid.c **** #include "main.h"
+  16:../../../mod/solenoid/solenoid.c **** #include "sdr_pin_defines_L0005.h"
+  17:../../../mod/solenoid/solenoid.c **** #include "solenoid.h"
+  18:../../../mod/solenoid/solenoid.c **** #include "stm32h7xx_hal.h"
+  19:../../../mod/solenoid/solenoid.c **** #include "usb.h"
+  20:../../../mod/solenoid/solenoid.c **** #include "valve.h"
+  21:../../../mod/solenoid/solenoid.c **** 
+  22:../../../mod/solenoid/solenoid.c **** 
+  23:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+  24:../../../mod/solenoid/solenoid.c ****  Global Variables 
+  25:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+  26:../../../mod/solenoid/solenoid.c **** 
+  27:../../../mod/solenoid/solenoid.c **** /* Solenoid Open States */
+  28:../../../mod/solenoid/solenoid.c **** GPIO_PinState sol_open_states[]   = { GPIO_PIN_SET  , 
+  29:../../../mod/solenoid/solenoid.c ****                                       GPIO_PIN_SET  , 
+  30:../../../mod/solenoid/solenoid.c **** 					                  GPIO_PIN_RESET, 
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 2
+
+
+  31:../../../mod/solenoid/solenoid.c **** 					                  GPIO_PIN_RESET,
+  32:../../../mod/solenoid/solenoid.c **** 					                  GPIO_PIN_RESET, 
+  33:../../../mod/solenoid/solenoid.c **** 									  GPIO_PIN_RESET };
+  34:../../../mod/solenoid/solenoid.c **** 
+  35:../../../mod/solenoid/solenoid.c **** /* Solenoid Closed States */
+  36:../../../mod/solenoid/solenoid.c **** GPIO_PinState sol_closed_states[] = { GPIO_PIN_RESET, 
+  37:../../../mod/solenoid/solenoid.c ****                                       GPIO_PIN_RESET, 
+  38:../../../mod/solenoid/solenoid.c **** 					                  GPIO_PIN_SET  ,
+  39:../../../mod/solenoid/solenoid.c **** 					                  GPIO_PIN_SET  ,
+  40:../../../mod/solenoid/solenoid.c **** 					                  GPIO_PIN_SET  ,
+  41:../../../mod/solenoid/solenoid.c **** 					                  GPIO_PIN_SET };
+  42:../../../mod/solenoid/solenoid.c **** 
+  43:../../../mod/solenoid/solenoid.c **** 
+  44:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+  45:../../../mod/solenoid/solenoid.c ****  Procedures 
+  46:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+  47:../../../mod/solenoid/solenoid.c **** 
+  48:../../../mod/solenoid/solenoid.c **** 
+  49:../../../mod/solenoid/solenoid.c **** /*******************************************************************************
+  50:../../../mod/solenoid/solenoid.c **** *                                                                              *
+  51:../../../mod/solenoid/solenoid.c **** * PROCEDURE:                                                                   *
+  52:../../../mod/solenoid/solenoid.c **** * 		solenoid_map                                                           *
+  53:../../../mod/solenoid/solenoid.c **** *                                                                              *
+  54:../../../mod/solenoid/solenoid.c **** * DESCRIPTION:                                                                 *
+  55:../../../mod/solenoid/solenoid.c **** * 		Maps a solenoid number to a microcontroller port and pin number        *
+  56:../../../mod/solenoid/solenoid.c **** *                                                                              *
+  57:../../../mod/solenoid/solenoid.c **** *******************************************************************************/
+  58:../../../mod/solenoid/solenoid.c **** void solenoid_map
+  59:../../../mod/solenoid/solenoid.c **** 	(
+  60:../../../mod/solenoid/solenoid.c **** 	struct sol_GPIO_handle* psol_GPIO_handle, /* Pointer to GPIO port and pin
+  61:../../../mod/solenoid/solenoid.c ****                                                  configuration for target
+  62:../../../mod/solenoid/solenoid.c ****                                                  solenoid                     */
+  63:../../../mod/solenoid/solenoid.c **** 	uint8_t solenoid_num /* Solenoid number to actuate */
+  64:../../../mod/solenoid/solenoid.c **** 	)
+  65:../../../mod/solenoid/solenoid.c **** {
+  29              		.loc 1 65 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 32
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 65 1 is_stmt 0 view .LVU1
+  34 0000 30B5     		push	{r4, r5, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 12
+  37              		.cfi_offset 4, -12
+  38              		.cfi_offset 5, -8
+  39              		.cfi_offset 14, -4
+  40 0002 89B0     		sub	sp, sp, #36
+  41              	.LCFI1:
+  42              		.cfi_def_cfa_offset 48
+  43 0004 0546     		mov	r5, r0
+  44 0006 0C46     		mov	r4, r1
+  66:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+  67:../../../mod/solenoid/solenoid.c ****  Local Variables
+  68:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+  69:../../../mod/solenoid/solenoid.c **** uint8_t solenoid_pin_map[] =       {2, 3, 4, 0, 1, 2}; /* Solenoid bit shifts */
+  45              		.loc 1 69 1 is_stmt 1 view .LVU2
+  46              		.loc 1 69 9 is_stmt 0 view .LVU3
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 3
+
+
+  47 0008 114B     		ldr	r3, .L3
+  48 000a 93E80300 		ldm	r3, {r0, r1}
+  49              	.LVL1:
+  50              		.loc 1 69 9 view .LVU4
+  51 000e 0690     		str	r0, [sp, #24]
+  52 0010 ADF81C10 		strh	r1, [sp, #28]	@ movhi
+  70:../../../mod/solenoid/solenoid.c **** GPIO_TypeDef* solenoid_port_map[] = {SOL1_GPIO_PORT,   /* Solenoid GPIO Ports */
+  53              		.loc 1 70 1 is_stmt 1 view .LVU5
+  54              		.loc 1 70 15 is_stmt 0 view .LVU6
+  55 0014 EE46     		mov	lr, sp
+  56 0016 03F1080C 		add	ip, r3, #8
+  57 001a BCE80F00 		ldmia	ip!, {r0, r1, r2, r3}
+  58 001e AEE80F00 		stmia	lr!, {r0, r1, r2, r3}
+  59 0022 9CE80300 		ldm	ip, {r0, r1}
+  60 0026 8EE80300 		stm	lr, {r0, r1}
+  71:../../../mod/solenoid/solenoid.c ****                                      SOL2_GPIO_PORT,
+  72:../../../mod/solenoid/solenoid.c ****                                      SOL3_GPIO_PORT, 
+  73:../../../mod/solenoid/solenoid.c **** 									 SOL4_GPIO_PORT,
+  74:../../../mod/solenoid/solenoid.c ****                                      SOL5_GPIO_PORT, 
+  75:../../../mod/solenoid/solenoid.c **** 									 SOL6_GPIO_PORT};
+  76:../../../mod/solenoid/solenoid.c **** 
+  77:../../../mod/solenoid/solenoid.c **** 
+  78:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+  79:../../../mod/solenoid/solenoid.c ****  Mapping
+  80:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+  81:../../../mod/solenoid/solenoid.c **** /* Port Setting Mapping */
+  82:../../../mod/solenoid/solenoid.c **** psol_GPIO_handle -> GPIOx    = solenoid_port_map[solenoid_num-1];
+  61              		.loc 1 82 1 is_stmt 1 view .LVU7
+  62              		.loc 1 82 62 is_stmt 0 view .LVU8
+  63 002a 611E     		subs	r1, r4, #1
+  64              		.loc 1 82 49 view .LVU9
+  65 002c 08AB     		add	r3, sp, #32
+  66 002e 03EB8103 		add	r3, r3, r1, lsl #2
+  67 0032 53F8203C 		ldr	r3, [r3, #-32]
+  68              		.loc 1 82 30 view .LVU10
+  69 0036 2B60     		str	r3, [r5]
+  83:../../../mod/solenoid/solenoid.c **** 
+  84:../../../mod/solenoid/solenoid.c **** /* Pin Setting Mapping */
+  85:../../../mod/solenoid/solenoid.c **** psol_GPIO_handle -> GPIO_pin = 1 << solenoid_pin_map[solenoid_num-1];
+  70              		.loc 1 85 1 is_stmt 1 view .LVU11
+  71              		.loc 1 85 53 is_stmt 0 view .LVU12
+  72 0038 04F11F03 		add	r3, r4, #31
+  73 003c 0DEB0301 		add	r1, sp, r3
+  74 0040 11F8082C 		ldrb	r2, [r1, #-8]	@ zero_extendqisi2
+  75              		.loc 1 85 34 view .LVU13
+  76 0044 0123     		movs	r3, #1
+  77 0046 9340     		lsls	r3, r3, r2
+  78              		.loc 1 85 30 view .LVU14
+  79 0048 AB80     		strh	r3, [r5, #4]	@ movhi
+  86:../../../mod/solenoid/solenoid.c **** 
+  87:../../../mod/solenoid/solenoid.c **** } /* solenoid_map */
+  80              		.loc 1 87 1 view .LVU15
+  81 004a 09B0     		add	sp, sp, #36
+  82              	.LCFI2:
+  83              		.cfi_def_cfa_offset 12
+  84              		@ sp needed
+  85 004c 30BD     		pop	{r4, r5, pc}
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 4
+
+
+  86              	.LVL2:
+  87              	.L4:
+  88              		.loc 1 87 1 view .LVU16
+  89 004e 00BF     		.align	2
+  90              	.L3:
+  91 0050 00000000 		.word	.LANCHOR0
+  92              		.cfi_endproc
+  93              	.LFE144:
+  95              		.section	.text.solenoid_on,"ax",%progbits
+  96              		.align	1
+  97              		.global	solenoid_on
+  98              		.syntax unified
+  99              		.thumb
+ 100              		.thumb_func
+ 102              	solenoid_on:
+ 103              	.LVL3:
+ 104              	.LFB146:
+  88:../../../mod/solenoid/solenoid.c **** 
+  89:../../../mod/solenoid/solenoid.c **** 
+  90:../../../mod/solenoid/solenoid.c **** /*******************************************************************************
+  91:../../../mod/solenoid/solenoid.c **** *                                                                              *
+  92:../../../mod/solenoid/solenoid.c **** * PROCEDURE:                                                                   *
+  93:../../../mod/solenoid/solenoid.c **** * 		solenoid_cmd_execute                                                   *
+  94:../../../mod/solenoid/solenoid.c **** *                                                                              *
+  95:../../../mod/solenoid/solenoid.c **** * DESCRIPTION:                                                                 *
+  96:../../../mod/solenoid/solenoid.c **** * 		Executes a solenoid function based on a subcommand code from a PC      *
+  97:../../../mod/solenoid/solenoid.c **** *                                                                              *
+  98:../../../mod/solenoid/solenoid.c **** *******************************************************************************/
+  99:../../../mod/solenoid/solenoid.c **** void solenoid_cmd_execute
+ 100:../../../mod/solenoid/solenoid.c **** 	(
+ 101:../../../mod/solenoid/solenoid.c **** 	uint8_t solenoid_cmd_opcode  /* Solenoid actuation code */
+ 102:../../../mod/solenoid/solenoid.c **** 	)
+ 103:../../../mod/solenoid/solenoid.c **** {
+ 104:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 105:../../../mod/solenoid/solenoid.c ****  Local Variables
+ 106:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 107:../../../mod/solenoid/solenoid.c **** uint8_t   solenoid_bitmask;    /* Solenoid bits: 0000 0111   */
+ 108:../../../mod/solenoid/solenoid.c **** uint8_t   solenoid_base_code;  /* Subcommand base code       */
+ 109:../../../mod/solenoid/solenoid.c **** uint8_t   solenoid_number;     /* Solenoid number to actuate */
+ 110:../../../mod/solenoid/solenoid.c **** SOL_STATE sol_state;           /* State of solenoid valves   */
+ 111:../../../mod/solenoid/solenoid.c **** 
+ 112:../../../mod/solenoid/solenoid.c **** 
+ 113:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 114:../../../mod/solenoid/solenoid.c ****  Initializations 
+ 115:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 116:../../../mod/solenoid/solenoid.c **** solenoid_bitmask = 0x07;
+ 117:../../../mod/solenoid/solenoid.c **** sol_state        = 0;
+ 118:../../../mod/solenoid/solenoid.c **** 
+ 119:../../../mod/solenoid/solenoid.c **** 
+ 120:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 121:../../../mod/solenoid/solenoid.c ****  Command Input Processing
+ 122:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 123:../../../mod/solenoid/solenoid.c **** 
+ 124:../../../mod/solenoid/solenoid.c **** /* Extract Solenoid base code */
+ 125:../../../mod/solenoid/solenoid.c **** solenoid_base_code = (~solenoid_bitmask) & solenoid_cmd_opcode;
+ 126:../../../mod/solenoid/solenoid.c **** 
+ 127:../../../mod/solenoid/solenoid.c **** /* Extract Solenoid number */
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 5
+
+
+ 128:../../../mod/solenoid/solenoid.c **** solenoid_number = solenoid_bitmask & solenoid_cmd_opcode;
+ 129:../../../mod/solenoid/solenoid.c **** 
+ 130:../../../mod/solenoid/solenoid.c **** 
+ 131:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 132:../../../mod/solenoid/solenoid.c ****  Call Solenoid API Function
+ 133:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 134:../../../mod/solenoid/solenoid.c **** switch(solenoid_base_code)
+ 135:../../../mod/solenoid/solenoid.c **** 	{
+ 136:../../../mod/solenoid/solenoid.c **** 	/* Solenoid On */
+ 137:../../../mod/solenoid/solenoid.c **** 	case SOL_ON_BASE_CODE:
+ 138:../../../mod/solenoid/solenoid.c **** 		{
+ 139:../../../mod/solenoid/solenoid.c **** 		solenoid_on(solenoid_number);
+ 140:../../../mod/solenoid/solenoid.c **** 		break;
+ 141:../../../mod/solenoid/solenoid.c **** 		}
+ 142:../../../mod/solenoid/solenoid.c **** 
+ 143:../../../mod/solenoid/solenoid.c **** 	/* Solenoid Off */
+ 144:../../../mod/solenoid/solenoid.c **** 	case SOL_OFF_BASE_CODE:
+ 145:../../../mod/solenoid/solenoid.c **** 		{
+ 146:../../../mod/solenoid/solenoid.c **** 		solenoid_off(solenoid_number);
+ 147:../../../mod/solenoid/solenoid.c **** 		break;
+ 148:../../../mod/solenoid/solenoid.c **** 		}
+ 149:../../../mod/solenoid/solenoid.c **** 
+ 150:../../../mod/solenoid/solenoid.c **** 	/* Solenoid Toggle */
+ 151:../../../mod/solenoid/solenoid.c **** 	case SOL_TOGGLE_BASE_CODE:
+ 152:../../../mod/solenoid/solenoid.c **** 		{
+ 153:../../../mod/solenoid/solenoid.c **** 		solenoid_toggle(solenoid_number);
+ 154:../../../mod/solenoid/solenoid.c **** 		break;
+ 155:../../../mod/solenoid/solenoid.c **** 		}
+ 156:../../../mod/solenoid/solenoid.c **** 
+ 157:../../../mod/solenoid/solenoid.c **** 	/* Solenoid Reset */
+ 158:../../../mod/solenoid/solenoid.c **** 	case SOL_RESET_CODE:
+ 159:../../../mod/solenoid/solenoid.c **** 		{
+ 160:../../../mod/solenoid/solenoid.c **** 		solenoid_reset();
+ 161:../../../mod/solenoid/solenoid.c **** 		break;
+ 162:../../../mod/solenoid/solenoid.c **** 		}
+ 163:../../../mod/solenoid/solenoid.c **** 	
+ 164:../../../mod/solenoid/solenoid.c **** 	/* Solenoid GetState */
+ 165:../../../mod/solenoid/solenoid.c **** 	case SOL_GETSTATE_CODE:
+ 166:../../../mod/solenoid/solenoid.c **** 		{
+ 167:../../../mod/solenoid/solenoid.c **** 		sol_state = solenoid_get_state();
+ 168:../../../mod/solenoid/solenoid.c **** 		#if   defined( TERMINAL )
+ 169:../../../mod/solenoid/solenoid.c **** 			usb_transmit( &sol_state, sizeof( sol_state ), HAL_DEFAULT_TIMEOUT );
+ 170:../../../mod/solenoid/solenoid.c **** 		#elif defined( HOTFIRE  ) 
+ 171:../../../mod/solenoid/solenoid.c **** 			valve_transmit( &sol_state, sizeof( sol_state ), HAL_DEFAULT_TIMEOUT );
+ 172:../../../mod/solenoid/solenoid.c **** 		#endif
+ 173:../../../mod/solenoid/solenoid.c **** 		break;
+ 174:../../../mod/solenoid/solenoid.c **** 		}
+ 175:../../../mod/solenoid/solenoid.c **** 
+ 176:../../../mod/solenoid/solenoid.c **** 	/* Solenoid open */
+ 177:../../../mod/solenoid/solenoid.c **** 	case SOL_OPEN_CODE:
+ 178:../../../mod/solenoid/solenoid.c **** 		{
+ 179:../../../mod/solenoid/solenoid.c **** 		solenoid_open( solenoid_number );
+ 180:../../../mod/solenoid/solenoid.c **** 		break;
+ 181:../../../mod/solenoid/solenoid.c **** 		}
+ 182:../../../mod/solenoid/solenoid.c **** 
+ 183:../../../mod/solenoid/solenoid.c **** 	/* Solenoid closed */
+ 184:../../../mod/solenoid/solenoid.c **** 	case SOL_CLOSE_CODE:
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 6
+
+
+ 185:../../../mod/solenoid/solenoid.c **** 		{
+ 186:../../../mod/solenoid/solenoid.c **** 		solenoid_close( solenoid_number );
+ 187:../../../mod/solenoid/solenoid.c **** 		break;
+ 188:../../../mod/solenoid/solenoid.c **** 		}
+ 189:../../../mod/solenoid/solenoid.c **** 
+ 190:../../../mod/solenoid/solenoid.c **** 	/* Unrecognized command, do nothing */
+ 191:../../../mod/solenoid/solenoid.c **** 	default:
+ 192:../../../mod/solenoid/solenoid.c **** 		{
+ 193:../../../mod/solenoid/solenoid.c **** 		break;
+ 194:../../../mod/solenoid/solenoid.c **** 		}
+ 195:../../../mod/solenoid/solenoid.c **** 	}
+ 196:../../../mod/solenoid/solenoid.c **** } /* solenoid_cmd_execute */
+ 197:../../../mod/solenoid/solenoid.c **** 
+ 198:../../../mod/solenoid/solenoid.c **** 
+ 199:../../../mod/solenoid/solenoid.c **** /*******************************************************************************
+ 200:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 201:../../../mod/solenoid/solenoid.c **** * PROCEDURE:                                                                   *
+ 202:../../../mod/solenoid/solenoid.c **** * 		solenoid_on                                                            *
+ 203:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 204:../../../mod/solenoid/solenoid.c **** * DESCRIPTION:                                                                 *
+ 205:../../../mod/solenoid/solenoid.c **** * 		 Applies power to a specified solenoid                                 *
+ 206:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 207:../../../mod/solenoid/solenoid.c **** *******************************************************************************/
+ 208:../../../mod/solenoid/solenoid.c **** void solenoid_on
+ 209:../../../mod/solenoid/solenoid.c **** 	(
+ 210:../../../mod/solenoid/solenoid.c **** 	uint8_t solenoid_num  /* Solenoid number to actuate */
+ 211:../../../mod/solenoid/solenoid.c **** 	)
+ 212:../../../mod/solenoid/solenoid.c **** {
+ 105              		.loc 1 212 1 is_stmt 1 view -0
+ 106              		.cfi_startproc
+ 107              		@ args = 0, pretend = 0, frame = 8
+ 108              		@ frame_needed = 0, uses_anonymous_args = 0
+ 109              		.loc 1 212 1 is_stmt 0 view .LVU18
+ 110 0000 00B5     		push	{lr}
+ 111              	.LCFI3:
+ 112              		.cfi_def_cfa_offset 4
+ 113              		.cfi_offset 14, -4
+ 114 0002 83B0     		sub	sp, sp, #12
+ 115              	.LCFI4:
+ 116              		.cfi_def_cfa_offset 16
+ 117 0004 0146     		mov	r1, r0
+ 213:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 214:../../../mod/solenoid/solenoid.c ****  Local Variables
+ 215:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 216:../../../mod/solenoid/solenoid.c **** struct sol_GPIO_handle solenoid_on_GPIO_handle;
+ 118              		.loc 1 216 1 is_stmt 1 view .LVU19
+ 217:../../../mod/solenoid/solenoid.c **** 
+ 218:../../../mod/solenoid/solenoid.c **** 
+ 219:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 220:../../../mod/solenoid/solenoid.c ****  Actuation
+ 221:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 222:../../../mod/solenoid/solenoid.c **** /* Solenoid number to GPIO port/pin mapping */
+ 223:../../../mod/solenoid/solenoid.c **** solenoid_map(&solenoid_on_GPIO_handle, solenoid_num);
+ 119              		.loc 1 223 1 view .LVU20
+ 120 0006 6846     		mov	r0, sp
+ 121              	.LVL4:
+ 122              		.loc 1 223 1 is_stmt 0 view .LVU21
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 7
+
+
+ 123 0008 FFF7FEFF 		bl	solenoid_map
+ 124              	.LVL5:
+ 224:../../../mod/solenoid/solenoid.c **** 
+ 225:../../../mod/solenoid/solenoid.c **** /* HAL GPIO Driver Call */
+ 226:../../../mod/solenoid/solenoid.c **** HAL_GPIO_WritePin(solenoid_on_GPIO_handle.GPIOx,
+ 125              		.loc 1 226 1 is_stmt 1 view .LVU22
+ 126 000c 0122     		movs	r2, #1
+ 127 000e BDF80410 		ldrh	r1, [sp, #4]
+ 128 0012 0098     		ldr	r0, [sp]
+ 129 0014 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 130              	.LVL6:
+ 227:../../../mod/solenoid/solenoid.c ****                        solenoid_on_GPIO_handle.GPIO_pin,
+ 228:../../../mod/solenoid/solenoid.c ****                        GPIO_PIN_SET);
+ 229:../../../mod/solenoid/solenoid.c **** } /* solenoid_on */
+ 131              		.loc 1 229 1 is_stmt 0 view .LVU23
+ 132 0018 03B0     		add	sp, sp, #12
+ 133              	.LCFI5:
+ 134              		.cfi_def_cfa_offset 4
+ 135              		@ sp needed
+ 136 001a 5DF804FB 		ldr	pc, [sp], #4
+ 137              		.cfi_endproc
+ 138              	.LFE146:
+ 140              		.section	.text.solenoid_off,"ax",%progbits
+ 141              		.align	1
+ 142              		.global	solenoid_off
+ 143              		.syntax unified
+ 144              		.thumb
+ 145              		.thumb_func
+ 147              	solenoid_off:
+ 148              	.LVL7:
+ 149              	.LFB147:
+ 230:../../../mod/solenoid/solenoid.c **** 
+ 231:../../../mod/solenoid/solenoid.c **** 
+ 232:../../../mod/solenoid/solenoid.c **** /*******************************************************************************
+ 233:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 234:../../../mod/solenoid/solenoid.c **** * PROCEDURE:                                                                   *
+ 235:../../../mod/solenoid/solenoid.c **** * 		solenoid_off                                                           *
+ 236:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 237:../../../mod/solenoid/solenoid.c **** * DESCRIPTION:                                                                 *
+ 238:../../../mod/solenoid/solenoid.c **** * 		 Removes power from a specified solenoid                               *
+ 239:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 240:../../../mod/solenoid/solenoid.c **** *******************************************************************************/
+ 241:../../../mod/solenoid/solenoid.c **** void solenoid_off
+ 242:../../../mod/solenoid/solenoid.c **** 	(
+ 243:../../../mod/solenoid/solenoid.c **** 	uint8_t solenoid_num  /* Solenoid number to actuate */
+ 244:../../../mod/solenoid/solenoid.c **** 	)
+ 245:../../../mod/solenoid/solenoid.c **** {
+ 150              		.loc 1 245 1 is_stmt 1 view -0
+ 151              		.cfi_startproc
+ 152              		@ args = 0, pretend = 0, frame = 8
+ 153              		@ frame_needed = 0, uses_anonymous_args = 0
+ 154              		.loc 1 245 1 is_stmt 0 view .LVU25
+ 155 0000 00B5     		push	{lr}
+ 156              	.LCFI6:
+ 157              		.cfi_def_cfa_offset 4
+ 158              		.cfi_offset 14, -4
+ 159 0002 83B0     		sub	sp, sp, #12
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 8
+
+
+ 160              	.LCFI7:
+ 161              		.cfi_def_cfa_offset 16
+ 162 0004 0146     		mov	r1, r0
+ 246:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 247:../../../mod/solenoid/solenoid.c ****  Local Variables
+ 248:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 249:../../../mod/solenoid/solenoid.c **** struct sol_GPIO_handle solenoid_on_GPIO_handle;
+ 163              		.loc 1 249 1 is_stmt 1 view .LVU26
+ 250:../../../mod/solenoid/solenoid.c **** 
+ 251:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 252:../../../mod/solenoid/solenoid.c ****  Actuation
+ 253:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 254:../../../mod/solenoid/solenoid.c **** /* Solenoid number to GPIO port/pin mapping */
+ 255:../../../mod/solenoid/solenoid.c **** solenoid_map(&solenoid_on_GPIO_handle, solenoid_num);
+ 164              		.loc 1 255 1 view .LVU27
+ 165 0006 6846     		mov	r0, sp
+ 166              	.LVL8:
+ 167              		.loc 1 255 1 is_stmt 0 view .LVU28
+ 168 0008 FFF7FEFF 		bl	solenoid_map
+ 169              	.LVL9:
+ 256:../../../mod/solenoid/solenoid.c **** 
+ 257:../../../mod/solenoid/solenoid.c **** /* HAL GPIO Driver Call */
+ 258:../../../mod/solenoid/solenoid.c **** HAL_GPIO_WritePin(solenoid_on_GPIO_handle.GPIOx,
+ 170              		.loc 1 258 1 is_stmt 1 view .LVU29
+ 171 000c 0022     		movs	r2, #0
+ 172 000e BDF80410 		ldrh	r1, [sp, #4]
+ 173 0012 0098     		ldr	r0, [sp]
+ 174 0014 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 175              	.LVL10:
+ 259:../../../mod/solenoid/solenoid.c ****                        solenoid_on_GPIO_handle.GPIO_pin,
+ 260:../../../mod/solenoid/solenoid.c ****                        GPIO_PIN_RESET);
+ 261:../../../mod/solenoid/solenoid.c **** } /* solenoid_off */
+ 176              		.loc 1 261 1 is_stmt 0 view .LVU30
+ 177 0018 03B0     		add	sp, sp, #12
+ 178              	.LCFI8:
+ 179              		.cfi_def_cfa_offset 4
+ 180              		@ sp needed
+ 181 001a 5DF804FB 		ldr	pc, [sp], #4
+ 182              		.cfi_endproc
+ 183              	.LFE147:
+ 185              		.section	.text.solenoid_toggle,"ax",%progbits
+ 186              		.align	1
+ 187              		.global	solenoid_toggle
+ 188              		.syntax unified
+ 189              		.thumb
+ 190              		.thumb_func
+ 192              	solenoid_toggle:
+ 193              	.LVL11:
+ 194              	.LFB148:
+ 262:../../../mod/solenoid/solenoid.c **** 
+ 263:../../../mod/solenoid/solenoid.c **** 
+ 264:../../../mod/solenoid/solenoid.c **** /*******************************************************************************
+ 265:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 266:../../../mod/solenoid/solenoid.c **** * PROCEDURE:                                                                   *
+ 267:../../../mod/solenoid/solenoid.c **** * 		solenoid_toggle                                                        *
+ 268:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 269:../../../mod/solenoid/solenoid.c **** * DESCRIPTION:                                                                 *
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 9
+
+
+ 270:../../../mod/solenoid/solenoid.c **** * 		 Toggles the actuation state of a specified solenoid                   *
+ 271:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 272:../../../mod/solenoid/solenoid.c **** *******************************************************************************/
+ 273:../../../mod/solenoid/solenoid.c **** void solenoid_toggle
+ 274:../../../mod/solenoid/solenoid.c **** 	(
+ 275:../../../mod/solenoid/solenoid.c **** 	uint8_t solenoid_num  /* Solenoid number to actuate */
+ 276:../../../mod/solenoid/solenoid.c **** 	)
+ 277:../../../mod/solenoid/solenoid.c **** {
+ 195              		.loc 1 277 1 is_stmt 1 view -0
+ 196              		.cfi_startproc
+ 197              		@ args = 0, pretend = 0, frame = 8
+ 198              		@ frame_needed = 0, uses_anonymous_args = 0
+ 199              		.loc 1 277 1 is_stmt 0 view .LVU32
+ 200 0000 00B5     		push	{lr}
+ 201              	.LCFI9:
+ 202              		.cfi_def_cfa_offset 4
+ 203              		.cfi_offset 14, -4
+ 204 0002 83B0     		sub	sp, sp, #12
+ 205              	.LCFI10:
+ 206              		.cfi_def_cfa_offset 16
+ 207 0004 0146     		mov	r1, r0
+ 278:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 279:../../../mod/solenoid/solenoid.c ****  Local Variables
+ 280:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 281:../../../mod/solenoid/solenoid.c **** struct sol_GPIO_handle solenoid_on_GPIO_handle;
+ 208              		.loc 1 281 1 is_stmt 1 view .LVU33
+ 282:../../../mod/solenoid/solenoid.c **** 
+ 283:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 284:../../../mod/solenoid/solenoid.c ****  Actuation
+ 285:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 286:../../../mod/solenoid/solenoid.c **** /* Solenoid number to GPIO port/pin mapping */
+ 287:../../../mod/solenoid/solenoid.c **** solenoid_map(&solenoid_on_GPIO_handle, solenoid_num);
+ 209              		.loc 1 287 1 view .LVU34
+ 210 0006 6846     		mov	r0, sp
+ 211              	.LVL12:
+ 212              		.loc 1 287 1 is_stmt 0 view .LVU35
+ 213 0008 FFF7FEFF 		bl	solenoid_map
+ 214              	.LVL13:
+ 288:../../../mod/solenoid/solenoid.c **** 
+ 289:../../../mod/solenoid/solenoid.c **** /* HAL GPIO Driver Call */
+ 290:../../../mod/solenoid/solenoid.c **** HAL_GPIO_TogglePin(solenoid_on_GPIO_handle.GPIOx,
+ 215              		.loc 1 290 1 is_stmt 1 view .LVU36
+ 216 000c BDF80410 		ldrh	r1, [sp, #4]
+ 217 0010 0098     		ldr	r0, [sp]
+ 218 0012 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 219              	.LVL14:
+ 291:../../../mod/solenoid/solenoid.c ****                        solenoid_on_GPIO_handle.GPIO_pin);
+ 292:../../../mod/solenoid/solenoid.c **** } /* solenoid_toggle */
+ 220              		.loc 1 292 1 is_stmt 0 view .LVU37
+ 221 0016 03B0     		add	sp, sp, #12
+ 222              	.LCFI11:
+ 223              		.cfi_def_cfa_offset 4
+ 224              		@ sp needed
+ 225 0018 5DF804FB 		ldr	pc, [sp], #4
+ 226              		.cfi_endproc
+ 227              	.LFE148:
+ 229              		.section	.text.solenoid_reset,"ax",%progbits
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 10
+
+
+ 230              		.align	1
+ 231              		.global	solenoid_reset
+ 232              		.syntax unified
+ 233              		.thumb
+ 234              		.thumb_func
+ 236              	solenoid_reset:
+ 237              	.LFB149:
+ 293:../../../mod/solenoid/solenoid.c **** 
+ 294:../../../mod/solenoid/solenoid.c **** 
+ 295:../../../mod/solenoid/solenoid.c **** /*******************************************************************************
+ 296:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 297:../../../mod/solenoid/solenoid.c **** * PROCEDURE:                                                                   *
+ 298:../../../mod/solenoid/solenoid.c **** * 		solenoid_reset                                                         *
+ 299:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 300:../../../mod/solenoid/solenoid.c **** * DESCRIPTION:                                                                 *
+ 301:../../../mod/solenoid/solenoid.c **** * 		 Resets all solenoids to their default state                           *
+ 302:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 303:../../../mod/solenoid/solenoid.c **** *******************************************************************************/
+ 304:../../../mod/solenoid/solenoid.c **** void solenoid_reset
+ 305:../../../mod/solenoid/solenoid.c **** 	(
+ 306:../../../mod/solenoid/solenoid.c **** 	void
+ 307:../../../mod/solenoid/solenoid.c **** 	)
+ 308:../../../mod/solenoid/solenoid.c **** {
+ 238              		.loc 1 308 1 is_stmt 1 view -0
+ 239              		.cfi_startproc
+ 240              		@ args = 0, pretend = 0, frame = 0
+ 241              		@ frame_needed = 0, uses_anonymous_args = 0
+ 242 0000 08B5     		push	{r3, lr}
+ 243              	.LCFI12:
+ 244              		.cfi_def_cfa_offset 8
+ 245              		.cfi_offset 3, -8
+ 246              		.cfi_offset 14, -4
+ 309:../../../mod/solenoid/solenoid.c **** // Call HAL_GPIO_WritePin for all pins
+ 310:../../../mod/solenoid/solenoid.c **** HAL_GPIO_WritePin(SOL1_GPIO_PORT, SOL1_PIN|SOL2_PIN|SOL3_PIN, GPIO_PIN_RESET);
+ 247              		.loc 1 310 1 view .LVU39
+ 248 0002 0022     		movs	r2, #0
+ 249 0004 1C21     		movs	r1, #28
+ 250 0006 0448     		ldr	r0, .L13
+ 251 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 252              	.LVL15:
+ 311:../../../mod/solenoid/solenoid.c **** HAL_GPIO_WritePin(SOL4_GPIO_PORT, SOL4_PIN|SOL5_PIN|SOL6_PIN, GPIO_PIN_RESET);
+ 253              		.loc 1 311 1 view .LVU40
+ 254 000c 0022     		movs	r2, #0
+ 255 000e 0721     		movs	r1, #7
+ 256 0010 0248     		ldr	r0, .L13+4
+ 257 0012 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 258              	.LVL16:
+ 312:../../../mod/solenoid/solenoid.c **** } /* solenoid_reset */
+ 259              		.loc 1 312 1 is_stmt 0 view .LVU41
+ 260 0016 08BD     		pop	{r3, pc}
+ 261              	.L14:
+ 262              		.align	2
+ 263              	.L13:
+ 264 0018 00100258 		.word	1476530176
+ 265 001c 00000258 		.word	1476526080
+ 266              		.cfi_endproc
+ 267              	.LFE149:
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 11
+
+
+ 269              		.section	.text.solenoid_get_state,"ax",%progbits
+ 270              		.align	1
+ 271              		.global	solenoid_get_state
+ 272              		.syntax unified
+ 273              		.thumb
+ 274              		.thumb_func
+ 276              	solenoid_get_state:
+ 277              	.LFB150:
+ 313:../../../mod/solenoid/solenoid.c **** 
+ 314:../../../mod/solenoid/solenoid.c **** 
+ 315:../../../mod/solenoid/solenoid.c **** /*******************************************************************************
+ 316:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 317:../../../mod/solenoid/solenoid.c **** * PROCEDURE:                                                                   *
+ 318:../../../mod/solenoid/solenoid.c **** * 		solenoid_get_state                                                     *
+ 319:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 320:../../../mod/solenoid/solenoid.c **** * DESCRIPTION:                                                                 *
+ 321:../../../mod/solenoid/solenoid.c **** *        Get the state of the solenoids                                        *
+ 322:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 323:../../../mod/solenoid/solenoid.c **** *******************************************************************************/
+ 324:../../../mod/solenoid/solenoid.c **** SOL_STATE solenoid_get_state
+ 325:../../../mod/solenoid/solenoid.c **** 	(
+ 326:../../../mod/solenoid/solenoid.c **** 	void
+ 327:../../../mod/solenoid/solenoid.c **** 	)
+ 328:../../../mod/solenoid/solenoid.c **** {
+ 278              		.loc 1 328 1 is_stmt 1 view -0
+ 279              		.cfi_startproc
+ 280              		@ args = 0, pretend = 0, frame = 8
+ 281              		@ frame_needed = 0, uses_anonymous_args = 0
+ 282 0000 70B5     		push	{r4, r5, r6, lr}
+ 283              	.LCFI13:
+ 284              		.cfi_def_cfa_offset 16
+ 285              		.cfi_offset 4, -16
+ 286              		.cfi_offset 5, -12
+ 287              		.cfi_offset 6, -8
+ 288              		.cfi_offset 14, -4
+ 289 0002 82B0     		sub	sp, sp, #8
+ 290              	.LCFI14:
+ 291              		.cfi_def_cfa_offset 24
+ 329:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 330:../../../mod/solenoid/solenoid.c ****  Local Variables
+ 331:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 332:../../../mod/solenoid/solenoid.c **** struct sol_GPIO_handle solenoid_GPIO_handle; /* GPIO handles             */
+ 292              		.loc 1 332 1 view .LVU43
+ 333:../../../mod/solenoid/solenoid.c **** SOL_STATE              sol_state;            /* Return value             */
+ 293              		.loc 1 333 1 view .LVU44
+ 334:../../../mod/solenoid/solenoid.c **** GPIO_PinState          pinstate;             /* On/off state of GPIO pin */
+ 294              		.loc 1 334 1 view .LVU45
+ 335:../../../mod/solenoid/solenoid.c **** 
+ 336:../../../mod/solenoid/solenoid.c **** 
+ 337:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 338:../../../mod/solenoid/solenoid.c ****  Initializations 
+ 339:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 340:../../../mod/solenoid/solenoid.c **** sol_state = 0;
+ 295              		.loc 1 340 1 view .LVU46
+ 296              	.LVL17:
+ 341:../../../mod/solenoid/solenoid.c **** pinstate  = GPIO_PIN_RESET;
+ 297              		.loc 1 341 1 view .LVU47
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 12
+
+
+ 342:../../../mod/solenoid/solenoid.c **** 
+ 343:../../../mod/solenoid/solenoid.c **** 
+ 344:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 345:../../../mod/solenoid/solenoid.c ****  Implementation 
+ 346:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 347:../../../mod/solenoid/solenoid.c **** for ( uint8_t i = 0; i < NUM_SOLENOIDS; i++ )
+ 298              		.loc 1 347 1 view .LVU48
+ 299              	.LBB2:
+ 300              		.loc 1 347 7 view .LVU49
+ 301              		.loc 1 347 15 is_stmt 0 view .LVU50
+ 302 0004 0025     		movs	r5, #0
+ 303              	.LBE2:
+ 340:../../../mod/solenoid/solenoid.c **** pinstate  = GPIO_PIN_RESET;
+ 304              		.loc 1 340 11 view .LVU51
+ 305 0006 2E46     		mov	r6, r5
+ 306              	.LBB3:
+ 307              		.loc 1 347 1 view .LVU52
+ 308 0008 00E0     		b	.L16
+ 309              	.LVL18:
+ 310              	.L17:
+ 311              		.loc 1 347 1 view .LVU53
+ 312              	.LBE3:
+ 328:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 313              		.loc 1 328 1 view .LVU54
+ 314 000a 2546     		mov	r5, r4
+ 315              	.LVL19:
+ 316              	.L16:
+ 317              	.LBB4:
+ 318              		.loc 1 347 24 is_stmt 1 discriminator 1 view .LVU55
+ 319 000c 052D     		cmp	r5, #5
+ 320 000e 11D8     		bhi	.L20
+ 348:../../../mod/solenoid/solenoid.c **** 	{
+ 349:../../../mod/solenoid/solenoid.c **** 	solenoid_map( &solenoid_GPIO_handle, i+1 );
+ 321              		.loc 1 349 2 view .LVU56
+ 322 0010 6C1C     		adds	r4, r5, #1
+ 323 0012 E4B2     		uxtb	r4, r4
+ 324 0014 2146     		mov	r1, r4
+ 325 0016 6846     		mov	r0, sp
+ 326 0018 FFF7FEFF 		bl	solenoid_map
+ 327              	.LVL20:
+ 350:../../../mod/solenoid/solenoid.c **** 	pinstate = HAL_GPIO_ReadPin( solenoid_GPIO_handle.GPIOx, 
+ 328              		.loc 1 350 2 view .LVU57
+ 329              		.loc 1 350 13 is_stmt 0 view .LVU58
+ 330 001c BDF80410 		ldrh	r1, [sp, #4]
+ 331 0020 0098     		ldr	r0, [sp]
+ 332 0022 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 333              	.LVL21:
+ 351:../../../mod/solenoid/solenoid.c **** 	                             solenoid_GPIO_handle.GPIO_pin );
+ 352:../../../mod/solenoid/solenoid.c **** 	if ( pinstate == GPIO_PIN_SET )
+ 334              		.loc 1 352 2 is_stmt 1 view .LVU59
+ 335              		.loc 1 352 5 is_stmt 0 view .LVU60
+ 336 0026 0128     		cmp	r0, #1
+ 337 0028 EFD1     		bne	.L17
+ 353:../../../mod/solenoid/solenoid.c **** 		{
+ 354:../../../mod/solenoid/solenoid.c **** 		sol_state |= ( 1 << i );
+ 338              		.loc 1 354 3 is_stmt 1 view .LVU61
+ 339              		.loc 1 354 20 is_stmt 0 view .LVU62
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 13
+
+
+ 340 002a 0123     		movs	r3, #1
+ 341 002c AB40     		lsls	r3, r3, r5
+ 342              		.loc 1 354 13 view .LVU63
+ 343 002e 1E43     		orrs	r6, r6, r3
+ 344              	.LVL22:
+ 345              		.loc 1 354 13 view .LVU64
+ 346 0030 F6B2     		uxtb	r6, r6
+ 347              	.LVL23:
+ 348              		.loc 1 354 13 view .LVU65
+ 349 0032 EAE7     		b	.L17
+ 350              	.LVL24:
+ 351              	.L20:
+ 352              		.loc 1 354 13 view .LVU66
+ 353              	.LBE4:
+ 355:../../../mod/solenoid/solenoid.c **** 		}
+ 356:../../../mod/solenoid/solenoid.c **** 	}
+ 357:../../../mod/solenoid/solenoid.c **** return sol_state;
+ 354              		.loc 1 357 1 is_stmt 1 view .LVU67
+ 358:../../../mod/solenoid/solenoid.c **** } /* solenoid_get_state */
+ 355              		.loc 1 358 1 is_stmt 0 view .LVU68
+ 356 0034 3046     		mov	r0, r6
+ 357 0036 02B0     		add	sp, sp, #8
+ 358              	.LCFI15:
+ 359              		.cfi_def_cfa_offset 16
+ 360              		@ sp needed
+ 361 0038 70BD     		pop	{r4, r5, r6, pc}
+ 362              		.loc 1 358 1 view .LVU69
+ 363              		.cfi_endproc
+ 364              	.LFE150:
+ 366              		.section	.text.solenoid_open,"ax",%progbits
+ 367              		.align	1
+ 368              		.global	solenoid_open
+ 369              		.syntax unified
+ 370              		.thumb
+ 371              		.thumb_func
+ 373              	solenoid_open:
+ 374              	.LVL25:
+ 375              	.LFB151:
+ 359:../../../mod/solenoid/solenoid.c **** 
+ 360:../../../mod/solenoid/solenoid.c **** 
+ 361:../../../mod/solenoid/solenoid.c **** /*******************************************************************************
+ 362:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 363:../../../mod/solenoid/solenoid.c **** * PROCEDURE:                                                                   *
+ 364:../../../mod/solenoid/solenoid.c **** * 		solenoid_open                                                          *
+ 365:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 366:../../../mod/solenoid/solenoid.c **** * DESCRIPTION:                                                                 *
+ 367:../../../mod/solenoid/solenoid.c **** *        Open Solenoids                                                        *
+ 368:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 369:../../../mod/solenoid/solenoid.c **** *******************************************************************************/
+ 370:../../../mod/solenoid/solenoid.c **** void solenoid_open 
+ 371:../../../mod/solenoid/solenoid.c **** 	(
+ 372:../../../mod/solenoid/solenoid.c **** 	uint8_t solenoid_num
+ 373:../../../mod/solenoid/solenoid.c **** 	)
+ 374:../../../mod/solenoid/solenoid.c **** {
+ 376              		.loc 1 374 1 is_stmt 1 view -0
+ 377              		.cfi_startproc
+ 378              		@ args = 0, pretend = 0, frame = 8
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 14
+
+
+ 379              		@ frame_needed = 0, uses_anonymous_args = 0
+ 380              		.loc 1 374 1 is_stmt 0 view .LVU71
+ 381 0000 10B5     		push	{r4, lr}
+ 382              	.LCFI16:
+ 383              		.cfi_def_cfa_offset 8
+ 384              		.cfi_offset 4, -8
+ 385              		.cfi_offset 14, -4
+ 386 0002 82B0     		sub	sp, sp, #8
+ 387              	.LCFI17:
+ 388              		.cfi_def_cfa_offset 16
+ 389 0004 0446     		mov	r4, r0
+ 375:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 376:../../../mod/solenoid/solenoid.c ****  Local Variables
+ 377:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 378:../../../mod/solenoid/solenoid.c **** struct sol_GPIO_handle solenoid_on_GPIO_handle;
+ 390              		.loc 1 378 1 is_stmt 1 view .LVU72
+ 379:../../../mod/solenoid/solenoid.c **** GPIO_PinState          pin_state;
+ 391              		.loc 1 379 1 view .LVU73
+ 380:../../../mod/solenoid/solenoid.c **** 
+ 381:../../../mod/solenoid/solenoid.c **** 
+ 382:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 383:../../../mod/solenoid/solenoid.c ****  Actuation
+ 384:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 385:../../../mod/solenoid/solenoid.c **** 
+ 386:../../../mod/solenoid/solenoid.c **** /* Solenoid number to GPIO port/pin mapping */
+ 387:../../../mod/solenoid/solenoid.c **** solenoid_map( &solenoid_on_GPIO_handle, solenoid_num );
+ 392              		.loc 1 387 1 view .LVU74
+ 393 0006 0146     		mov	r1, r0
+ 394 0008 6846     		mov	r0, sp
+ 395              	.LVL26:
+ 396              		.loc 1 387 1 is_stmt 0 view .LVU75
+ 397 000a FFF7FEFF 		bl	solenoid_map
+ 398              	.LVL27:
+ 388:../../../mod/solenoid/solenoid.c **** 
+ 389:../../../mod/solenoid/solenoid.c **** /* Determine Solenoid Pinstate */
+ 390:../../../mod/solenoid/solenoid.c **** pin_state = sol_open_states[solenoid_num-1];
+ 399              		.loc 1 390 1 is_stmt 1 view .LVU76
+ 400              		.loc 1 390 41 is_stmt 0 view .LVU77
+ 401 000e 013C     		subs	r4, r4, #1
+ 402              	.LVL28:
+ 391:../../../mod/solenoid/solenoid.c **** 
+ 392:../../../mod/solenoid/solenoid.c **** /* HAL GPIO Driver Call */
+ 393:../../../mod/solenoid/solenoid.c **** HAL_GPIO_WritePin( solenoid_on_GPIO_handle.GPIOx,
+ 403              		.loc 1 393 1 is_stmt 1 view .LVU78
+ 404 0010 044B     		ldr	r3, .L23
+ 405 0012 1A5D     		ldrb	r2, [r3, r4]	@ zero_extendqisi2
+ 406 0014 BDF80410 		ldrh	r1, [sp, #4]
+ 407 0018 0098     		ldr	r0, [sp]
+ 408 001a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 409              	.LVL29:
+ 394:../../../mod/solenoid/solenoid.c ****                    solenoid_on_GPIO_handle.GPIO_pin,
+ 395:../../../mod/solenoid/solenoid.c ****                    pin_state );
+ 396:../../../mod/solenoid/solenoid.c **** 
+ 397:../../../mod/solenoid/solenoid.c **** } /* solenoid_get_state */
+ 410              		.loc 1 397 1 is_stmt 0 view .LVU79
+ 411 001e 02B0     		add	sp, sp, #8
+ 412              	.LCFI18:
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 15
+
+
+ 413              		.cfi_def_cfa_offset 8
+ 414              		@ sp needed
+ 415 0020 10BD     		pop	{r4, pc}
+ 416              	.LVL30:
+ 417              	.L24:
+ 418              		.loc 1 397 1 view .LVU80
+ 419 0022 00BF     		.align	2
+ 420              	.L23:
+ 421 0024 00000000 		.word	sol_open_states
+ 422              		.cfi_endproc
+ 423              	.LFE151:
+ 425              		.section	.text.solenoid_close,"ax",%progbits
+ 426              		.align	1
+ 427              		.global	solenoid_close
+ 428              		.syntax unified
+ 429              		.thumb
+ 430              		.thumb_func
+ 432              	solenoid_close:
+ 433              	.LVL31:
+ 434              	.LFB152:
+ 398:../../../mod/solenoid/solenoid.c **** 
+ 399:../../../mod/solenoid/solenoid.c **** 
+ 400:../../../mod/solenoid/solenoid.c **** /*******************************************************************************
+ 401:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 402:../../../mod/solenoid/solenoid.c **** * PROCEDURE:                                                                   *
+ 403:../../../mod/solenoid/solenoid.c **** * 		solenoid_close                                                         *
+ 404:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 405:../../../mod/solenoid/solenoid.c **** * DESCRIPTION:                                                                 *
+ 406:../../../mod/solenoid/solenoid.c **** *        Close solenoids                                                       *
+ 407:../../../mod/solenoid/solenoid.c **** *                                                                              *
+ 408:../../../mod/solenoid/solenoid.c **** *******************************************************************************/
+ 409:../../../mod/solenoid/solenoid.c **** void solenoid_close
+ 410:../../../mod/solenoid/solenoid.c **** 	(
+ 411:../../../mod/solenoid/solenoid.c **** 	uint8_t solenoid_num
+ 412:../../../mod/solenoid/solenoid.c **** 	)
+ 413:../../../mod/solenoid/solenoid.c **** {
+ 435              		.loc 1 413 1 is_stmt 1 view -0
+ 436              		.cfi_startproc
+ 437              		@ args = 0, pretend = 0, frame = 8
+ 438              		@ frame_needed = 0, uses_anonymous_args = 0
+ 439              		.loc 1 413 1 is_stmt 0 view .LVU82
+ 440 0000 10B5     		push	{r4, lr}
+ 441              	.LCFI19:
+ 442              		.cfi_def_cfa_offset 8
+ 443              		.cfi_offset 4, -8
+ 444              		.cfi_offset 14, -4
+ 445 0002 82B0     		sub	sp, sp, #8
+ 446              	.LCFI20:
+ 447              		.cfi_def_cfa_offset 16
+ 448 0004 0446     		mov	r4, r0
+ 414:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 415:../../../mod/solenoid/solenoid.c ****  Local Variables
+ 416:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 417:../../../mod/solenoid/solenoid.c **** struct sol_GPIO_handle solenoid_on_GPIO_handle;
+ 449              		.loc 1 417 1 is_stmt 1 view .LVU83
+ 418:../../../mod/solenoid/solenoid.c **** GPIO_PinState          pin_state;
+ 450              		.loc 1 418 1 view .LVU84
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 16
+
+
+ 419:../../../mod/solenoid/solenoid.c **** 
+ 420:../../../mod/solenoid/solenoid.c **** 
+ 421:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 422:../../../mod/solenoid/solenoid.c ****  Actuation
+ 423:../../../mod/solenoid/solenoid.c **** ------------------------------------------------------------------------------*/
+ 424:../../../mod/solenoid/solenoid.c **** 
+ 425:../../../mod/solenoid/solenoid.c **** /* Solenoid number to GPIO port/pin mapping */
+ 426:../../../mod/solenoid/solenoid.c **** solenoid_map( &solenoid_on_GPIO_handle, solenoid_num );
+ 451              		.loc 1 426 1 view .LVU85
+ 452 0006 0146     		mov	r1, r0
+ 453 0008 6846     		mov	r0, sp
+ 454              	.LVL32:
+ 455              		.loc 1 426 1 is_stmt 0 view .LVU86
+ 456 000a FFF7FEFF 		bl	solenoid_map
+ 457              	.LVL33:
+ 427:../../../mod/solenoid/solenoid.c **** 
+ 428:../../../mod/solenoid/solenoid.c **** /* Determine Solenoid Pinstate */
+ 429:../../../mod/solenoid/solenoid.c **** pin_state = sol_closed_states[solenoid_num-1];
+ 458              		.loc 1 429 1 is_stmt 1 view .LVU87
+ 459              		.loc 1 429 43 is_stmt 0 view .LVU88
+ 460 000e 013C     		subs	r4, r4, #1
+ 461              	.LVL34:
+ 430:../../../mod/solenoid/solenoid.c **** 
+ 431:../../../mod/solenoid/solenoid.c **** /* HAL GPIO Driver Call */
+ 432:../../../mod/solenoid/solenoid.c **** HAL_GPIO_WritePin( solenoid_on_GPIO_handle.GPIOx,
+ 462              		.loc 1 432 1 is_stmt 1 view .LVU89
+ 463 0010 044B     		ldr	r3, .L27
+ 464 0012 1A5D     		ldrb	r2, [r3, r4]	@ zero_extendqisi2
+ 465 0014 BDF80410 		ldrh	r1, [sp, #4]
+ 466 0018 0098     		ldr	r0, [sp]
+ 467 001a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 468              	.LVL35:
+ 433:../../../mod/solenoid/solenoid.c ****                    solenoid_on_GPIO_handle.GPIO_pin,
+ 434:../../../mod/solenoid/solenoid.c ****                    pin_state );
+ 435:../../../mod/solenoid/solenoid.c **** 
+ 436:../../../mod/solenoid/solenoid.c **** } /* solenoid_close */
+ 469              		.loc 1 436 1 is_stmt 0 view .LVU90
+ 470 001e 02B0     		add	sp, sp, #8
+ 471              	.LCFI21:
+ 472              		.cfi_def_cfa_offset 8
+ 473              		@ sp needed
+ 474 0020 10BD     		pop	{r4, pc}
+ 475              	.LVL36:
+ 476              	.L28:
+ 477              		.loc 1 436 1 view .LVU91
+ 478 0022 00BF     		.align	2
+ 479              	.L27:
+ 480 0024 00000000 		.word	sol_closed_states
+ 481              		.cfi_endproc
+ 482              	.LFE152:
+ 484              		.section	.text.solenoid_cmd_execute,"ax",%progbits
+ 485              		.align	1
+ 486              		.global	solenoid_cmd_execute
+ 487              		.syntax unified
+ 488              		.thumb
+ 489              		.thumb_func
+ 491              	solenoid_cmd_execute:
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 17
+
+
+ 492              	.LVL37:
+ 493              	.LFB145:
+ 103:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 494              		.loc 1 103 1 is_stmt 1 view -0
+ 495              		.cfi_startproc
+ 496              		@ args = 0, pretend = 0, frame = 8
+ 497              		@ frame_needed = 0, uses_anonymous_args = 0
+ 103:../../../mod/solenoid/solenoid.c **** /*------------------------------------------------------------------------------
+ 498              		.loc 1 103 1 is_stmt 0 view .LVU93
+ 499 0000 00B5     		push	{lr}
+ 500              	.LCFI22:
+ 501              		.cfi_def_cfa_offset 4
+ 502              		.cfi_offset 14, -4
+ 503 0002 83B0     		sub	sp, sp, #12
+ 504              	.LCFI23:
+ 505              		.cfi_def_cfa_offset 16
+ 506 0004 0346     		mov	r3, r0
+ 107:../../../mod/solenoid/solenoid.c **** uint8_t   solenoid_base_code;  /* Subcommand base code       */
+ 507              		.loc 1 107 1 is_stmt 1 view .LVU94
+ 108:../../../mod/solenoid/solenoid.c **** uint8_t   solenoid_number;     /* Solenoid number to actuate */
+ 508              		.loc 1 108 1 view .LVU95
+ 109:../../../mod/solenoid/solenoid.c **** SOL_STATE sol_state;           /* State of solenoid valves   */
+ 509              		.loc 1 109 1 view .LVU96
+ 110:../../../mod/solenoid/solenoid.c **** 
+ 510              		.loc 1 110 1 view .LVU97
+ 116:../../../mod/solenoid/solenoid.c **** sol_state        = 0;
+ 511              		.loc 1 116 1 view .LVU98
+ 512              	.LVL38:
+ 117:../../../mod/solenoid/solenoid.c **** 
+ 513              		.loc 1 117 1 view .LVU99
+ 117:../../../mod/solenoid/solenoid.c **** 
+ 514              		.loc 1 117 18 is_stmt 0 view .LVU100
+ 515 0006 0022     		movs	r2, #0
+ 516 0008 8DF80720 		strb	r2, [sp, #7]
+ 125:../../../mod/solenoid/solenoid.c **** 
+ 517              		.loc 1 125 1 is_stmt 1 view .LVU101
+ 518              	.LVL39:
+ 128:../../../mod/solenoid/solenoid.c **** 
+ 519              		.loc 1 128 1 view .LVU102
+ 128:../../../mod/solenoid/solenoid.c **** 
+ 520              		.loc 1 128 17 is_stmt 0 view .LVU103
+ 521 000c 00F00700 		and	r0, r0, #7
+ 522              	.LVL40:
+ 134:../../../mod/solenoid/solenoid.c **** 	{
+ 523              		.loc 1 134 1 is_stmt 1 view .LVU104
+ 524 0010 03F0F803 		and	r3, r3, #248
+ 525              	.LVL41:
+ 134:../../../mod/solenoid/solenoid.c **** 	{
+ 526              		.loc 1 134 1 is_stmt 0 view .LVU105
+ 527 0014 302B     		cmp	r3, #48
+ 528 0016 1CD8     		bhi	.L29
+ 529 0018 DFE803F0 		tbb	[pc, r3]
+ 530              	.L32:
+ 531 001c 19       		.byte	(.L38-.L32)/2
+ 532 001d 1B       		.byte	(.L29-.L32)/2
+ 533 001e 1B       		.byte	(.L29-.L32)/2
+ 534 001f 1B       		.byte	(.L29-.L32)/2
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 18
+
+
+ 535 0020 1B       		.byte	(.L29-.L32)/2
+ 536 0021 1B       		.byte	(.L29-.L32)/2
+ 537 0022 1B       		.byte	(.L29-.L32)/2
+ 538 0023 1B       		.byte	(.L29-.L32)/2
+ 539 0024 1E       		.byte	(.L37-.L32)/2
+ 540 0025 1B       		.byte	(.L29-.L32)/2
+ 541 0026 1B       		.byte	(.L29-.L32)/2
+ 542 0027 1B       		.byte	(.L29-.L32)/2
+ 543 0028 1B       		.byte	(.L29-.L32)/2
+ 544 0029 1B       		.byte	(.L29-.L32)/2
+ 545 002a 1B       		.byte	(.L29-.L32)/2
+ 546 002b 1B       		.byte	(.L29-.L32)/2
+ 547 002c 21       		.byte	(.L36-.L32)/2
+ 548 002d 1B       		.byte	(.L29-.L32)/2
+ 549 002e 1B       		.byte	(.L29-.L32)/2
+ 550 002f 1B       		.byte	(.L29-.L32)/2
+ 551 0030 1B       		.byte	(.L29-.L32)/2
+ 552 0031 1B       		.byte	(.L29-.L32)/2
+ 553 0032 1B       		.byte	(.L29-.L32)/2
+ 554 0033 1B       		.byte	(.L29-.L32)/2
+ 555 0034 24       		.byte	(.L35-.L32)/2
+ 556 0035 1B       		.byte	(.L29-.L32)/2
+ 557 0036 1B       		.byte	(.L29-.L32)/2
+ 558 0037 1B       		.byte	(.L29-.L32)/2
+ 559 0038 1B       		.byte	(.L29-.L32)/2
+ 560 0039 1B       		.byte	(.L29-.L32)/2
+ 561 003a 1B       		.byte	(.L29-.L32)/2
+ 562 003b 1B       		.byte	(.L29-.L32)/2
+ 563 003c 27       		.byte	(.L34-.L32)/2
+ 564 003d 1B       		.byte	(.L29-.L32)/2
+ 565 003e 1B       		.byte	(.L29-.L32)/2
+ 566 003f 1B       		.byte	(.L29-.L32)/2
+ 567 0040 1B       		.byte	(.L29-.L32)/2
+ 568 0041 1B       		.byte	(.L29-.L32)/2
+ 569 0042 1B       		.byte	(.L29-.L32)/2
+ 570 0043 1B       		.byte	(.L29-.L32)/2
+ 571 0044 32       		.byte	(.L33-.L32)/2
+ 572 0045 1B       		.byte	(.L29-.L32)/2
+ 573 0046 1B       		.byte	(.L29-.L32)/2
+ 574 0047 1B       		.byte	(.L29-.L32)/2
+ 575 0048 1B       		.byte	(.L29-.L32)/2
+ 576 0049 1B       		.byte	(.L29-.L32)/2
+ 577 004a 1B       		.byte	(.L29-.L32)/2
+ 578 004b 1B       		.byte	(.L29-.L32)/2
+ 579 004c 35       		.byte	(.L31-.L32)/2
+ 580 004d 00       		.p2align 1
+ 581              	.L38:
+ 139:../../../mod/solenoid/solenoid.c **** 		break;
+ 582              		.loc 1 139 3 is_stmt 1 view .LVU106
+ 583 004e FFF7FEFF 		bl	solenoid_on
+ 584              	.LVL42:
+ 140:../../../mod/solenoid/solenoid.c **** 		}
+ 585              		.loc 1 140 3 view .LVU107
+ 586              	.L29:
+ 196:../../../mod/solenoid/solenoid.c **** 
+ 587              		.loc 1 196 1 is_stmt 0 view .LVU108
+ 588 0052 03B0     		add	sp, sp, #12
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 19
+
+
+ 589              	.LCFI24:
+ 590              		.cfi_remember_state
+ 591              		.cfi_def_cfa_offset 4
+ 592              		@ sp needed
+ 593 0054 5DF804FB 		ldr	pc, [sp], #4
+ 594              	.LVL43:
+ 595              	.L37:
+ 596              	.LCFI25:
+ 597              		.cfi_restore_state
+ 146:../../../mod/solenoid/solenoid.c **** 		break;
+ 598              		.loc 1 146 3 is_stmt 1 view .LVU109
+ 599 0058 FFF7FEFF 		bl	solenoid_off
+ 600              	.LVL44:
+ 147:../../../mod/solenoid/solenoid.c **** 		}
+ 601              		.loc 1 147 3 view .LVU110
+ 602 005c F9E7     		b	.L29
+ 603              	.LVL45:
+ 604              	.L36:
+ 153:../../../mod/solenoid/solenoid.c **** 		break;
+ 605              		.loc 1 153 3 view .LVU111
+ 606 005e FFF7FEFF 		bl	solenoid_toggle
+ 607              	.LVL46:
+ 154:../../../mod/solenoid/solenoid.c **** 		}
+ 608              		.loc 1 154 3 view .LVU112
+ 609 0062 F6E7     		b	.L29
+ 610              	.LVL47:
+ 611              	.L35:
+ 160:../../../mod/solenoid/solenoid.c **** 		break;
+ 612              		.loc 1 160 3 view .LVU113
+ 613 0064 FFF7FEFF 		bl	solenoid_reset
+ 614              	.LVL48:
+ 161:../../../mod/solenoid/solenoid.c **** 		}
+ 615              		.loc 1 161 3 view .LVU114
+ 616 0068 F3E7     		b	.L29
+ 617              	.LVL49:
+ 618              	.L34:
+ 167:../../../mod/solenoid/solenoid.c **** 		#if   defined( TERMINAL )
+ 619              		.loc 1 167 3 view .LVU115
+ 167:../../../mod/solenoid/solenoid.c **** 		#if   defined( TERMINAL )
+ 620              		.loc 1 167 15 is_stmt 0 view .LVU116
+ 621 006a FFF7FEFF 		bl	solenoid_get_state
+ 622              	.LVL50:
+ 167:../../../mod/solenoid/solenoid.c **** 		#if   defined( TERMINAL )
+ 623              		.loc 1 167 13 discriminator 1 view .LVU117
+ 624 006e 8DF80700 		strb	r0, [sp, #7]
+ 169:../../../mod/solenoid/solenoid.c **** 		#elif defined( HOTFIRE  ) 
+ 625              		.loc 1 169 4 is_stmt 1 view .LVU118
+ 626 0072 0122     		movs	r2, #1
+ 627 0074 1146     		mov	r1, r2
+ 628 0076 0DF10700 		add	r0, sp, #7
+ 629 007a FFF7FEFF 		bl	usb_transmit
+ 630              	.LVL51:
+ 173:../../../mod/solenoid/solenoid.c **** 		}
+ 631              		.loc 1 173 3 view .LVU119
+ 632 007e E8E7     		b	.L29
+ 633              	.LVL52:
+ 634              	.L33:
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 20
+
+
+ 179:../../../mod/solenoid/solenoid.c **** 		break;
+ 635              		.loc 1 179 3 view .LVU120
+ 636 0080 FFF7FEFF 		bl	solenoid_open
+ 637              	.LVL53:
+ 180:../../../mod/solenoid/solenoid.c **** 		}
+ 638              		.loc 1 180 3 view .LVU121
+ 639 0084 E5E7     		b	.L29
+ 640              	.LVL54:
+ 641              	.L31:
+ 186:../../../mod/solenoid/solenoid.c **** 		break;
+ 642              		.loc 1 186 3 view .LVU122
+ 643 0086 FFF7FEFF 		bl	solenoid_close
+ 644              	.LVL55:
+ 187:../../../mod/solenoid/solenoid.c **** 		}
+ 645              		.loc 1 187 3 view .LVU123
+ 196:../../../mod/solenoid/solenoid.c **** 
+ 646              		.loc 1 196 1 is_stmt 0 view .LVU124
+ 647 008a E2E7     		b	.L29
+ 648              		.cfi_endproc
+ 649              	.LFE145:
+ 651              		.global	sol_closed_states
+ 652              		.section	.data.sol_closed_states,"aw"
+ 653              		.align	2
+ 656              	sol_closed_states:
+ 657 0000 00       		.byte	0
+ 658 0001 00       		.byte	0
+ 659 0002 01       		.byte	1
+ 660 0003 01       		.byte	1
+ 661 0004 01       		.byte	1
+ 662 0005 01       		.byte	1
+ 663              		.global	sol_open_states
+ 664              		.section	.data.sol_open_states,"aw"
+ 665              		.align	2
+ 668              	sol_open_states:
+ 669 0000 01       		.byte	1
+ 670 0001 01       		.byte	1
+ 671 0002 00       		.byte	0
+ 672 0003 00       		.byte	0
+ 673 0004 00       		.byte	0
+ 674 0005 00       		.byte	0
+ 675              		.section	.rodata
+ 676              		.align	2
+ 677              		.set	.LANCHOR0,. + 0
+ 678              	.LC1:
+ 679 0000 02030400 		.ascii	"\002\003\004\000\001\002"
+ 679      0102
+ 680 0006 0000     		.space	2
+ 681              	.LC0:
+ 682 0008 00100258 		.word	1476530176
+ 683 000c 00100258 		.word	1476530176
+ 684 0010 00100258 		.word	1476530176
+ 685 0014 00000258 		.word	1476526080
+ 686 0018 00000258 		.word	1476526080
+ 687 001c 00000258 		.word	1476526080
+ 688              		.text
+ 689              	.Letext0:
+ 690              		.file 2 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 21
+
+
+ 691              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 692              		.file 4 "../../../lib/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h"
+ 693              		.file 5 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.3.1/includ
+ 694              		.file 6 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h"
+ 695              		.file 7 "../../../mod/solenoid/solenoid.h"
+ 696              		.file 8 "../../../mod/usb/usb.h"
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s 			page 22
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 solenoid.c
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:20     .text.solenoid_map:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:26     .text.solenoid_map:00000000 solenoid_map
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:91     .text.solenoid_map:00000050 $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:96     .text.solenoid_on:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:102    .text.solenoid_on:00000000 solenoid_on
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:141    .text.solenoid_off:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:147    .text.solenoid_off:00000000 solenoid_off
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:186    .text.solenoid_toggle:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:192    .text.solenoid_toggle:00000000 solenoid_toggle
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:230    .text.solenoid_reset:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:236    .text.solenoid_reset:00000000 solenoid_reset
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:264    .text.solenoid_reset:00000018 $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:270    .text.solenoid_get_state:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:276    .text.solenoid_get_state:00000000 solenoid_get_state
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:367    .text.solenoid_open:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:373    .text.solenoid_open:00000000 solenoid_open
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:421    .text.solenoid_open:00000024 $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:668    .data.sol_open_states:00000000 sol_open_states
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:426    .text.solenoid_close:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:432    .text.solenoid_close:00000000 solenoid_close
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:480    .text.solenoid_close:00000024 $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:656    .data.sol_closed_states:00000000 sol_closed_states
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:485    .text.solenoid_cmd_execute:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:491    .text.solenoid_cmd_execute:00000000 solenoid_cmd_execute
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:531    .text.solenoid_cmd_execute:0000001c $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:653    .data.sol_closed_states:00000000 $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:665    .data.sol_open_states:00000000 $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:676    .rodata:00000000 $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:580    .text.solenoid_cmd_execute:0000004d $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccDzu0E7.s:580    .text.solenoid_cmd_execute:0000004e $t
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_GPIO_TogglePin
+HAL_GPIO_ReadPin
+usb_transmit

@@ -1,0 +1,1221 @@
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"main.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "main.c"
+  19              		.section	.text.main,"ax",%progbits
+  20              		.align	1
+  21              		.global	main
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	main:
+  27              	.LFB144:
+   1:main.c        **** /*******************************************************************************
+   2:main.c        **** *
+   3:main.c        **** * FILE:
+   4:main.c        **** * 		main.c
+   5:main.c        **** *
+   6:main.c        **** * DESCRIPTION:
+   7:main.c        **** * 		Processes commands recieved from a host PC, provides fine control over
+   8:main.c        **** *       valve controller hardware resources
+   9:main.c        **** *
+  10:main.c        **** *******************************************************************************/
+  11:main.c        **** 
+  12:main.c        **** 
+  13:main.c        **** /*------------------------------------------------------------------------------
+  14:main.c        ****  Project Includes
+  15:main.c        **** ------------------------------------------------------------------------------*/
+  16:main.c        **** 
+  17:main.c        **** /* Application Layer */
+  18:main.c        **** #include "sdr_pin_defines_L0005.h"
+  19:main.c        **** #include "main.h"
+  20:main.c        **** #include "init.h"
+  21:main.c        **** 
+  22:main.c        **** /* Module Layer */
+  23:main.c        **** #include "commands.h"
+  24:main.c        **** #include "led.h"
+  25:main.c        **** #include "solenoid.h"
+  26:main.c        **** #include "sensor.h"
+  27:main.c        **** #include "usb.h"
+  28:main.c        **** #include "valve.h"
+  29:main.c        **** 
+  30:main.c        **** 
+  31:main.c        **** /*------------------------------------------------------------------------------
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 2
+
+
+  32:main.c        ****  Global Variables
+  33:main.c        **** ------------------------------------------------------------------------------*/
+  34:main.c        **** TIM_HandleTypeDef  htim2;  /* Fuel main valve control PWM signals */
+  35:main.c        **** TIM_HandleTypeDef  htim15; /* LOX main valve control PWM signals  */
+  36:main.c        **** UART_HandleTypeDef huart1; /* UART to USB                         */
+  37:main.c        **** UART_HandleTypeDef huart3; /* UART to engine controller           */
+  38:main.c        **** 
+  39:main.c        **** 
+  40:main.c        **** /*------------------------------------------------------------------------------
+  41:main.c        ****  Application entry point
+  42:main.c        **** ------------------------------------------------------------------------------*/
+  43:main.c        **** int main
+  44:main.c        **** 	(
+  45:main.c        **** 	void
+  46:main.c        **** 	)
+  47:main.c        **** {
+  28              		.loc 1 47 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 10B5     		push	{r4, lr}
+  33              	.LCFI0:
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 4, -8
+  36              		.cfi_offset 14, -4
+  48:main.c        **** /*------------------------------------------------------------------------------
+  49:main.c        ****  Local Variables
+  50:main.c        **** ------------------------------------------------------------------------------*/
+  51:main.c        **** uint8_t       command;        /* SDEC command code          */
+  37              		.loc 1 51 1 view .LVU1
+  52:main.c        **** USB_STATUS    usb_status;     /* UART/USB status            */
+  38              		.loc 1 52 1 view .LVU2
+  53:main.c        **** //VALVE_STATUS  valve_status;   /* Valve module return codes  */
+  54:main.c        **** 
+  55:main.c        **** 
+  56:main.c        **** /*------------------------------------------------------------------------------
+  57:main.c        ****  Initializations
+  58:main.c        **** ------------------------------------------------------------------------------*/
+  59:main.c        **** usb_status    = USB_OK;
+  39              		.loc 1 59 1 view .LVU3
+  40              	.LVL0:
+  60:main.c        **** //valve_status  = VALVE_OK;
+  61:main.c        **** 
+  62:main.c        **** 
+  63:main.c        **** /*------------------------------------------------------------------------------
+  64:main.c        ****  MCU Initialization
+  65:main.c        **** ------------------------------------------------------------------------------*/
+  66:main.c        **** HAL_Init           ();   /* CMSIS HAL               */
+  41              		.loc 1 66 1 view .LVU4
+  42 0002 FFF7FEFF 		bl	HAL_Init
+  43              	.LVL1:
+  67:main.c        **** SystemClock_Config ();   /* System clock            */
+  44              		.loc 1 67 1 view .LVU5
+  45 0006 FFF7FEFF 		bl	SystemClock_Config
+  46              	.LVL2:
+  68:main.c        **** GPIO_Init          ();   /* GPIO                    */
+  47              		.loc 1 68 1 view .LVU6
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 3
+
+
+  48 000a FFF7FEFF 		bl	GPIO_Init
+  49              	.LVL3:
+  69:main.c        **** USB_UART_Init      ();   /* USB UART                */
+  50              		.loc 1 69 1 view .LVU7
+  51 000e FFF7FEFF 		bl	USB_UART_Init
+  52              	.LVL4:
+  70:main.c        **** Valve_UART_Init    ();   /* Engine Controller UART  */
+  53              		.loc 1 70 1 view .LVU8
+  54 0012 FFF7FEFF 		bl	Valve_UART_Init
+  55              	.LVL5:
+  71:main.c        **** LOX_Valve_TIM_Init ();   /* LOX Valve control timer */
+  56              		.loc 1 71 1 view .LVU9
+  57 0016 FFF7FEFF 		bl	LOX_Valve_TIM_Init
+  58              	.LVL6:
+  72:main.c        **** Fuel_Valve_TIM_Init();   /* Fuel Valve control timer */
+  59              		.loc 1 72 1 view .LVU10
+  60 001a FFF7FEFF 		bl	Fuel_Valve_TIM_Init
+  61              	.LVL7:
+  73:main.c        **** 
+  74:main.c        **** 
+  75:main.c        **** /*------------------------------------------------------------------------------
+  76:main.c        ****  External Hardware initializations
+  77:main.c        **** ------------------------------------------------------------------------------*/
+  78:main.c        **** 
+  79:main.c        **** /* Sensor module */
+  80:main.c        **** sensor_init();
+  62              		.loc 1 80 1 view .LVU11
+  63 001e FFF7FEFF 		bl	sensor_init
+  64              	.LVL8:
+  81:main.c        **** 
+  82:main.c        **** /* Indicate successful initialization with green status LED */
+  83:main.c        **** led_set_color( LED_GREEN );
+  65              		.loc 1 83 1 view .LVU12
+  66 0022 0120     		movs	r0, #1
+  67 0024 FFF7FEFF 		bl	led_set_color
+  68              	.LVL9:
+  69 0028 0AE0     		b	.L4
+  70              	.LVL10:
+  71              	.L3:
+  72              	.LBB4:
+  84:main.c        **** 
+  85:main.c        **** 
+  86:main.c        **** /*------------------------------------------------------------------------------
+  87:main.c        ****  Event Loop
+  88:main.c        **** ------------------------------------------------------------------------------*/
+  89:main.c        **** while (1)
+  90:main.c        **** 	{
+  91:main.c        **** 	   for (int i = 0; i < 6; ++i)
+  92:main.c        **** 				{
+  93:main.c        **** 				solenoid_toggle(i+1);
+  73              		.loc 1 93 5 view .LVU13
+  74 002a 601C     		adds	r0, r4, #1
+  75 002c C0B2     		uxtb	r0, r0
+  76 002e FFF7FEFF 		bl	solenoid_toggle
+  77              	.LVL11:
+  91:main.c        **** 				{
+  78              		.loc 1 91 28 discriminator 3 view .LVU14
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 4
+
+
+  79 0032 0134     		adds	r4, r4, #1
+  80              	.LVL12:
+  81              	.L2:
+  91:main.c        **** 				{
+  82              		.loc 1 91 23 discriminator 1 view .LVU15
+  83 0034 052C     		cmp	r4, #5
+  84 0036 F8DD     		ble	.L3
+  85              	.LBE4:
+  94:main.c        **** 				}
+  95:main.c        **** 
+  96:main.c        **** 		HAL_Delay(2000);
+  86              		.loc 1 96 3 view .LVU16
+  87 0038 4FF4FA60 		mov	r0, #2000
+  88 003c FFF7FEFF 		bl	HAL_Delay
+  89              	.LVL13:
+  89:main.c        **** 	{
+  90              		.loc 1 89 7 view .LVU17
+  91              	.L4:
+  89:main.c        **** 	{
+  92              		.loc 1 89 1 view .LVU18
+  91:main.c        **** 				{
+  93              		.loc 1 91 5 view .LVU19
+  94              	.LBB5:
+  91:main.c        **** 				{
+  95              		.loc 1 91 10 view .LVU20
+  91:main.c        **** 				{
+  96              		.loc 1 91 14 is_stmt 0 view .LVU21
+  97 0040 0024     		movs	r4, #0
+  91:main.c        **** 				{
+  98              		.loc 1 91 5 view .LVU22
+  99 0042 F7E7     		b	.L2
+ 100              	.LBE5:
+ 101              		.cfi_endproc
+ 102              	.LFE144:
+ 104              		.section	.text.Error_Handler,"ax",%progbits
+ 105              		.align	1
+ 106              		.global	Error_Handler
+ 107              		.syntax unified
+ 108              		.thumb
+ 109              		.thumb_func
+ 111              	Error_Handler:
+ 112              	.LFB146:
+  97:main.c        **** 	}
+  98:main.c        **** } /* main */
+  99:main.c        **** 
+ 100:main.c        **** 
+ 101:main.c        **** /*******************************************************************************
+ 102:main.c        **** *                                                                              *
+ 103:main.c        **** * PROCEDURE:                                                                   *
+ 104:main.c        **** * 		command_handler                                                        *
+ 105:main.c        **** *                                                                              *
+ 106:main.c        **** * DESCRIPTION:                                                                 *
+ 107:main.c        **** * 		Processes commands from the SDEC terminal                              *
+ 108:main.c        **** *                                                                              *
+ 109:main.c        **** *******************************************************************************/
+ 110:main.c        **** void command_handler
+ 111:main.c        **** 	(
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 5
+
+
+ 112:main.c        **** 	uint8_t    command,     /* sdec command                              */
+ 113:main.c        **** 	CMD_SOURCE cmd_source   /* Determines which serial interface is used */
+ 114:main.c        **** 	)
+ 115:main.c        **** {
+ 116:main.c        **** /*------------------------------------------------------------------------------
+ 117:main.c        ****  Local Variables
+ 118:main.c        **** ------------------------------------------------------------------------------*/
+ 119:main.c        **** SENSOR_STATUS sensor_status;    /* Return codes from sensor API */
+ 120:main.c        **** USB_STATUS    usb_status;       /* Return codes from USB API    */
+ 121:main.c        **** VALVE_STATUS  valve_status;     /* Return codes from valve API  */
+ 122:main.c        **** uint8_t       subcommand;       /* SDEC subcommands             */
+ 123:main.c        **** uint8_t       firmware_code;    /* Firmware identifying code    */
+ 124:main.c        **** 
+ 125:main.c        **** 
+ 126:main.c        **** /*------------------------------------------------------------------------------
+ 127:main.c        ****  Initializations
+ 128:main.c        **** ------------------------------------------------------------------------------*/
+ 129:main.c        **** sensor_status = SENSOR_OK;
+ 130:main.c        **** usb_status    = USB_OK;
+ 131:main.c        **** valve_status  = VALVE_OK;
+ 132:main.c        **** subcommand    = 0;
+ 133:main.c        **** firmware_code = FIRMWARE_TERMINAL;
+ 134:main.c        **** 
+ 135:main.c        **** 
+ 136:main.c        **** /*------------------------------------------------------------------------------
+ 137:main.c        ****  Implementation
+ 138:main.c        **** ------------------------------------------------------------------------------*/
+ 139:main.c        **** switch( command )
+ 140:main.c        **** 	{
+ 141:main.c        **** 	/* Ping Command ----------------------------------------------------------*/
+ 142:main.c        **** 	case PING_OP:
+ 143:main.c        **** 		{
+ 144:main.c        **** 		ping( cmd_source );
+ 145:main.c        **** 		break;
+ 146:main.c        **** 		} /* PING_OP */
+ 147:main.c        **** 
+ 148:main.c        **** 	/* Connect Command -------------------------------------------------------*/
+ 149:main.c        **** 	case CONNECT_OP:
+ 150:main.c        **** 		{
+ 151:main.c        **** 		/* Board identifier */
+ 152:main.c        **** 		ping( cmd_source );
+ 153:main.c        **** 
+ 154:main.c        **** 		/* Firmware identifier */
+ 155:main.c        **** 		usb_transmit( &firmware_code, sizeof( uint8_t ), HAL_DEFAULT_TIMEOUT );
+ 156:main.c        **** 		break;
+ 157:main.c        **** 		} /* CONNECT_OP */
+ 158:main.c        **** 
+ 159:main.c        **** 	/* Solenoid Command ------------------------------------------------------*/
+ 160:main.c        **** 	case SOL_OP:
+ 161:main.c        **** 		{
+ 162:main.c        **** 		/* Get subcommand */
+ 163:main.c        **** 		if ( cmd_source == CMD_SOURCE_USB )
+ 164:main.c        **** 			{
+ 165:main.c        **** 			usb_status = usb_receive( &subcommand,
+ 166:main.c        **** 									sizeof( subcommand ),
+ 167:main.c        **** 									HAL_DEFAULT_TIMEOUT );
+ 168:main.c        **** 			if ( usb_status == USB_OK )
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 6
+
+
+ 169:main.c        **** 				{
+ 170:main.c        **** 				solenoid_cmd_execute( subcommand );
+ 171:main.c        **** 				}
+ 172:main.c        **** 			else
+ 173:main.c        **** 				{
+ 174:main.c        **** 				/* Do nothing */
+ 175:main.c        **** 				Error_Handler();
+ 176:main.c        **** 				}
+ 177:main.c        **** 			}
+ 178:main.c        **** 		else
+ 179:main.c        **** 			{
+ 180:main.c        **** 			valve_status = valve_receive( &subcommand         ,
+ 181:main.c        **** 			                              sizeof( subcommand ),
+ 182:main.c        **** 										  HAL_DEFAULT_TIMEOUT );
+ 183:main.c        **** 			if ( valve_status == VALVE_OK )
+ 184:main.c        **** 				{
+ 185:main.c        **** 				solenoid_cmd_execute( subcommand );
+ 186:main.c        **** 				}
+ 187:main.c        **** 			else
+ 188:main.c        **** 				{
+ 189:main.c        **** 				Error_Handler();
+ 190:main.c        **** 				}
+ 191:main.c        **** 
+ 192:main.c        **** 			}
+ 193:main.c        **** 		break;
+ 194:main.c        **** 		} /* SOL_OP */
+ 195:main.c        **** 
+ 196:main.c        **** 	/* Sensor Command --------------------------------------------------------*/
+ 197:main.c        **** 	case SENSOR_OP:
+ 198:main.c        **** 		{
+ 199:main.c        **** 		if ( cmd_source == CMD_SOURCE_USB )
+ 200:main.c        **** 			{
+ 201:main.c        **** 			usb_status = usb_receive( &subcommand,
+ 202:main.c        **** 									sizeof( subcommand ),
+ 203:main.c        **** 									HAL_DEFAULT_TIMEOUT );
+ 204:main.c        **** 			if ( usb_status == USB_OK )
+ 205:main.c        **** 				{
+ 206:main.c        **** 				sensor_status = sensor_cmd_execute( subcommand, cmd_source );
+ 207:main.c        **** 				if ( sensor_status != SENSOR_OK )
+ 208:main.c        **** 					{
+ 209:main.c        **** 					Error_Handler();
+ 210:main.c        **** 					}
+ 211:main.c        **** 				}
+ 212:main.c        **** 			else
+ 213:main.c        **** 				{
+ 214:main.c        **** 				Error_Handler();
+ 215:main.c        **** 				}
+ 216:main.c        **** 			}
+ 217:main.c        **** 		else
+ 218:main.c        **** 			{
+ 219:main.c        **** 			valve_status = valve_receive( &subcommand         ,
+ 220:main.c        **** 			                              sizeof( subcommand ),
+ 221:main.c        **** 										  HAL_DEFAULT_TIMEOUT );
+ 222:main.c        **** 			if ( valve_status == VALVE_OK )
+ 223:main.c        **** 				{
+ 224:main.c        **** 				sensor_status = sensor_cmd_execute( subcommand, cmd_source );
+ 225:main.c        **** 				if ( sensor_status != SENSOR_OK )
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 7
+
+
+ 226:main.c        **** 					{
+ 227:main.c        **** 					Error_Handler();
+ 228:main.c        **** 					}
+ 229:main.c        **** 				}
+ 230:main.c        **** 			else
+ 231:main.c        **** 				{
+ 232:main.c        **** 				Error_Handler();
+ 233:main.c        **** 				}
+ 234:main.c        **** 			}
+ 235:main.c        **** 		break;
+ 236:main.c        **** 		} /* SENSOR_OP */
+ 237:main.c        **** 
+ 238:main.c        **** 	/* Valve command ---------------------------------------------------------*/
+ 239:main.c        **** 	case VALVE_OP:
+ 240:main.c        **** 		{
+ 241:main.c        **** 		if ( cmd_source == CMD_SOURCE_USB )
+ 242:main.c        **** 			{
+ 243:main.c        **** 			/* Get subcommand */
+ 244:main.c        **** 			usb_status = usb_receive( &subcommand         ,
+ 245:main.c        **** 									sizeof( subcommand ),
+ 246:main.c        **** 									HAL_DEFAULT_TIMEOUT );
+ 247:main.c        **** 
+ 248:main.c        **** 			/* Execute subcommand */
+ 249:main.c        **** 			if ( usb_status != USB_OK )
+ 250:main.c        **** 				{
+ 251:main.c        **** 				Error_Handler();
+ 252:main.c        **** 				}
+ 253:main.c        **** 			else
+ 254:main.c        **** 				{
+ 255:main.c        **** 				valve_status = valve_cmd_execute( subcommand );
+ 256:main.c        **** 				if ( valve_status != VALVE_OK )
+ 257:main.c        **** 					{
+ 258:main.c        **** 					Error_Handler();
+ 259:main.c        **** 					}
+ 260:main.c        **** 				}
+ 261:main.c        **** 			}
+ 262:main.c        **** 		else
+ 263:main.c        **** 			{
+ 264:main.c        **** 			/* Get subcommand */
+ 265:main.c        **** 			valve_status = valve_receive( &subcommand         ,
+ 266:main.c        **** 			                              sizeof( subcommand ),
+ 267:main.c        **** 										  HAL_DEFAULT_TIMEOUT );
+ 268:main.c        **** 
+ 269:main.c        **** 			/* Execute subcommand */
+ 270:main.c        **** 			if ( valve_status != VALVE_OK )
+ 271:main.c        **** 				{
+ 272:main.c        **** 				Error_Handler();
+ 273:main.c        **** 				}
+ 274:main.c        **** 			else
+ 275:main.c        **** 				{
+ 276:main.c        **** 				valve_status = valve_cmd_execute( subcommand );
+ 277:main.c        **** 				if ( valve_status != VALVE_OK )
+ 278:main.c        **** 					{
+ 279:main.c        **** 					Error_Handler();
+ 280:main.c        **** 					}
+ 281:main.c        **** 				}
+ 282:main.c        **** 			}
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 8
+
+
+ 283:main.c        **** 		break;
+ 284:main.c        **** 		} /* VALVE_OP */
+ 285:main.c        **** 
+ 286:main.c        **** 	/* Unrecognized Command -----------------------------------------*/
+ 287:main.c        **** 	default:
+ 288:main.c        **** 		{
+ 289:main.c        **** 		/* Unrecognized command code */
+ 290:main.c        **** //		Error_Handler();
+ 291:main.c        **** 		break;
+ 292:main.c        **** 		}
+ 293:main.c        **** 	} /* switch( command ) */
+ 294:main.c        **** 
+ 295:main.c        **** } /* command handler */
+ 296:main.c        **** 
+ 297:main.c        **** 
+ 298:main.c        **** /*******************************************************************************
+ 299:main.c        **** *                                                                              *
+ 300:main.c        **** * PROCEDURE:                                                                   *
+ 301:main.c        **** * 		Error_Handler                                                          *
+ 302:main.c        **** *                                                                              *
+ 303:main.c        **** * DESCRIPTION:                                                                 *
+ 304:main.c        **** * 		Handles software errors by turing the status LED red                   *
+ 305:main.c        **** *                                                                              *
+ 306:main.c        **** *******************************************************************************/
+ 307:main.c        **** void Error_Handler(void)
+ 308:main.c        **** {
+ 113              		.loc 1 308 1 is_stmt 1 view -0
+ 114              		.cfi_startproc
+ 115              		@ Volatile: function does not return.
+ 116              		@ args = 0, pretend = 0, frame = 0
+ 117              		@ frame_needed = 0, uses_anonymous_args = 0
+ 118 0000 08B5     		push	{r3, lr}
+ 119              	.LCFI1:
+ 120              		.cfi_def_cfa_offset 8
+ 121              		.cfi_offset 3, -8
+ 122              		.cfi_offset 14, -4
+ 309:main.c        ****   __disable_irq();
+ 123              		.loc 1 309 3 view .LVU24
+ 124              	.LBB6:
+ 125              	.LBI6:
+ 126              		.file 2 "../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h"
+   1:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** /**************************************************************************//**
+   2:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * @file     cmsis_gcc.h
+   3:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
+   4:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * @version  V5.2.0
+   5:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * @date     08. May 2019
+   6:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  ******************************************************************************/
+   7:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** /*
+   8:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * Copyright (c) 2009-2019 Arm Limited. All rights reserved.
+   9:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  10:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
+  11:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  12:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  13:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * not use this file except in compliance with the License.
+  14:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * You may obtain a copy of the License at
+  15:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  16:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * www.apache.org/licenses/LICENSE-2.0
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 9
+
+
+  17:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  18:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * Unless required by applicable law or agreed to in writing, software
+  19:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  20:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  21:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+  22:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  * limitations under the License.
+  23:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+  24:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  25:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __CMSIS_GCC_H
+  26:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #define __CMSIS_GCC_H
+  27:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  28:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** /* ignore some GCC warnings */
+  29:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic push
+  30:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
+  31:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
+  32:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
+  33:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  34:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** /* Fallback for __has_builtin */
+  35:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __has_builtin
+  36:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __has_builtin(x) (0)
+  37:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  38:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  39:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** /* CMSIS compiler specific defines */
+  40:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ASM
+  41:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ASM                                  __asm
+  42:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  43:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __INLINE
+  44:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __INLINE                               inline
+  45:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  46:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_INLINE
+  47:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_INLINE                        static inline
+  48:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  49:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_FORCEINLINE                 
+  50:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline
+  51:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif                                           
+  52:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __NO_RETURN
+  53:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
+  54:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  55:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __USED
+  56:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __USED                                 __attribute__((used))
+  57:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  58:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __WEAK
+  59:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __WEAK                                 __attribute__((weak))
+  60:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  61:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED
+  62:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED                               __attribute__((packed, aligned(1)))
+  63:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  64:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
+  65:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+  66:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  67:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_UNION
+  68:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
+  69:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  70:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32        /* deprecated */
+  71:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  72:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  73:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 10
+
+
+  74:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
+  75:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  76:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
+  77:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  78:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+  79:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  80:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  81:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  82:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_WRITE { uint16_t v; };
+  83:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  84:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_WRITE(addr, val)    (void)((((struct T_UINT16_WRITE *)(void *)(addr))-
+  85:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  86:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
+  87:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  88:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  89:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  90:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
+  91:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  92:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
+  93:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  94:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
+  95:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  96:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  97:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  98:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
+  99:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 100:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
+ 101:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 102:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
+ 103:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+ 104:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+ 105:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ 106:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_READ { uint32_t v; };
+ 107:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 108:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
+ 109:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 110:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ALIGNED
+ 111:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
+ 112:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 113:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __RESTRICT
+ 114:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __RESTRICT                             __restrict
+ 115:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 116:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __COMPILER_BARRIER
+ 117:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __COMPILER_BARRIER()                   __ASM volatile("":::"memory")
+ 118:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 119:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 120:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** /* #########################  Startup and Lowlevel Init  ######################## */
+ 121:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 122:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __PROGRAM_START
+ 123:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 124:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 125:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Initializes data and bss sections
+ 126:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   \details This default implementations initialized all data and additional bss
+ 127:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****            sections relying on .copy.table and .zero.table specified properly
+ 128:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****            in the used linker script.
+ 129:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   
+ 130:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 11
+
+
+ 131:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE __NO_RETURN void __cmsis_start(void)
+ 132:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 133:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   extern void _start(void) __NO_RETURN;
+ 134:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   
+ 135:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   typedef struct {
+ 136:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****     uint32_t const* src;
+ 137:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****     uint32_t* dest;
+ 138:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****     uint32_t  wlen;
+ 139:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   } __copy_table_t;
+ 140:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   
+ 141:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   typedef struct {
+ 142:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****     uint32_t* dest;
+ 143:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****     uint32_t  wlen;
+ 144:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   } __zero_table_t;
+ 145:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   
+ 146:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   extern const __copy_table_t __copy_table_start__;
+ 147:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   extern const __copy_table_t __copy_table_end__;
+ 148:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   extern const __zero_table_t __zero_table_start__;
+ 149:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   extern const __zero_table_t __zero_table_end__;
+ 150:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 151:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   for (__copy_table_t const* pTable = &__copy_table_start__; pTable < &__copy_table_end__; ++pTable
+ 152:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****     for(uint32_t i=0u; i<pTable->wlen; ++i) {
+ 153:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****       pTable->dest[i] = pTable->src[i];
+ 154:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****     }
+ 155:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   }
+ 156:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  
+ 157:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   for (__zero_table_t const* pTable = &__zero_table_start__; pTable < &__zero_table_end__; ++pTable
+ 158:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****     for(uint32_t i=0u; i<pTable->wlen; ++i) {
+ 159:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****       pTable->dest[i] = 0u;
+ 160:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****     }
+ 161:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   }
+ 162:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  
+ 163:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   _start();
+ 164:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 165:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   
+ 166:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #define __PROGRAM_START           __cmsis_start
+ 167:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 168:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 169:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __INITIAL_SP
+ 170:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #define __INITIAL_SP              __StackTop
+ 171:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 172:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 173:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __STACK_LIMIT
+ 174:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #define __STACK_LIMIT             __StackLimit
+ 175:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 176:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 177:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __VECTOR_TABLE
+ 178:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #define __VECTOR_TABLE            __Vectors
+ 179:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 180:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 181:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __VECTOR_TABLE_ATTRIBUTE
+ 182:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #define __VECTOR_TABLE_ATTRIBUTE  __attribute((used, section(".vectors")))
+ 183:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 184:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 185:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** /* ###########################  Core Function Access  ########################### */
+ 186:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** /** \ingroup  CMSIS_Core_FunctionInterface
+ 187:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 12
+
+
+ 188:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   @{
+ 189:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 190:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 191:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 192:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Enable IRQ Interrupts
+ 193:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Enables IRQ interrupts by clearing the I-bit in the CPSR.
+ 194:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 195:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 196:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __enable_irq(void)
+ 197:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 198:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsie i" : : : "memory");
+ 199:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 200:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 201:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 202:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 203:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Disable IRQ Interrupts
+ 204:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Disables IRQ interrupts by setting the I-bit in the CPSR.
+ 205:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 206:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 207:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
+ 127              		.loc 2 207 27 view .LVU25
+ 128              	.LBB7:
+ 208:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 209:../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
+ 129              		.loc 2 209 3 view .LVU26
+ 130              		.syntax unified
+ 131              	@ 209 "../../../lib/Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 132 0002 72B6     		cpsid i
+ 133              	@ 0 "" 2
+ 134              		.thumb
+ 135              		.syntax unified
+ 136              	.LBE7:
+ 137              	.LBE6:
+ 310:main.c        ****   led_error_assert();
+ 138              		.loc 1 310 3 view .LVU27
+ 139 0004 FFF7FEFF 		bl	led_error_assert
+ 140              	.LVL14:
+ 141              	.L7:
+ 311:main.c        ****   while (1)
+ 142              		.loc 1 311 3 view .LVU28
+ 312:main.c        **** 	{
+ 313:main.c        **** 	/* Application hangs */
+ 314:main.c        **** 	}
+ 143              		.loc 1 314 2 view .LVU29
+ 311:main.c        ****   while (1)
+ 144              		.loc 1 311 9 view .LVU30
+ 145 0008 FEE7     		b	.L7
+ 146              		.cfi_endproc
+ 147              	.LFE146:
+ 149              		.section	.text.command_handler,"ax",%progbits
+ 150              		.align	1
+ 151              		.global	command_handler
+ 152              		.syntax unified
+ 153              		.thumb
+ 154              		.thumb_func
+ 156              	command_handler:
+ 157              	.LVL15:
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 13
+
+
+ 158              	.LFB145:
+ 115:main.c        **** /*------------------------------------------------------------------------------
+ 159              		.loc 1 115 1 view -0
+ 160              		.cfi_startproc
+ 161              		@ args = 0, pretend = 0, frame = 8
+ 162              		@ frame_needed = 0, uses_anonymous_args = 0
+ 115:main.c        **** /*------------------------------------------------------------------------------
+ 163              		.loc 1 115 1 is_stmt 0 view .LVU32
+ 164 0000 10B5     		push	{r4, lr}
+ 165              	.LCFI2:
+ 166              		.cfi_def_cfa_offset 8
+ 167              		.cfi_offset 4, -8
+ 168              		.cfi_offset 14, -4
+ 169 0002 82B0     		sub	sp, sp, #8
+ 170              	.LCFI3:
+ 171              		.cfi_def_cfa_offset 16
+ 172 0004 0C46     		mov	r4, r1
+ 119:main.c        **** USB_STATUS    usb_status;       /* Return codes from USB API    */
+ 173              		.loc 1 119 1 is_stmt 1 view .LVU33
+ 120:main.c        **** VALVE_STATUS  valve_status;     /* Return codes from valve API  */
+ 174              		.loc 1 120 1 view .LVU34
+ 121:main.c        **** uint8_t       subcommand;       /* SDEC subcommands             */
+ 175              		.loc 1 121 1 view .LVU35
+ 122:main.c        **** uint8_t       firmware_code;    /* Firmware identifying code    */
+ 176              		.loc 1 122 1 view .LVU36
+ 123:main.c        **** 
+ 177              		.loc 1 123 1 view .LVU37
+ 129:main.c        **** usb_status    = USB_OK;
+ 178              		.loc 1 129 1 view .LVU38
+ 179              	.LVL16:
+ 130:main.c        **** valve_status  = VALVE_OK;
+ 180              		.loc 1 130 1 view .LVU39
+ 131:main.c        **** subcommand    = 0;
+ 181              		.loc 1 131 1 view .LVU40
+ 132:main.c        **** firmware_code = FIRMWARE_TERMINAL;
+ 182              		.loc 1 132 1 view .LVU41
+ 132:main.c        **** firmware_code = FIRMWARE_TERMINAL;
+ 183              		.loc 1 132 15 is_stmt 0 view .LVU42
+ 184 0006 0023     		movs	r3, #0
+ 185 0008 8DF80730 		strb	r3, [sp, #7]
+ 133:main.c        **** 
+ 186              		.loc 1 133 1 is_stmt 1 view .LVU43
+ 133:main.c        **** 
+ 187              		.loc 1 133 15 is_stmt 0 view .LVU44
+ 188 000c 0123     		movs	r3, #1
+ 189 000e 8DF80630 		strb	r3, [sp, #6]
+ 139:main.c        **** 	{
+ 190              		.loc 1 139 1 is_stmt 1 view .LVU45
+ 191 0012 0328     		cmp	r0, #3
+ 192 0014 45D0     		beq	.L10
+ 193 0016 14D9     		bls	.L27
+ 194 0018 5128     		cmp	r0, #81
+ 195 001a 25D0     		beq	.L15
+ 196 001c 5228     		cmp	r0, #82
+ 197 001e 21D1     		bne	.L9
+ 241:main.c        **** 			{
+ 198              		.loc 1 241 3 view .LVU46
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 14
+
+
+ 241:main.c        **** 			{
+ 199              		.loc 1 241 6 is_stmt 0 view .LVU47
+ 200 0020 0029     		cmp	r1, #0
+ 201 0022 65D1     		bne	.L23
+ 244:main.c        **** 									sizeof( subcommand ),
+ 202              		.loc 1 244 4 is_stmt 1 view .LVU48
+ 244:main.c        **** 									sizeof( subcommand ),
+ 203              		.loc 1 244 17 is_stmt 0 view .LVU49
+ 204 0024 0122     		movs	r2, #1
+ 205 0026 1146     		mov	r1, r2
+ 206              	.LVL17:
+ 244:main.c        **** 									sizeof( subcommand ),
+ 207              		.loc 1 244 17 view .LVU50
+ 208 0028 0DF10700 		add	r0, sp, #7
+ 209              	.LVL18:
+ 244:main.c        **** 									sizeof( subcommand ),
+ 210              		.loc 1 244 17 view .LVU51
+ 211 002c FFF7FEFF 		bl	usb_receive
+ 212              	.LVL19:
+ 249:main.c        **** 				{
+ 213              		.loc 1 249 4 is_stmt 1 view .LVU52
+ 249:main.c        **** 				{
+ 214              		.loc 1 249 7 is_stmt 0 view .LVU53
+ 215 0030 0028     		cmp	r0, #0
+ 216 0032 5BD1     		bne	.L28
+ 255:main.c        **** 				if ( valve_status != VALVE_OK )
+ 217              		.loc 1 255 5 is_stmt 1 view .LVU54
+ 255:main.c        **** 				if ( valve_status != VALVE_OK )
+ 218              		.loc 1 255 20 is_stmt 0 view .LVU55
+ 219 0034 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 220              	.LVL20:
+ 255:main.c        **** 				if ( valve_status != VALVE_OK )
+ 221              		.loc 1 255 20 view .LVU56
+ 222 0038 FFF7FEFF 		bl	valve_cmd_execute
+ 223              	.LVL21:
+ 256:main.c        **** 					{
+ 224              		.loc 1 256 5 is_stmt 1 view .LVU57
+ 256:main.c        **** 					{
+ 225              		.loc 1 256 8 is_stmt 0 view .LVU58
+ 226 003c 90B1     		cbz	r0, .L9
+ 258:main.c        **** 					}
+ 227              		.loc 1 258 6 is_stmt 1 view .LVU59
+ 228 003e FFF7FEFF 		bl	Error_Handler
+ 229              	.LVL22:
+ 230              	.L27:
+ 139:main.c        **** 	{
+ 231              		.loc 1 139 1 is_stmt 0 view .LVU60
+ 232 0042 9842     		cmp	r0, r3
+ 233 0044 0BD0     		beq	.L12
+ 234 0046 0228     		cmp	r0, #2
+ 235 0048 0CD1     		bne	.L9
+ 152:main.c        **** 
+ 236              		.loc 1 152 3 is_stmt 1 view .LVU61
+ 237 004a 0846     		mov	r0, r1
+ 238              	.LVL23:
+ 152:main.c        **** 
+ 239              		.loc 1 152 3 is_stmt 0 view .LVU62
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 15
+
+
+ 240 004c FFF7FEFF 		bl	ping
+ 241              	.LVL24:
+ 155:main.c        **** 		break;
+ 242              		.loc 1 155 3 is_stmt 1 view .LVU63
+ 243 0050 0122     		movs	r2, #1
+ 244 0052 1146     		mov	r1, r2
+ 245 0054 0DF10600 		add	r0, sp, #6
+ 246 0058 FFF7FEFF 		bl	usb_transmit
+ 247              	.LVL25:
+ 156:main.c        **** 		} /* CONNECT_OP */
+ 248              		.loc 1 156 3 view .LVU64
+ 249 005c 02E0     		b	.L9
+ 250              	.LVL26:
+ 251              	.L12:
+ 144:main.c        **** 		break;
+ 252              		.loc 1 144 3 view .LVU65
+ 253 005e 0846     		mov	r0, r1
+ 254              	.LVL27:
+ 144:main.c        **** 		break;
+ 255              		.loc 1 144 3 is_stmt 0 view .LVU66
+ 256 0060 FFF7FEFF 		bl	ping
+ 257              	.LVL28:
+ 145:main.c        **** 		} /* PING_OP */
+ 258              		.loc 1 145 3 is_stmt 1 view .LVU67
+ 259              	.L9:
+ 295:main.c        **** 
+ 260              		.loc 1 295 1 is_stmt 0 view .LVU68
+ 261 0064 02B0     		add	sp, sp, #8
+ 262              	.LCFI4:
+ 263              		.cfi_remember_state
+ 264              		.cfi_def_cfa_offset 8
+ 265              		@ sp needed
+ 266 0066 10BD     		pop	{r4, pc}
+ 267              	.LVL29:
+ 268              	.L15:
+ 269              	.LCFI5:
+ 270              		.cfi_restore_state
+ 163:main.c        **** 			{
+ 271              		.loc 1 163 3 is_stmt 1 view .LVU69
+ 163:main.c        **** 			{
+ 272              		.loc 1 163 6 is_stmt 0 view .LVU70
+ 273 0068 69B9     		cbnz	r1, .L17
+ 165:main.c        **** 									sizeof( subcommand ),
+ 274              		.loc 1 165 4 is_stmt 1 view .LVU71
+ 165:main.c        **** 									sizeof( subcommand ),
+ 275              		.loc 1 165 17 is_stmt 0 view .LVU72
+ 276 006a 0122     		movs	r2, #1
+ 277 006c 1146     		mov	r1, r2
+ 278              	.LVL30:
+ 165:main.c        **** 									sizeof( subcommand ),
+ 279              		.loc 1 165 17 view .LVU73
+ 280 006e 0DF10700 		add	r0, sp, #7
+ 281              	.LVL31:
+ 165:main.c        **** 									sizeof( subcommand ),
+ 282              		.loc 1 165 17 view .LVU74
+ 283 0072 FFF7FEFF 		bl	usb_receive
+ 284              	.LVL32:
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 16
+
+
+ 168:main.c        **** 				{
+ 285              		.loc 1 168 4 is_stmt 1 view .LVU75
+ 168:main.c        **** 				{
+ 286              		.loc 1 168 7 is_stmt 0 view .LVU76
+ 287 0076 20B9     		cbnz	r0, .L18
+ 170:main.c        **** 				}
+ 288              		.loc 1 170 5 is_stmt 1 view .LVU77
+ 289 0078 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 290              	.LVL33:
+ 170:main.c        **** 				}
+ 291              		.loc 1 170 5 is_stmt 0 view .LVU78
+ 292 007c FFF7FEFF 		bl	solenoid_cmd_execute
+ 293              	.LVL34:
+ 294 0080 F0E7     		b	.L9
+ 295              	.LVL35:
+ 296              	.L18:
+ 175:main.c        **** 				}
+ 297              		.loc 1 175 5 is_stmt 1 view .LVU79
+ 298 0082 FFF7FEFF 		bl	Error_Handler
+ 299              	.LVL36:
+ 300              	.L17:
+ 180:main.c        **** 			                              sizeof( subcommand ),
+ 301              		.loc 1 180 4 view .LVU80
+ 180:main.c        **** 			                              sizeof( subcommand ),
+ 302              		.loc 1 180 19 is_stmt 0 view .LVU81
+ 303 0086 0122     		movs	r2, #1
+ 304 0088 1146     		mov	r1, r2
+ 305              	.LVL37:
+ 180:main.c        **** 			                              sizeof( subcommand ),
+ 306              		.loc 1 180 19 view .LVU82
+ 307 008a 0DF10700 		add	r0, sp, #7
+ 308              	.LVL38:
+ 180:main.c        **** 			                              sizeof( subcommand ),
+ 309              		.loc 1 180 19 view .LVU83
+ 310 008e FFF7FEFF 		bl	valve_receive
+ 311              	.LVL39:
+ 183:main.c        **** 				{
+ 312              		.loc 1 183 4 is_stmt 1 view .LVU84
+ 183:main.c        **** 				{
+ 313              		.loc 1 183 7 is_stmt 0 view .LVU85
+ 314 0092 20B9     		cbnz	r0, .L19
+ 185:main.c        **** 				}
+ 315              		.loc 1 185 5 is_stmt 1 view .LVU86
+ 316 0094 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 317              	.LVL40:
+ 185:main.c        **** 				}
+ 318              		.loc 1 185 5 is_stmt 0 view .LVU87
+ 319 0098 FFF7FEFF 		bl	solenoid_cmd_execute
+ 320              	.LVL41:
+ 321 009c E2E7     		b	.L9
+ 322              	.LVL42:
+ 323              	.L19:
+ 189:main.c        **** 				}
+ 324              		.loc 1 189 5 is_stmt 1 view .LVU88
+ 325 009e FFF7FEFF 		bl	Error_Handler
+ 326              	.LVL43:
+ 327              	.L10:
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 17
+
+
+ 199:main.c        **** 			{
+ 328              		.loc 1 199 3 view .LVU89
+ 199:main.c        **** 			{
+ 329              		.loc 1 199 6 is_stmt 0 view .LVU90
+ 330 00a2 89B9     		cbnz	r1, .L20
+ 201:main.c        **** 									sizeof( subcommand ),
+ 331              		.loc 1 201 4 is_stmt 1 view .LVU91
+ 201:main.c        **** 									sizeof( subcommand ),
+ 332              		.loc 1 201 17 is_stmt 0 view .LVU92
+ 333 00a4 0122     		movs	r2, #1
+ 334 00a6 1146     		mov	r1, r2
+ 335              	.LVL44:
+ 201:main.c        **** 									sizeof( subcommand ),
+ 336              		.loc 1 201 17 view .LVU93
+ 337 00a8 0DF10700 		add	r0, sp, #7
+ 338              	.LVL45:
+ 201:main.c        **** 									sizeof( subcommand ),
+ 339              		.loc 1 201 17 view .LVU94
+ 340 00ac FFF7FEFF 		bl	usb_receive
+ 341              	.LVL46:
+ 204:main.c        **** 				{
+ 342              		.loc 1 204 4 is_stmt 1 view .LVU95
+ 204:main.c        **** 				{
+ 343              		.loc 1 204 7 is_stmt 0 view .LVU96
+ 344 00b0 40B9     		cbnz	r0, .L21
+ 206:main.c        **** 				if ( sensor_status != SENSOR_OK )
+ 345              		.loc 1 206 5 is_stmt 1 view .LVU97
+ 206:main.c        **** 				if ( sensor_status != SENSOR_OK )
+ 346              		.loc 1 206 21 is_stmt 0 view .LVU98
+ 347 00b2 2146     		mov	r1, r4
+ 348 00b4 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 349              	.LVL47:
+ 206:main.c        **** 				if ( sensor_status != SENSOR_OK )
+ 350              		.loc 1 206 21 view .LVU99
+ 351 00b8 FFF7FEFF 		bl	sensor_cmd_execute
+ 352              	.LVL48:
+ 207:main.c        **** 					{
+ 353              		.loc 1 207 5 is_stmt 1 view .LVU100
+ 207:main.c        **** 					{
+ 354              		.loc 1 207 8 is_stmt 0 view .LVU101
+ 355 00bc 0028     		cmp	r0, #0
+ 356 00be D1D0     		beq	.L9
+ 209:main.c        **** 					}
+ 357              		.loc 1 209 6 is_stmt 1 view .LVU102
+ 358 00c0 FFF7FEFF 		bl	Error_Handler
+ 359              	.LVL49:
+ 360              	.L21:
+ 214:main.c        **** 				}
+ 361              		.loc 1 214 5 view .LVU103
+ 362 00c4 FFF7FEFF 		bl	Error_Handler
+ 363              	.LVL50:
+ 364              	.L20:
+ 219:main.c        **** 			                              sizeof( subcommand ),
+ 365              		.loc 1 219 4 view .LVU104
+ 219:main.c        **** 			                              sizeof( subcommand ),
+ 366              		.loc 1 219 19 is_stmt 0 view .LVU105
+ 367 00c8 0122     		movs	r2, #1
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 18
+
+
+ 368 00ca 1146     		mov	r1, r2
+ 369              	.LVL51:
+ 219:main.c        **** 			                              sizeof( subcommand ),
+ 370              		.loc 1 219 19 view .LVU106
+ 371 00cc 0DF10700 		add	r0, sp, #7
+ 372              	.LVL52:
+ 219:main.c        **** 			                              sizeof( subcommand ),
+ 373              		.loc 1 219 19 view .LVU107
+ 374 00d0 FFF7FEFF 		bl	valve_receive
+ 375              	.LVL53:
+ 222:main.c        **** 				{
+ 376              		.loc 1 222 4 is_stmt 1 view .LVU108
+ 222:main.c        **** 				{
+ 377              		.loc 1 222 7 is_stmt 0 view .LVU109
+ 378 00d4 40B9     		cbnz	r0, .L22
+ 224:main.c        **** 				if ( sensor_status != SENSOR_OK )
+ 379              		.loc 1 224 5 is_stmt 1 view .LVU110
+ 224:main.c        **** 				if ( sensor_status != SENSOR_OK )
+ 380              		.loc 1 224 21 is_stmt 0 view .LVU111
+ 381 00d6 2146     		mov	r1, r4
+ 382 00d8 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 383              	.LVL54:
+ 224:main.c        **** 				if ( sensor_status != SENSOR_OK )
+ 384              		.loc 1 224 21 view .LVU112
+ 385 00dc FFF7FEFF 		bl	sensor_cmd_execute
+ 386              	.LVL55:
+ 225:main.c        **** 					{
+ 387              		.loc 1 225 5 is_stmt 1 view .LVU113
+ 225:main.c        **** 					{
+ 388              		.loc 1 225 8 is_stmt 0 view .LVU114
+ 389 00e0 0028     		cmp	r0, #0
+ 390 00e2 BFD0     		beq	.L9
+ 227:main.c        **** 					}
+ 391              		.loc 1 227 6 is_stmt 1 view .LVU115
+ 392 00e4 FFF7FEFF 		bl	Error_Handler
+ 393              	.LVL56:
+ 394              	.L22:
+ 232:main.c        **** 				}
+ 395              		.loc 1 232 5 view .LVU116
+ 396 00e8 FFF7FEFF 		bl	Error_Handler
+ 397              	.LVL57:
+ 398              	.L28:
+ 251:main.c        **** 				}
+ 399              		.loc 1 251 5 view .LVU117
+ 400 00ec FFF7FEFF 		bl	Error_Handler
+ 401              	.LVL58:
+ 402              	.L23:
+ 265:main.c        **** 			                              sizeof( subcommand ),
+ 403              		.loc 1 265 4 view .LVU118
+ 265:main.c        **** 			                              sizeof( subcommand ),
+ 404              		.loc 1 265 19 is_stmt 0 view .LVU119
+ 405 00f0 0122     		movs	r2, #1
+ 406 00f2 1146     		mov	r1, r2
+ 407              	.LVL59:
+ 265:main.c        **** 			                              sizeof( subcommand ),
+ 408              		.loc 1 265 19 view .LVU120
+ 409 00f4 0DF10700 		add	r0, sp, #7
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 19
+
+
+ 410              	.LVL60:
+ 265:main.c        **** 			                              sizeof( subcommand ),
+ 411              		.loc 1 265 19 view .LVU121
+ 412 00f8 FFF7FEFF 		bl	valve_receive
+ 413              	.LVL61:
+ 270:main.c        **** 				{
+ 414              		.loc 1 270 4 is_stmt 1 view .LVU122
+ 270:main.c        **** 				{
+ 415              		.loc 1 270 7 is_stmt 0 view .LVU123
+ 416 00fc 38B9     		cbnz	r0, .L29
+ 276:main.c        **** 				if ( valve_status != VALVE_OK )
+ 417              		.loc 1 276 5 is_stmt 1 view .LVU124
+ 276:main.c        **** 				if ( valve_status != VALVE_OK )
+ 418              		.loc 1 276 20 is_stmt 0 view .LVU125
+ 419 00fe 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 420              	.LVL62:
+ 276:main.c        **** 				if ( valve_status != VALVE_OK )
+ 421              		.loc 1 276 20 view .LVU126
+ 422 0102 FFF7FEFF 		bl	valve_cmd_execute
+ 423              	.LVL63:
+ 277:main.c        **** 					{
+ 424              		.loc 1 277 5 is_stmt 1 view .LVU127
+ 277:main.c        **** 					{
+ 425              		.loc 1 277 8 is_stmt 0 view .LVU128
+ 426 0106 0028     		cmp	r0, #0
+ 427 0108 ACD0     		beq	.L9
+ 279:main.c        **** 					}
+ 428              		.loc 1 279 6 is_stmt 1 view .LVU129
+ 429 010a FFF7FEFF 		bl	Error_Handler
+ 430              	.LVL64:
+ 431              	.L29:
+ 272:main.c        **** 				}
+ 432              		.loc 1 272 5 view .LVU130
+ 433 010e FFF7FEFF 		bl	Error_Handler
+ 434              	.LVL65:
+ 272:main.c        **** 				}
+ 435              		.loc 1 272 5 is_stmt 0 view .LVU131
+ 436              		.cfi_endproc
+ 437              	.LFE145:
+ 439              		.global	huart3
+ 440              		.section	.bss.huart3,"aw",%nobits
+ 441              		.align	2
+ 444              	huart3:
+ 445 0000 00000000 		.space	144
+ 445      00000000 
+ 445      00000000 
+ 445      00000000 
+ 445      00000000 
+ 446              		.global	huart1
+ 447              		.section	.bss.huart1,"aw",%nobits
+ 448              		.align	2
+ 451              	huart1:
+ 452 0000 00000000 		.space	144
+ 452      00000000 
+ 452      00000000 
+ 452      00000000 
+ 452      00000000 
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 20
+
+
+ 453              		.global	htim15
+ 454              		.section	.bss.htim15,"aw",%nobits
+ 455              		.align	2
+ 458              	htim15:
+ 459 0000 00000000 		.space	76
+ 459      00000000 
+ 459      00000000 
+ 459      00000000 
+ 459      00000000 
+ 460              		.global	htim2
+ 461              		.section	.bss.htim2,"aw",%nobits
+ 462              		.align	2
+ 465              	htim2:
+ 466 0000 00000000 		.space	76
+ 466      00000000 
+ 466      00000000 
+ 466      00000000 
+ 466      00000000 
+ 467              		.text
+ 468              	.Letext0:
+ 469              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 470              		.file 4 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 471              		.file 5 "../../../lib/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h"
+ 472              		.file 6 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.3.1/includ
+ 473              		.file 7 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
+ 474              		.file 8 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h"
+ 475              		.file 9 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h"
+ 476              		.file 10 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h"
+ 477              		.file 11 "../../../lib/sdr_pin_defines_L0005.h"
+ 478              		.file 12 "main.h"
+ 479              		.file 13 "../../../mod/led/led.h"
+ 480              		.file 14 "../../../mod/sensor/sensor.h"
+ 481              		.file 15 "../../../mod/usb/usb.h"
+ 482              		.file 16 "../../../mod/valve/valve.h"
+ 483              		.file 17 "../../../mod/solenoid/solenoid.h"
+ 484              		.file 18 "../../../mod/commands/commands.h"
+ 485              		.file 19 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h"
+ 486              		.file 20 "../../../init/rev3/init.h"
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s 			page 21
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:20     .text.main:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:26     .text.main:00000000 main
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:105    .text.Error_Handler:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:111    .text.Error_Handler:00000000 Error_Handler
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:150    .text.command_handler:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:156    .text.command_handler:00000000 command_handler
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:444    .bss.huart3:00000000 huart3
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:441    .bss.huart3:00000000 $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:451    .bss.huart1:00000000 huart1
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:448    .bss.huart1:00000000 $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:458    .bss.htim15:00000000 htim15
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:455    .bss.htim15:00000000 $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:465    .bss.htim2:00000000 htim2
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccflUVrs.s:462    .bss.htim2:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_Init
+SystemClock_Config
+GPIO_Init
+USB_UART_Init
+Valve_UART_Init
+LOX_Valve_TIM_Init
+Fuel_Valve_TIM_Init
+sensor_init
+led_set_color
+solenoid_toggle
+HAL_Delay
+led_error_assert
+usb_receive
+valve_cmd_execute
+ping
+usb_transmit
+solenoid_cmd_execute
+valve_receive
+sensor_cmd_execute

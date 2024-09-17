@@ -1,0 +1,1782 @@
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"init.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.file 1 "../../../init/rev3/init.c"
+  19              		.section	.text.SystemClock_Config,"ax",%progbits
+  20              		.align	1
+  21              		.global	SystemClock_Config
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	SystemClock_Config:
+  27              	.LFB144:
+   1:../../../init/rev3/init.c **** /*******************************************************************************
+   2:../../../init/rev3/init.c **** *                                                                              *
+   3:../../../init/rev3/init.c **** * FILE:                                                                        *
+   4:../../../init/rev3/init.c **** * 		init.c                                                                 *
+   5:../../../init/rev3/init.c **** *                                                                              *
+   6:../../../init/rev3/init.c **** * DESCRIPTION:                                                                 *
+   7:../../../init/rev3/init.c **** * 		Contains initialization routines for MCU core and peripherals          *
+   8:../../../init/rev3/init.c **** *                                                                              *
+   9:../../../init/rev3/init.c **** *******************************************************************************/
+  10:../../../init/rev3/init.c **** 
+  11:../../../init/rev3/init.c **** 
+  12:../../../init/rev3/init.c **** /*------------------------------------------------------------------------------
+  13:../../../init/rev3/init.c ****  Standard Includes                                                              
+  14:../../../init/rev3/init.c **** ------------------------------------------------------------------------------*/
+  15:../../../init/rev3/init.c **** 
+  16:../../../init/rev3/init.c **** 
+  17:../../../init/rev3/init.c **** /*------------------------------------------------------------------------------
+  18:../../../init/rev3/init.c ****  Project Includes                                                               
+  19:../../../init/rev3/init.c **** ------------------------------------------------------------------------------*/
+  20:../../../init/rev3/init.c **** #include "sdr_pin_defines_L0005.h"
+  21:../../../init/rev3/init.c **** #include "main.h"
+  22:../../../init/rev3/init.c **** #include "init.h"
+  23:../../../init/rev3/init.c **** 
+  24:../../../init/rev3/init.c **** 
+  25:../../../init/rev3/init.c **** /*------------------------------------------------------------------------------
+  26:../../../init/rev3/init.c ****  Global Variables 
+  27:../../../init/rev3/init.c **** ------------------------------------------------------------------------------*/
+  28:../../../init/rev3/init.c **** 
+  29:../../../init/rev3/init.c **** 
+  30:../../../init/rev3/init.c **** /*------------------------------------------------------------------------------
+  31:../../../init/rev3/init.c ****  Procedures 
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 2
+
+
+  32:../../../init/rev3/init.c **** ------------------------------------------------------------------------------*/
+  33:../../../init/rev3/init.c **** 
+  34:../../../init/rev3/init.c **** 
+  35:../../../init/rev3/init.c **** /*******************************************************************************
+  36:../../../init/rev3/init.c **** *                                                                              *
+  37:../../../init/rev3/init.c **** * PROCEDURE:                                                                   *
+  38:../../../init/rev3/init.c **** * 		SystemClock_Config                                                     *
+  39:../../../init/rev3/init.c **** *                                                                              *
+  40:../../../init/rev3/init.c **** * DESCRIPTION:                                                                 *
+  41:../../../init/rev3/init.c **** * 		Initializes the microcontroller clock. Enables peripheral clocks and   *
+  42:../../../init/rev3/init.c **** *       sets prescalers                                                        *
+  43:../../../init/rev3/init.c **** *                                                                              *
+  44:../../../init/rev3/init.c **** *******************************************************************************/
+  45:../../../init/rev3/init.c **** void SystemClock_Config
+  46:../../../init/rev3/init.c **** 	(
+  47:../../../init/rev3/init.c **** 	void
+  48:../../../init/rev3/init.c **** 	)
+  49:../../../init/rev3/init.c **** {
+  28              		.loc 1 49 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 112
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 00B5     		push	{lr}
+  33              	.LCFI0:
+  34              		.cfi_def_cfa_offset 4
+  35              		.cfi_offset 14, -4
+  36 0002 9DB0     		sub	sp, sp, #116
+  37              	.LCFI1:
+  38              		.cfi_def_cfa_offset 120
+  50:../../../init/rev3/init.c **** /* Initialization Structs */
+  51:../../../init/rev3/init.c **** RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  39              		.loc 1 51 1 view .LVU1
+  40              		.loc 1 51 20 is_stmt 0 view .LVU2
+  41 0004 4C22     		movs	r2, #76
+  42 0006 0021     		movs	r1, #0
+  43 0008 09A8     		add	r0, sp, #36
+  44 000a FFF7FEFF 		bl	memset
+  45              	.LVL0:
+  52:../../../init/rev3/init.c **** RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  46              		.loc 1 52 1 is_stmt 1 view .LVU3
+  47              		.loc 1 52 20 is_stmt 0 view .LVU4
+  48 000e 2022     		movs	r2, #32
+  49 0010 0021     		movs	r1, #0
+  50 0012 01A8     		add	r0, sp, #4
+  51 0014 FFF7FEFF 		bl	memset
+  52              	.LVL1:
+  53:../../../init/rev3/init.c **** 
+  54:../../../init/rev3/init.c **** /* Supply configuration update enable */
+  55:../../../init/rev3/init.c **** HAL_PWREx_ConfigSupply( PWR_LDO_SUPPLY );
+  53              		.loc 1 55 1 is_stmt 1 view .LVU5
+  54 0018 0220     		movs	r0, #2
+  55 001a FFF7FEFF 		bl	HAL_PWREx_ConfigSupply
+  56              	.LVL2:
+  56:../../../init/rev3/init.c **** 
+  57:../../../init/rev3/init.c **** /* Configure the main internal regulator output voltage */
+  58:../../../init/rev3/init.c **** __HAL_PWR_VOLTAGESCALING_CONFIG( PWR_REGULATOR_VOLTAGE_SCALE3 );
+  57              		.loc 1 58 1 view .LVU6
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 3
+
+
+  58              	.LBB2:
+  59              		.loc 1 58 1 view .LVU7
+  60 001e 0023     		movs	r3, #0
+  61 0020 0093     		str	r3, [sp]
+  62              		.loc 1 58 1 view .LVU8
+  63              		.loc 1 58 1 discriminator 2 view .LVU9
+  64 0022 224B     		ldr	r3, .L8
+  65 0024 DA6A     		ldr	r2, [r3, #44]
+  66 0026 22F00102 		bic	r2, r2, #1
+  67 002a DA62     		str	r2, [r3, #44]
+  68              		.loc 1 58 1 discriminator 2 view .LVU10
+  69 002c DB6A     		ldr	r3, [r3, #44]
+  70 002e 03F00103 		and	r3, r3, #1
+  71 0032 0093     		str	r3, [sp]
+  72              		.loc 1 58 1 discriminator 2 view .LVU11
+  73 0034 1E4A     		ldr	r2, .L8+4
+  74 0036 9369     		ldr	r3, [r2, #24]
+  75 0038 23F44043 		bic	r3, r3, #49152
+  76 003c 43F48043 		orr	r3, r3, #16384
+  77 0040 9361     		str	r3, [r2, #24]
+  78              		.loc 1 58 1 discriminator 2 view .LVU12
+  79 0042 9369     		ldr	r3, [r2, #24]
+  80 0044 03F44043 		and	r3, r3, #49152
+  81 0048 0093     		str	r3, [sp]
+  82              		.loc 1 58 1 discriminator 4 view .LVU13
+  83 004a 009B     		ldr	r3, [sp]
+  84              	.LBE2:
+  85              		.loc 1 58 1 discriminator 4 view .LVU14
+  59:../../../init/rev3/init.c **** while( !__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY) ){}
+  86              		.loc 1 59 1 view .LVU15
+  87              	.L2:
+  88              		.loc 1 59 47 discriminator 1 view .LVU16
+  89              		.loc 1 59 8 discriminator 1 view .LVU17
+  90              		.loc 1 59 9 is_stmt 0 discriminator 1 view .LVU18
+  91 004c 184B     		ldr	r3, .L8+4
+  92 004e 9B69     		ldr	r3, [r3, #24]
+  93              		.loc 1 59 8 discriminator 1 view .LVU19
+  94 0050 13F4005F 		tst	r3, #8192
+  95 0054 FAD0     		beq	.L2
+  60:../../../init/rev3/init.c **** 
+  61:../../../init/rev3/init.c **** /* Macro to configure the PLL clock source */
+  62:../../../init/rev3/init.c **** __HAL_RCC_PLL_PLLSOURCE_CONFIG( RCC_PLLSOURCE_HSI );
+  96              		.loc 1 62 1 is_stmt 1 view .LVU20
+  97 0056 174A     		ldr	r2, .L8+8
+  98 0058 936A     		ldr	r3, [r2, #40]
+  99 005a 23F00303 		bic	r3, r3, #3
+ 100 005e 9362     		str	r3, [r2, #40]
+  63:../../../init/rev3/init.c **** 
+  64:../../../init/rev3/init.c **** /* Initializes the RCC Oscillators according to the specified parameters
+  65:../../../init/rev3/init.c ****    in the RCC_OscInitTypeDef structure. */
+  66:../../../init/rev3/init.c **** RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_HSI;
+ 101              		.loc 1 66 1 view .LVU21
+ 102              		.loc 1 66 39 is_stmt 0 view .LVU22
+ 103 0060 0223     		movs	r3, #2
+ 104 0062 0993     		str	r3, [sp, #36]
+  67:../../../init/rev3/init.c **** RCC_OscInitStruct.HSIState            = RCC_HSI_DIV1;
+ 105              		.loc 1 67 1 is_stmt 1 view .LVU23
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 4
+
+
+ 106              		.loc 1 67 39 is_stmt 0 view .LVU24
+ 107 0064 0123     		movs	r3, #1
+ 108 0066 0C93     		str	r3, [sp, #48]
+  68:../../../init/rev3/init.c **** RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+ 109              		.loc 1 68 1 is_stmt 1 view .LVU25
+ 110              		.loc 1 68 39 is_stmt 0 view .LVU26
+ 111 0068 4023     		movs	r3, #64
+ 112 006a 0D93     		str	r3, [sp, #52]
+  69:../../../init/rev3/init.c **** RCC_OscInitStruct.PLL.PLLState        = RCC_PLL_NONE;
+ 113              		.loc 1 69 1 is_stmt 1 view .LVU27
+ 114              		.loc 1 69 39 is_stmt 0 view .LVU28
+ 115 006c 0023     		movs	r3, #0
+ 116 006e 1293     		str	r3, [sp, #72]
+  70:../../../init/rev3/init.c **** RCC_OscInitStruct.PLL.PLLSource       = RCC_PLLSOURCE_HSI;
+ 117              		.loc 1 70 1 is_stmt 1 view .LVU29
+ 118              		.loc 1 70 39 is_stmt 0 view .LVU30
+ 119 0070 1393     		str	r3, [sp, #76]
+  71:../../../init/rev3/init.c **** if ( HAL_RCC_OscConfig( &RCC_OscInitStruct ) != HAL_OK )
+ 120              		.loc 1 71 1 is_stmt 1 view .LVU31
+ 121              		.loc 1 71 6 is_stmt 0 view .LVU32
+ 122 0072 09A8     		add	r0, sp, #36
+ 123 0074 FFF7FEFF 		bl	HAL_RCC_OscConfig
+ 124              	.LVL3:
+ 125              		.loc 1 71 4 discriminator 1 view .LVU33
+ 126 0078 90B9     		cbnz	r0, .L6
+ 127              	.L3:
+  72:../../../init/rev3/init.c **** 	{
+  73:../../../init/rev3/init.c **** 	Error_Handler();
+  74:../../../init/rev3/init.c **** 	}
+  75:../../../init/rev3/init.c **** 
+  76:../../../init/rev3/init.c **** /* Initializes the CPU, AHB and APB buses clocks */
+  77:../../../init/rev3/init.c **** RCC_ClkInitStruct.ClockType      = RCC_CLOCKTYPE_HCLK    | RCC_CLOCKTYPE_SYSCLK |
+ 128              		.loc 1 77 1 is_stmt 1 view .LVU34
+ 129              		.loc 1 77 34 is_stmt 0 view .LVU35
+ 130 007a 3F23     		movs	r3, #63
+ 131 007c 0193     		str	r3, [sp, #4]
+  78:../../../init/rev3/init.c ****                                    RCC_CLOCKTYPE_PCLK1   | RCC_CLOCKTYPE_PCLK2  |
+  79:../../../init/rev3/init.c **** 							       RCC_CLOCKTYPE_D3PCLK1 | RCC_CLOCKTYPE_D1PCLK1;
+  80:../../../init/rev3/init.c **** RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_HSI;
+ 132              		.loc 1 80 1 is_stmt 1 view .LVU36
+ 133              		.loc 1 80 34 is_stmt 0 view .LVU37
+ 134 007e 0023     		movs	r3, #0
+ 135 0080 0293     		str	r3, [sp, #8]
+  81:../../../init/rev3/init.c **** RCC_ClkInitStruct.SYSCLKDivider  = RCC_SYSCLK_DIV1;
+ 136              		.loc 1 81 1 is_stmt 1 view .LVU38
+ 137              		.loc 1 81 34 is_stmt 0 view .LVU39
+ 138 0082 0393     		str	r3, [sp, #12]
+  82:../../../init/rev3/init.c **** RCC_ClkInitStruct.AHBCLKDivider  = RCC_HCLK_DIV1;
+ 139              		.loc 1 82 1 is_stmt 1 view .LVU40
+ 140              		.loc 1 82 34 is_stmt 0 view .LVU41
+ 141 0084 0493     		str	r3, [sp, #16]
+  83:../../../init/rev3/init.c **** RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV1;
+ 142              		.loc 1 83 1 is_stmt 1 view .LVU42
+ 143              		.loc 1 83 34 is_stmt 0 view .LVU43
+ 144 0086 0593     		str	r3, [sp, #20]
+  84:../../../init/rev3/init.c **** RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV2;
+ 145              		.loc 1 84 1 is_stmt 1 view .LVU44
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 5
+
+
+ 146              		.loc 1 84 34 is_stmt 0 view .LVU45
+ 147 0088 4022     		movs	r2, #64
+ 148 008a 0692     		str	r2, [sp, #24]
+  85:../../../init/rev3/init.c **** RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV1;
+ 149              		.loc 1 85 1 is_stmt 1 view .LVU46
+ 150              		.loc 1 85 34 is_stmt 0 view .LVU47
+ 151 008c 0793     		str	r3, [sp, #28]
+  86:../../../init/rev3/init.c **** RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV1;
+ 152              		.loc 1 86 1 is_stmt 1 view .LVU48
+ 153              		.loc 1 86 34 is_stmt 0 view .LVU49
+ 154 008e 0893     		str	r3, [sp, #32]
+  87:../../../init/rev3/init.c **** if ( HAL_RCC_ClockConfig( &RCC_ClkInitStruct, FLASH_LATENCY_1 ) != HAL_OK )
+ 155              		.loc 1 87 1 is_stmt 1 view .LVU50
+ 156              		.loc 1 87 6 is_stmt 0 view .LVU51
+ 157 0090 0121     		movs	r1, #1
+ 158 0092 01A8     		add	r0, sp, #4
+ 159 0094 FFF7FEFF 		bl	HAL_RCC_ClockConfig
+ 160              	.LVL4:
+ 161              		.loc 1 87 4 discriminator 1 view .LVU52
+ 162 0098 28B9     		cbnz	r0, .L7
+ 163              	.L1:
+  88:../../../init/rev3/init.c **** 	{
+  89:../../../init/rev3/init.c **** 	Error_Handler();
+  90:../../../init/rev3/init.c **** 	}
+  91:../../../init/rev3/init.c **** } /* SystemClock_Config */
+ 164              		.loc 1 91 1 view .LVU53
+ 165 009a 1DB0     		add	sp, sp, #116
+ 166              	.LCFI2:
+ 167              		.cfi_remember_state
+ 168              		.cfi_def_cfa_offset 4
+ 169              		@ sp needed
+ 170 009c 5DF804FB 		ldr	pc, [sp], #4
+ 171              	.L6:
+ 172              	.LCFI3:
+ 173              		.cfi_restore_state
+  73:../../../init/rev3/init.c **** 	}
+ 174              		.loc 1 73 2 is_stmt 1 view .LVU54
+ 175 00a0 FFF7FEFF 		bl	Error_Handler
+ 176              	.LVL5:
+ 177 00a4 E9E7     		b	.L3
+ 178              	.L7:
+  89:../../../init/rev3/init.c **** 	}
+ 179              		.loc 1 89 2 view .LVU55
+ 180 00a6 FFF7FEFF 		bl	Error_Handler
+ 181              	.LVL6:
+ 182              		.loc 1 91 1 is_stmt 0 view .LVU56
+ 183 00aa F6E7     		b	.L1
+ 184              	.L9:
+ 185              		.align	2
+ 186              	.L8:
+ 187 00ac 00040058 		.word	1476396032
+ 188 00b0 00480258 		.word	1476544512
+ 189 00b4 00440258 		.word	1476543488
+ 190              		.cfi_endproc
+ 191              	.LFE144:
+ 193              		.section	.text.Fuel_Valve_TIM_Init,"ax",%progbits
+ 194              		.align	1
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 6
+
+
+ 195              		.global	Fuel_Valve_TIM_Init
+ 196              		.syntax unified
+ 197              		.thumb
+ 198              		.thumb_func
+ 200              	Fuel_Valve_TIM_Init:
+ 201              	.LFB145:
+  92:../../../init/rev3/init.c **** 
+  93:../../../init/rev3/init.c **** 
+  94:../../../init/rev3/init.c **** /*******************************************************************************
+  95:../../../init/rev3/init.c **** *                                                                              *
+  96:../../../init/rev3/init.c **** * PROCEDURE:                                                                   *
+  97:../../../init/rev3/init.c **** * 		Fuel_Valve_TIM_Init                                                    *
+  98:../../../init/rev3/init.c **** *                                                                              *
+  99:../../../init/rev3/init.c **** * DESCRIPTION:                                                                 *
+ 100:../../../init/rev3/init.c **** * 		Initializes the main fuel valve PWM control timer                      *
+ 101:../../../init/rev3/init.c **** *                                                                              *
+ 102:../../../init/rev3/init.c **** *******************************************************************************/
+ 103:../../../init/rev3/init.c **** void Fuel_Valve_TIM_Init
+ 104:../../../init/rev3/init.c **** 	(
+ 105:../../../init/rev3/init.c **** 	void
+ 106:../../../init/rev3/init.c **** 	)
+ 107:../../../init/rev3/init.c **** {
+ 202              		.loc 1 107 1 is_stmt 1 view -0
+ 203              		.cfi_startproc
+ 204              		@ args = 0, pretend = 0, frame = 56
+ 205              		@ frame_needed = 0, uses_anonymous_args = 0
+ 206 0000 00B5     		push	{lr}
+ 207              	.LCFI4:
+ 208              		.cfi_def_cfa_offset 4
+ 209              		.cfi_offset 14, -4
+ 210 0002 8FB0     		sub	sp, sp, #60
+ 211              	.LCFI5:
+ 212              		.cfi_def_cfa_offset 64
+ 108:../../../init/rev3/init.c **** /* Initialization structs */
+ 109:../../../init/rev3/init.c **** TIM_ClockConfigTypeDef  sClockSourceConfig = {0};
+ 213              		.loc 1 109 1 view .LVU58
+ 214              		.loc 1 109 25 is_stmt 0 view .LVU59
+ 215 0004 0023     		movs	r3, #0
+ 216 0006 0A93     		str	r3, [sp, #40]
+ 217 0008 0B93     		str	r3, [sp, #44]
+ 218 000a 0C93     		str	r3, [sp, #48]
+ 219 000c 0D93     		str	r3, [sp, #52]
+ 110:../../../init/rev3/init.c **** TIM_MasterConfigTypeDef sMasterConfig      = {0};
+ 220              		.loc 1 110 1 is_stmt 1 view .LVU60
+ 221              		.loc 1 110 25 is_stmt 0 view .LVU61
+ 222 000e 0793     		str	r3, [sp, #28]
+ 223 0010 0893     		str	r3, [sp, #32]
+ 224 0012 0993     		str	r3, [sp, #36]
+ 111:../../../init/rev3/init.c **** TIM_OC_InitTypeDef      sConfigOC          = {0};
+ 225              		.loc 1 111 1 is_stmt 1 view .LVU62
+ 226              		.loc 1 111 25 is_stmt 0 view .LVU63
+ 227 0014 0093     		str	r3, [sp]
+ 228 0016 0193     		str	r3, [sp, #4]
+ 229 0018 0293     		str	r3, [sp, #8]
+ 230 001a 0393     		str	r3, [sp, #12]
+ 231 001c 0493     		str	r3, [sp, #16]
+ 232 001e 0593     		str	r3, [sp, #20]
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 7
+
+
+ 233 0020 0693     		str	r3, [sp, #24]
+ 112:../../../init/rev3/init.c **** 
+ 113:../../../init/rev3/init.c **** /* Initializations */
+ 114:../../../init/rev3/init.c **** htim2.Instance               = TIM2;
+ 234              		.loc 1 114 1 is_stmt 1 view .LVU64
+ 235              		.loc 1 114 30 is_stmt 0 view .LVU65
+ 236 0022 2248     		ldr	r0, .L22
+ 237 0024 4FF08042 		mov	r2, #1073741824
+ 238 0028 0260     		str	r2, [r0]
+ 115:../../../init/rev3/init.c **** htim2.Init.Prescaler         = 0;
+ 239              		.loc 1 115 1 is_stmt 1 view .LVU66
+ 240              		.loc 1 115 30 is_stmt 0 view .LVU67
+ 241 002a 4360     		str	r3, [r0, #4]
+ 116:../../../init/rev3/init.c **** htim2.Init.CounterMode       = TIM_COUNTERMODE_UP;
+ 242              		.loc 1 116 1 is_stmt 1 view .LVU68
+ 243              		.loc 1 116 30 is_stmt 0 view .LVU69
+ 244 002c 8360     		str	r3, [r0, #8]
+ 117:../../../init/rev3/init.c **** htim2.Init.Period            = 63999;
+ 245              		.loc 1 117 1 is_stmt 1 view .LVU70
+ 246              		.loc 1 117 30 is_stmt 0 view .LVU71
+ 247 002e 4FF6FF12 		movw	r2, #63999
+ 248 0032 C260     		str	r2, [r0, #12]
+ 118:../../../init/rev3/init.c **** htim2.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+ 249              		.loc 1 118 1 is_stmt 1 view .LVU72
+ 250              		.loc 1 118 30 is_stmt 0 view .LVU73
+ 251 0034 0361     		str	r3, [r0, #16]
+ 119:../../../init/rev3/init.c **** htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+ 252              		.loc 1 119 1 is_stmt 1 view .LVU74
+ 253              		.loc 1 119 30 is_stmt 0 view .LVU75
+ 254 0036 8361     		str	r3, [r0, #24]
+ 120:../../../init/rev3/init.c **** if ( HAL_TIM_Base_Init( &htim2 ) != HAL_OK )
+ 255              		.loc 1 120 1 is_stmt 1 view .LVU76
+ 256              		.loc 1 120 6 is_stmt 0 view .LVU77
+ 257 0038 FFF7FEFF 		bl	HAL_TIM_Base_Init
+ 258              	.LVL7:
+ 259              		.loc 1 120 4 discriminator 1 view .LVU78
+ 260 003c 38BB     		cbnz	r0, .L17
+ 261              	.L11:
+ 121:../../../init/rev3/init.c **** 	{
+ 122:../../../init/rev3/init.c **** 	Error_Handler();
+ 123:../../../init/rev3/init.c **** 	}
+ 124:../../../init/rev3/init.c **** sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+ 262              		.loc 1 124 1 is_stmt 1 view .LVU79
+ 263              		.loc 1 124 32 is_stmt 0 view .LVU80
+ 264 003e 4FF48053 		mov	r3, #4096
+ 265 0042 0A93     		str	r3, [sp, #40]
+ 125:../../../init/rev3/init.c **** if ( HAL_TIM_ConfigClockSource( &htim2, &sClockSourceConfig ) != HAL_OK )
+ 266              		.loc 1 125 1 is_stmt 1 view .LVU81
+ 267              		.loc 1 125 6 is_stmt 0 view .LVU82
+ 268 0044 0AA9     		add	r1, sp, #40
+ 269 0046 1948     		ldr	r0, .L22
+ 270 0048 FFF7FEFF 		bl	HAL_TIM_ConfigClockSource
+ 271              	.LVL8:
+ 272              		.loc 1 125 4 discriminator 1 view .LVU83
+ 273 004c 10BB     		cbnz	r0, .L18
+ 274              	.L12:
+ 126:../../../init/rev3/init.c **** 	{
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 8
+
+
+ 127:../../../init/rev3/init.c **** 	Error_Handler();
+ 128:../../../init/rev3/init.c **** 	}
+ 129:../../../init/rev3/init.c **** if ( HAL_TIM_PWM_Init( &htim2 ) != HAL_OK )
+ 275              		.loc 1 129 1 is_stmt 1 view .LVU84
+ 276              		.loc 1 129 6 is_stmt 0 view .LVU85
+ 277 004e 1748     		ldr	r0, .L22
+ 278 0050 FFF7FEFF 		bl	HAL_TIM_PWM_Init
+ 279              	.LVL9:
+ 280              		.loc 1 129 4 discriminator 1 view .LVU86
+ 281 0054 08BB     		cbnz	r0, .L19
+ 282              	.L13:
+ 130:../../../init/rev3/init.c **** 	{
+ 131:../../../init/rev3/init.c **** 	Error_Handler();
+ 132:../../../init/rev3/init.c **** 	}
+ 133:../../../init/rev3/init.c **** sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+ 283              		.loc 1 133 1 is_stmt 1 view .LVU87
+ 284              		.loc 1 133 35 is_stmt 0 view .LVU88
+ 285 0056 0023     		movs	r3, #0
+ 286 0058 0793     		str	r3, [sp, #28]
+ 134:../../../init/rev3/init.c **** sMasterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
+ 287              		.loc 1 134 1 is_stmt 1 view .LVU89
+ 288              		.loc 1 134 35 is_stmt 0 view .LVU90
+ 289 005a 0993     		str	r3, [sp, #36]
+ 135:../../../init/rev3/init.c **** if ( HAL_TIMEx_MasterConfigSynchronization( &htim2, &sMasterConfig ) != HAL_OK )
+ 290              		.loc 1 135 1 is_stmt 1 view .LVU91
+ 291              		.loc 1 135 6 is_stmt 0 view .LVU92
+ 292 005c 07A9     		add	r1, sp, #28
+ 293 005e 1348     		ldr	r0, .L22
+ 294 0060 FFF7FEFF 		bl	HAL_TIMEx_MasterConfigSynchronization
+ 295              	.LVL10:
+ 296              		.loc 1 135 4 discriminator 1 view .LVU93
+ 297 0064 E0B9     		cbnz	r0, .L20
+ 298              	.L14:
+ 136:../../../init/rev3/init.c **** 	{
+ 137:../../../init/rev3/init.c **** 	Error_Handler();
+ 138:../../../init/rev3/init.c **** 	}
+ 139:../../../init/rev3/init.c **** sConfigOC.OCMode     = TIM_OCMODE_PWM1;
+ 299              		.loc 1 139 1 is_stmt 1 view .LVU94
+ 300              		.loc 1 139 22 is_stmt 0 view .LVU95
+ 301 0066 6023     		movs	r3, #96
+ 302 0068 0093     		str	r3, [sp]
+ 140:../../../init/rev3/init.c **** sConfigOC.Pulse      = 32000;
+ 303              		.loc 1 140 1 is_stmt 1 view .LVU96
+ 304              		.loc 1 140 22 is_stmt 0 view .LVU97
+ 305 006a 4FF4FA43 		mov	r3, #32000
+ 306 006e 0193     		str	r3, [sp, #4]
+ 141:../../../init/rev3/init.c **** sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+ 307              		.loc 1 141 1 is_stmt 1 view .LVU98
+ 308              		.loc 1 141 22 is_stmt 0 view .LVU99
+ 309 0070 0023     		movs	r3, #0
+ 310 0072 0293     		str	r3, [sp, #8]
+ 142:../../../init/rev3/init.c **** sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+ 311              		.loc 1 142 1 is_stmt 1 view .LVU100
+ 312              		.loc 1 142 22 is_stmt 0 view .LVU101
+ 313 0074 0493     		str	r3, [sp, #16]
+ 143:../../../init/rev3/init.c **** if ( HAL_TIM_PWM_ConfigChannel( &htim2, &sConfigOC, TIM_CHANNEL_4 ) != HAL_OK )
+ 314              		.loc 1 143 1 is_stmt 1 view .LVU102
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 9
+
+
+ 315              		.loc 1 143 6 is_stmt 0 view .LVU103
+ 316 0076 0C22     		movs	r2, #12
+ 317 0078 6946     		mov	r1, sp
+ 318 007a 0C48     		ldr	r0, .L22
+ 319 007c FFF7FEFF 		bl	HAL_TIM_PWM_ConfigChannel
+ 320              	.LVL11:
+ 321              		.loc 1 143 4 discriminator 1 view .LVU104
+ 322 0080 88B9     		cbnz	r0, .L21
+ 323              	.L15:
+ 144:../../../init/rev3/init.c **** 	{
+ 145:../../../init/rev3/init.c **** 	Error_Handler();
+ 146:../../../init/rev3/init.c **** 	}
+ 147:../../../init/rev3/init.c **** HAL_TIM_MspPostInit( &htim2 );
+ 324              		.loc 1 147 1 is_stmt 1 view .LVU105
+ 325 0082 0A48     		ldr	r0, .L22
+ 326 0084 FFF7FEFF 		bl	HAL_TIM_MspPostInit
+ 327              	.LVL12:
+ 148:../../../init/rev3/init.c **** } /* Fuel_Valve_TIM_Init */
+ 328              		.loc 1 148 1 is_stmt 0 view .LVU106
+ 329 0088 0FB0     		add	sp, sp, #60
+ 330              	.LCFI6:
+ 331              		.cfi_remember_state
+ 332              		.cfi_def_cfa_offset 4
+ 333              		@ sp needed
+ 334 008a 5DF804FB 		ldr	pc, [sp], #4
+ 335              	.L17:
+ 336              	.LCFI7:
+ 337              		.cfi_restore_state
+ 122:../../../init/rev3/init.c **** 	}
+ 338              		.loc 1 122 2 is_stmt 1 view .LVU107
+ 339 008e FFF7FEFF 		bl	Error_Handler
+ 340              	.LVL13:
+ 341 0092 D4E7     		b	.L11
+ 342              	.L18:
+ 127:../../../init/rev3/init.c **** 	}
+ 343              		.loc 1 127 2 view .LVU108
+ 344 0094 FFF7FEFF 		bl	Error_Handler
+ 345              	.LVL14:
+ 346 0098 D9E7     		b	.L12
+ 347              	.L19:
+ 131:../../../init/rev3/init.c **** 	}
+ 348              		.loc 1 131 2 view .LVU109
+ 349 009a FFF7FEFF 		bl	Error_Handler
+ 350              	.LVL15:
+ 351 009e DAE7     		b	.L13
+ 352              	.L20:
+ 137:../../../init/rev3/init.c **** 	}
+ 353              		.loc 1 137 2 view .LVU110
+ 354 00a0 FFF7FEFF 		bl	Error_Handler
+ 355              	.LVL16:
+ 356 00a4 DFE7     		b	.L14
+ 357              	.L21:
+ 145:../../../init/rev3/init.c **** 	}
+ 358              		.loc 1 145 2 view .LVU111
+ 359 00a6 FFF7FEFF 		bl	Error_Handler
+ 360              	.LVL17:
+ 361 00aa EAE7     		b	.L15
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 10
+
+
+ 362              	.L23:
+ 363              		.align	2
+ 364              	.L22:
+ 365 00ac 00000000 		.word	htim2
+ 366              		.cfi_endproc
+ 367              	.LFE145:
+ 369              		.section	.text.LOX_Valve_TIM_Init,"ax",%progbits
+ 370              		.align	1
+ 371              		.global	LOX_Valve_TIM_Init
+ 372              		.syntax unified
+ 373              		.thumb
+ 374              		.thumb_func
+ 376              	LOX_Valve_TIM_Init:
+ 377              	.LFB146:
+ 149:../../../init/rev3/init.c **** 
+ 150:../../../init/rev3/init.c **** 
+ 151:../../../init/rev3/init.c **** /*******************************************************************************
+ 152:../../../init/rev3/init.c **** *                                                                              *
+ 153:../../../init/rev3/init.c **** * PROCEDURE:                                                                   *
+ 154:../../../init/rev3/init.c **** * 		LOX_Valve_TIM_Init                                                     *
+ 155:../../../init/rev3/init.c **** *                                                                              *
+ 156:../../../init/rev3/init.c **** * DESCRIPTION:                                                                 *
+ 157:../../../init/rev3/init.c **** * 		Initializes the LOX fuel valve PWM control timer                       *
+ 158:../../../init/rev3/init.c **** *                                                                              *
+ 159:../../../init/rev3/init.c **** *******************************************************************************/
+ 160:../../../init/rev3/init.c **** void LOX_Valve_TIM_Init
+ 161:../../../init/rev3/init.c **** 	(
+ 162:../../../init/rev3/init.c **** 	void
+ 163:../../../init/rev3/init.c **** 	)
+ 164:../../../init/rev3/init.c **** {
+ 378              		.loc 1 164 1 view -0
+ 379              		.cfi_startproc
+ 380              		@ args = 0, pretend = 0, frame = 104
+ 381              		@ frame_needed = 0, uses_anonymous_args = 0
+ 382 0000 10B5     		push	{r4, lr}
+ 383              	.LCFI8:
+ 384              		.cfi_def_cfa_offset 8
+ 385              		.cfi_offset 4, -8
+ 386              		.cfi_offset 14, -4
+ 387 0002 9AB0     		sub	sp, sp, #104
+ 388              	.LCFI9:
+ 389              		.cfi_def_cfa_offset 112
+ 165:../../../init/rev3/init.c **** /* Initialization structs */
+ 166:../../../init/rev3/init.c **** TIM_ClockConfigTypeDef         sClockSourceConfig   = {0};
+ 390              		.loc 1 166 1 view .LVU113
+ 391              		.loc 1 166 32 is_stmt 0 view .LVU114
+ 392 0004 0024     		movs	r4, #0
+ 393 0006 1694     		str	r4, [sp, #88]
+ 394 0008 1794     		str	r4, [sp, #92]
+ 395 000a 1894     		str	r4, [sp, #96]
+ 396 000c 1994     		str	r4, [sp, #100]
+ 167:../../../init/rev3/init.c **** TIM_MasterConfigTypeDef        sMasterConfig        = {0};
+ 397              		.loc 1 167 1 is_stmt 1 view .LVU115
+ 398              		.loc 1 167 32 is_stmt 0 view .LVU116
+ 399 000e 1394     		str	r4, [sp, #76]
+ 400 0010 1494     		str	r4, [sp, #80]
+ 401 0012 1594     		str	r4, [sp, #84]
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 11
+
+
+ 168:../../../init/rev3/init.c **** TIM_OC_InitTypeDef             sConfigOC            = {0};
+ 402              		.loc 1 168 1 is_stmt 1 view .LVU117
+ 403              		.loc 1 168 32 is_stmt 0 view .LVU118
+ 404 0014 0C94     		str	r4, [sp, #48]
+ 405 0016 0D94     		str	r4, [sp, #52]
+ 406 0018 0E94     		str	r4, [sp, #56]
+ 407 001a 0F94     		str	r4, [sp, #60]
+ 408 001c 1094     		str	r4, [sp, #64]
+ 409 001e 1194     		str	r4, [sp, #68]
+ 410 0020 1294     		str	r4, [sp, #72]
+ 169:../../../init/rev3/init.c **** TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
+ 411              		.loc 1 169 1 is_stmt 1 view .LVU119
+ 412              		.loc 1 169 32 is_stmt 0 view .LVU120
+ 413 0022 2C22     		movs	r2, #44
+ 414 0024 2146     		mov	r1, r4
+ 415 0026 01A8     		add	r0, sp, #4
+ 416 0028 FFF7FEFF 		bl	memset
+ 417              	.LVL18:
+ 170:../../../init/rev3/init.c **** 
+ 171:../../../init/rev3/init.c **** /* Initializations */
+ 172:../../../init/rev3/init.c **** htim15.Instance               = TIM15;
+ 418              		.loc 1 172 1 is_stmt 1 view .LVU121
+ 419              		.loc 1 172 31 is_stmt 0 view .LVU122
+ 420 002c 2E48     		ldr	r0, .L38
+ 421 002e 2F4B     		ldr	r3, .L38+4
+ 422 0030 0360     		str	r3, [r0]
+ 173:../../../init/rev3/init.c **** htim15.Init.Prescaler         = 0;
+ 423              		.loc 1 173 1 is_stmt 1 view .LVU123
+ 424              		.loc 1 173 31 is_stmt 0 view .LVU124
+ 425 0032 4460     		str	r4, [r0, #4]
+ 174:../../../init/rev3/init.c **** htim15.Init.CounterMode       = TIM_COUNTERMODE_UP;
+ 426              		.loc 1 174 1 is_stmt 1 view .LVU125
+ 427              		.loc 1 174 31 is_stmt 0 view .LVU126
+ 428 0034 8460     		str	r4, [r0, #8]
+ 175:../../../init/rev3/init.c **** htim15.Init.Period            = 63999;
+ 429              		.loc 1 175 1 is_stmt 1 view .LVU127
+ 430              		.loc 1 175 31 is_stmt 0 view .LVU128
+ 431 0036 4FF6FF13 		movw	r3, #63999
+ 432 003a C360     		str	r3, [r0, #12]
+ 176:../../../init/rev3/init.c **** htim15.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+ 433              		.loc 1 176 1 is_stmt 1 view .LVU129
+ 434              		.loc 1 176 31 is_stmt 0 view .LVU130
+ 435 003c 0461     		str	r4, [r0, #16]
+ 177:../../../init/rev3/init.c **** htim15.Init.RepetitionCounter = 0;
+ 436              		.loc 1 177 1 is_stmt 1 view .LVU131
+ 437              		.loc 1 177 31 is_stmt 0 view .LVU132
+ 438 003e 4461     		str	r4, [r0, #20]
+ 178:../../../init/rev3/init.c **** htim15.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+ 439              		.loc 1 178 1 is_stmt 1 view .LVU133
+ 440              		.loc 1 178 31 is_stmt 0 view .LVU134
+ 441 0040 8461     		str	r4, [r0, #24]
+ 179:../../../init/rev3/init.c **** if ( HAL_TIM_Base_Init( &htim15 ) != HAL_OK )
+ 442              		.loc 1 179 1 is_stmt 1 view .LVU135
+ 443              		.loc 1 179 6 is_stmt 0 view .LVU136
+ 444 0042 FFF7FEFF 		bl	HAL_TIM_Base_Init
+ 445              	.LVL19:
+ 446              		.loc 1 179 4 discriminator 1 view .LVU137
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 12
+
+
+ 447 0046 0028     		cmp	r0, #0
+ 448 0048 3BD1     		bne	.L32
+ 449              	.L25:
+ 180:../../../init/rev3/init.c **** 	{
+ 181:../../../init/rev3/init.c **** 	Error_Handler();
+ 182:../../../init/rev3/init.c **** 	}
+ 183:../../../init/rev3/init.c **** sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+ 450              		.loc 1 183 1 is_stmt 1 view .LVU138
+ 451              		.loc 1 183 32 is_stmt 0 view .LVU139
+ 452 004a 4FF48053 		mov	r3, #4096
+ 453 004e 1693     		str	r3, [sp, #88]
+ 184:../../../init/rev3/init.c **** if ( HAL_TIM_ConfigClockSource( &htim15, &sClockSourceConfig ) != HAL_OK )
+ 454              		.loc 1 184 1 is_stmt 1 view .LVU140
+ 455              		.loc 1 184 6 is_stmt 0 view .LVU141
+ 456 0050 16A9     		add	r1, sp, #88
+ 457 0052 2548     		ldr	r0, .L38
+ 458 0054 FFF7FEFF 		bl	HAL_TIM_ConfigClockSource
+ 459              	.LVL20:
+ 460              		.loc 1 184 4 discriminator 1 view .LVU142
+ 461 0058 0028     		cmp	r0, #0
+ 462 005a 35D1     		bne	.L33
+ 463              	.L26:
+ 185:../../../init/rev3/init.c **** 	{
+ 186:../../../init/rev3/init.c **** 	Error_Handler();
+ 187:../../../init/rev3/init.c **** 	}
+ 188:../../../init/rev3/init.c **** if ( HAL_TIM_PWM_Init( &htim15 ) != HAL_OK )
+ 464              		.loc 1 188 1 is_stmt 1 view .LVU143
+ 465              		.loc 1 188 6 is_stmt 0 view .LVU144
+ 466 005c 2248     		ldr	r0, .L38
+ 467 005e FFF7FEFF 		bl	HAL_TIM_PWM_Init
+ 468              	.LVL21:
+ 469              		.loc 1 188 4 discriminator 1 view .LVU145
+ 470 0062 0028     		cmp	r0, #0
+ 471 0064 33D1     		bne	.L34
+ 472              	.L27:
+ 189:../../../init/rev3/init.c **** 	{
+ 190:../../../init/rev3/init.c **** 	Error_Handler();
+ 191:../../../init/rev3/init.c **** 	}
+ 192:../../../init/rev3/init.c **** sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+ 473              		.loc 1 192 1 is_stmt 1 view .LVU146
+ 474              		.loc 1 192 35 is_stmt 0 view .LVU147
+ 475 0066 0023     		movs	r3, #0
+ 476 0068 1393     		str	r3, [sp, #76]
+ 193:../../../init/rev3/init.c **** sMasterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
+ 477              		.loc 1 193 1 is_stmt 1 view .LVU148
+ 478              		.loc 1 193 35 is_stmt 0 view .LVU149
+ 479 006a 1593     		str	r3, [sp, #84]
+ 194:../../../init/rev3/init.c **** if ( HAL_TIMEx_MasterConfigSynchronization( &htim15, &sMasterConfig ) != HAL_OK )
+ 480              		.loc 1 194 1 is_stmt 1 view .LVU150
+ 481              		.loc 1 194 6 is_stmt 0 view .LVU151
+ 482 006c 13A9     		add	r1, sp, #76
+ 483 006e 1E48     		ldr	r0, .L38
+ 484 0070 FFF7FEFF 		bl	HAL_TIMEx_MasterConfigSynchronization
+ 485              	.LVL22:
+ 486              		.loc 1 194 4 discriminator 1 view .LVU152
+ 487 0074 0028     		cmp	r0, #0
+ 488 0076 2DD1     		bne	.L35
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 13
+
+
+ 489              	.L28:
+ 195:../../../init/rev3/init.c **** 	{
+ 196:../../../init/rev3/init.c **** 	Error_Handler();
+ 197:../../../init/rev3/init.c **** 	}
+ 198:../../../init/rev3/init.c **** sConfigOC.OCMode       = TIM_OCMODE_PWM1;
+ 490              		.loc 1 198 1 is_stmt 1 view .LVU153
+ 491              		.loc 1 198 24 is_stmt 0 view .LVU154
+ 492 0078 6023     		movs	r3, #96
+ 493 007a 0C93     		str	r3, [sp, #48]
+ 199:../../../init/rev3/init.c **** sConfigOC.Pulse        = 32000;
+ 494              		.loc 1 199 1 is_stmt 1 view .LVU155
+ 495              		.loc 1 199 24 is_stmt 0 view .LVU156
+ 496 007c 4FF4FA43 		mov	r3, #32000
+ 497 0080 0D93     		str	r3, [sp, #52]
+ 200:../../../init/rev3/init.c **** sConfigOC.OCPolarity   = TIM_OCPOLARITY_HIGH;
+ 498              		.loc 1 200 1 is_stmt 1 view .LVU157
+ 499              		.loc 1 200 24 is_stmt 0 view .LVU158
+ 500 0082 0022     		movs	r2, #0
+ 501 0084 0E92     		str	r2, [sp, #56]
+ 201:../../../init/rev3/init.c **** sConfigOC.OCNPolarity  = TIM_OCNPOLARITY_HIGH;
+ 502              		.loc 1 201 1 is_stmt 1 view .LVU159
+ 503              		.loc 1 201 24 is_stmt 0 view .LVU160
+ 504 0086 0F92     		str	r2, [sp, #60]
+ 202:../../../init/rev3/init.c **** sConfigOC.OCFastMode   = TIM_OCFAST_DISABLE;
+ 505              		.loc 1 202 1 is_stmt 1 view .LVU161
+ 506              		.loc 1 202 24 is_stmt 0 view .LVU162
+ 507 0088 1092     		str	r2, [sp, #64]
+ 203:../../../init/rev3/init.c **** sConfigOC.OCIdleState  = TIM_OCIDLESTATE_RESET;
+ 508              		.loc 1 203 1 is_stmt 1 view .LVU163
+ 509              		.loc 1 203 24 is_stmt 0 view .LVU164
+ 510 008a 1192     		str	r2, [sp, #68]
+ 204:../../../init/rev3/init.c **** sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+ 511              		.loc 1 204 1 is_stmt 1 view .LVU165
+ 512              		.loc 1 204 24 is_stmt 0 view .LVU166
+ 513 008c 1292     		str	r2, [sp, #72]
+ 205:../../../init/rev3/init.c **** if ( HAL_TIM_PWM_ConfigChannel( &htim15, &sConfigOC, TIM_CHANNEL_1 ) != HAL_OK )
+ 514              		.loc 1 205 1 is_stmt 1 view .LVU167
+ 515              		.loc 1 205 6 is_stmt 0 view .LVU168
+ 516 008e 0CA9     		add	r1, sp, #48
+ 517 0090 1548     		ldr	r0, .L38
+ 518 0092 FFF7FEFF 		bl	HAL_TIM_PWM_ConfigChannel
+ 519              	.LVL23:
+ 520              		.loc 1 205 4 discriminator 1 view .LVU169
+ 521 0096 00BB     		cbnz	r0, .L36
+ 522              	.L29:
+ 206:../../../init/rev3/init.c **** 	{
+ 207:../../../init/rev3/init.c **** 	Error_Handler();
+ 208:../../../init/rev3/init.c **** 	}
+ 209:../../../init/rev3/init.c **** sBreakDeadTimeConfig.OffStateRunMode  = TIM_OSSR_DISABLE;
+ 523              		.loc 1 209 1 is_stmt 1 view .LVU170
+ 524              		.loc 1 209 39 is_stmt 0 view .LVU171
+ 525 0098 0023     		movs	r3, #0
+ 526 009a 0193     		str	r3, [sp, #4]
+ 210:../../../init/rev3/init.c **** sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
+ 527              		.loc 1 210 1 is_stmt 1 view .LVU172
+ 528              		.loc 1 210 39 is_stmt 0 view .LVU173
+ 529 009c 0293     		str	r3, [sp, #8]
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 14
+
+
+ 211:../../../init/rev3/init.c **** sBreakDeadTimeConfig.LockLevel        = TIM_LOCKLEVEL_OFF;
+ 530              		.loc 1 211 1 is_stmt 1 view .LVU174
+ 531              		.loc 1 211 39 is_stmt 0 view .LVU175
+ 532 009e 0393     		str	r3, [sp, #12]
+ 212:../../../init/rev3/init.c **** sBreakDeadTimeConfig.DeadTime         = 0;
+ 533              		.loc 1 212 1 is_stmt 1 view .LVU176
+ 534              		.loc 1 212 39 is_stmt 0 view .LVU177
+ 535 00a0 0493     		str	r3, [sp, #16]
+ 213:../../../init/rev3/init.c **** sBreakDeadTimeConfig.BreakState       = TIM_BREAK_DISABLE;
+ 536              		.loc 1 213 1 is_stmt 1 view .LVU178
+ 537              		.loc 1 213 39 is_stmt 0 view .LVU179
+ 538 00a2 0593     		str	r3, [sp, #20]
+ 214:../../../init/rev3/init.c **** sBreakDeadTimeConfig.BreakPolarity    = TIM_BREAKPOLARITY_HIGH;
+ 539              		.loc 1 214 1 is_stmt 1 view .LVU180
+ 540              		.loc 1 214 39 is_stmt 0 view .LVU181
+ 541 00a4 4FF40052 		mov	r2, #8192
+ 542 00a8 0692     		str	r2, [sp, #24]
+ 215:../../../init/rev3/init.c **** sBreakDeadTimeConfig.BreakFilter      = 0;
+ 543              		.loc 1 215 1 is_stmt 1 view .LVU182
+ 544              		.loc 1 215 39 is_stmt 0 view .LVU183
+ 545 00aa 0793     		str	r3, [sp, #28]
+ 216:../../../init/rev3/init.c **** sBreakDeadTimeConfig.AutomaticOutput  = TIM_AUTOMATICOUTPUT_DISABLE;
+ 546              		.loc 1 216 1 is_stmt 1 view .LVU184
+ 547              		.loc 1 216 39 is_stmt 0 view .LVU185
+ 548 00ac 0B93     		str	r3, [sp, #44]
+ 217:../../../init/rev3/init.c **** if ( HAL_TIMEx_ConfigBreakDeadTime( &htim15, &sBreakDeadTimeConfig ) != HAL_OK )
+ 549              		.loc 1 217 1 is_stmt 1 view .LVU186
+ 550              		.loc 1 217 6 is_stmt 0 view .LVU187
+ 551 00ae 01A9     		add	r1, sp, #4
+ 552 00b0 0D48     		ldr	r0, .L38
+ 553 00b2 FFF7FEFF 		bl	HAL_TIMEx_ConfigBreakDeadTime
+ 554              	.LVL24:
+ 555              		.loc 1 217 4 discriminator 1 view .LVU188
+ 556 00b6 98B9     		cbnz	r0, .L37
+ 557              	.L30:
+ 218:../../../init/rev3/init.c **** 	{
+ 219:../../../init/rev3/init.c **** 	Error_Handler();
+ 220:../../../init/rev3/init.c **** 	}
+ 221:../../../init/rev3/init.c **** HAL_TIM_MspPostInit( &htim15 );
+ 558              		.loc 1 221 1 is_stmt 1 view .LVU189
+ 559 00b8 0B48     		ldr	r0, .L38
+ 560 00ba FFF7FEFF 		bl	HAL_TIM_MspPostInit
+ 561              	.LVL25:
+ 222:../../../init/rev3/init.c **** } /* LOX_Valve_TIM_Init */
+ 562              		.loc 1 222 1 is_stmt 0 view .LVU190
+ 563 00be 1AB0     		add	sp, sp, #104
+ 564              	.LCFI10:
+ 565              		.cfi_remember_state
+ 566              		.cfi_def_cfa_offset 8
+ 567              		@ sp needed
+ 568 00c0 10BD     		pop	{r4, pc}
+ 569              	.L32:
+ 570              	.LCFI11:
+ 571              		.cfi_restore_state
+ 181:../../../init/rev3/init.c **** 	}
+ 572              		.loc 1 181 2 is_stmt 1 view .LVU191
+ 573 00c2 FFF7FEFF 		bl	Error_Handler
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 15
+
+
+ 574              	.LVL26:
+ 575 00c6 C0E7     		b	.L25
+ 576              	.L33:
+ 186:../../../init/rev3/init.c **** 	}
+ 577              		.loc 1 186 2 view .LVU192
+ 578 00c8 FFF7FEFF 		bl	Error_Handler
+ 579              	.LVL27:
+ 580 00cc C6E7     		b	.L26
+ 581              	.L34:
+ 190:../../../init/rev3/init.c **** 	}
+ 582              		.loc 1 190 2 view .LVU193
+ 583 00ce FFF7FEFF 		bl	Error_Handler
+ 584              	.LVL28:
+ 585 00d2 C8E7     		b	.L27
+ 586              	.L35:
+ 196:../../../init/rev3/init.c **** 	}
+ 587              		.loc 1 196 2 view .LVU194
+ 588 00d4 FFF7FEFF 		bl	Error_Handler
+ 589              	.LVL29:
+ 590 00d8 CEE7     		b	.L28
+ 591              	.L36:
+ 207:../../../init/rev3/init.c **** 	}
+ 592              		.loc 1 207 2 view .LVU195
+ 593 00da FFF7FEFF 		bl	Error_Handler
+ 594              	.LVL30:
+ 595 00de DBE7     		b	.L29
+ 596              	.L37:
+ 219:../../../init/rev3/init.c **** 	}
+ 597              		.loc 1 219 2 view .LVU196
+ 598 00e0 FFF7FEFF 		bl	Error_Handler
+ 599              	.LVL31:
+ 600 00e4 E8E7     		b	.L30
+ 601              	.L39:
+ 602 00e6 00BF     		.align	2
+ 603              	.L38:
+ 604 00e8 00000000 		.word	htim15
+ 605 00ec 00400140 		.word	1073823744
+ 606              		.cfi_endproc
+ 607              	.LFE146:
+ 609              		.section	.text.USB_UART_Init,"ax",%progbits
+ 610              		.align	1
+ 611              		.global	USB_UART_Init
+ 612              		.syntax unified
+ 613              		.thumb
+ 614              		.thumb_func
+ 616              	USB_UART_Init:
+ 617              	.LFB147:
+ 223:../../../init/rev3/init.c **** 
+ 224:../../../init/rev3/init.c **** 
+ 225:../../../init/rev3/init.c **** /*******************************************************************************
+ 226:../../../init/rev3/init.c **** *                                                                              *
+ 227:../../../init/rev3/init.c **** * PROCEDURE:                                                                   *
+ 228:../../../init/rev3/init.c **** * 		USB_UART_Init                                                          *
+ 229:../../../init/rev3/init.c **** *                                                                              *
+ 230:../../../init/rev3/init.c **** * DESCRIPTION:                                                                 *
+ 231:../../../init/rev3/init.c **** * 		Initializes the UART peripheral used for USB communication with a PC   *
+ 232:../../../init/rev3/init.c **** *                                                                              *
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 16
+
+
+ 233:../../../init/rev3/init.c **** *******************************************************************************/
+ 234:../../../init/rev3/init.c **** void USB_UART_Init
+ 235:../../../init/rev3/init.c **** 	(
+ 236:../../../init/rev3/init.c **** 	void
+ 237:../../../init/rev3/init.c **** 	)
+ 238:../../../init/rev3/init.c **** {
+ 618              		.loc 1 238 1 view -0
+ 619              		.cfi_startproc
+ 620              		@ args = 0, pretend = 0, frame = 0
+ 621              		@ frame_needed = 0, uses_anonymous_args = 0
+ 622 0000 08B5     		push	{r3, lr}
+ 623              	.LCFI12:
+ 624              		.cfi_def_cfa_offset 8
+ 625              		.cfi_offset 3, -8
+ 626              		.cfi_offset 14, -4
+ 239:../../../init/rev3/init.c **** /* UART Configuration settings */
+ 240:../../../init/rev3/init.c **** huart1.Instance                    = USART1;
+ 627              		.loc 1 240 1 view .LVU198
+ 628              		.loc 1 240 36 is_stmt 0 view .LVU199
+ 629 0002 1748     		ldr	r0, .L50
+ 630 0004 174B     		ldr	r3, .L50+4
+ 631 0006 0360     		str	r3, [r0]
+ 241:../../../init/rev3/init.c **** huart1.Init.BaudRate               = 921600;
+ 632              		.loc 1 241 1 is_stmt 1 view .LVU200
+ 633              		.loc 1 241 36 is_stmt 0 view .LVU201
+ 634 0008 4FF46123 		mov	r3, #921600
+ 635 000c 4360     		str	r3, [r0, #4]
+ 242:../../../init/rev3/init.c **** huart1.Init.WordLength             = UART_WORDLENGTH_8B;
+ 636              		.loc 1 242 1 is_stmt 1 view .LVU202
+ 637              		.loc 1 242 36 is_stmt 0 view .LVU203
+ 638 000e 0023     		movs	r3, #0
+ 639 0010 8360     		str	r3, [r0, #8]
+ 243:../../../init/rev3/init.c **** huart1.Init.StopBits               = UART_STOPBITS_1;
+ 640              		.loc 1 243 1 is_stmt 1 view .LVU204
+ 641              		.loc 1 243 36 is_stmt 0 view .LVU205
+ 642 0012 C360     		str	r3, [r0, #12]
+ 244:../../../init/rev3/init.c **** huart1.Init.Parity                 = UART_PARITY_NONE;
+ 643              		.loc 1 244 1 is_stmt 1 view .LVU206
+ 644              		.loc 1 244 36 is_stmt 0 view .LVU207
+ 645 0014 0361     		str	r3, [r0, #16]
+ 245:../../../init/rev3/init.c **** huart1.Init.Mode                   = UART_MODE_TX_RX;
+ 646              		.loc 1 245 1 is_stmt 1 view .LVU208
+ 647              		.loc 1 245 36 is_stmt 0 view .LVU209
+ 648 0016 0C22     		movs	r2, #12
+ 649 0018 4261     		str	r2, [r0, #20]
+ 246:../../../init/rev3/init.c **** huart1.Init.HwFlowCtl              = UART_HWCONTROL_NONE;
+ 650              		.loc 1 246 1 is_stmt 1 view .LVU210
+ 651              		.loc 1 246 36 is_stmt 0 view .LVU211
+ 652 001a 8361     		str	r3, [r0, #24]
+ 247:../../../init/rev3/init.c **** huart1.Init.OverSampling           = UART_OVERSAMPLING_16;
+ 653              		.loc 1 247 1 is_stmt 1 view .LVU212
+ 654              		.loc 1 247 36 is_stmt 0 view .LVU213
+ 655 001c C361     		str	r3, [r0, #28]
+ 248:../../../init/rev3/init.c **** huart1.Init.OneBitSampling         = UART_ONE_BIT_SAMPLE_DISABLE;
+ 656              		.loc 1 248 1 is_stmt 1 view .LVU214
+ 657              		.loc 1 248 36 is_stmt 0 view .LVU215
+ 658 001e 0362     		str	r3, [r0, #32]
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 17
+
+
+ 249:../../../init/rev3/init.c **** huart1.Init.ClockPrescaler         = UART_PRESCALER_DIV1;
+ 659              		.loc 1 249 1 is_stmt 1 view .LVU216
+ 660              		.loc 1 249 36 is_stmt 0 view .LVU217
+ 661 0020 4362     		str	r3, [r0, #36]
+ 250:../../../init/rev3/init.c **** huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+ 662              		.loc 1 250 1 is_stmt 1 view .LVU218
+ 663              		.loc 1 250 36 is_stmt 0 view .LVU219
+ 664 0022 8362     		str	r3, [r0, #40]
+ 251:../../../init/rev3/init.c **** 
+ 252:../../../init/rev3/init.c **** /* Initialize the peripheral */
+ 253:../../../init/rev3/init.c **** if ( HAL_UART_Init( &(USB_HUART) ) != HAL_OK )
+ 665              		.loc 1 253 1 is_stmt 1 view .LVU220
+ 666              		.loc 1 253 6 is_stmt 0 view .LVU221
+ 667 0024 FFF7FEFF 		bl	HAL_UART_Init
+ 668              	.LVL32:
+ 669              		.loc 1 253 4 discriminator 1 view .LVU222
+ 670 0028 70B9     		cbnz	r0, .L46
+ 671              	.L41:
+ 254:../../../init/rev3/init.c **** 	{
+ 255:../../../init/rev3/init.c **** 	Error_Handler();
+ 256:../../../init/rev3/init.c **** 	}
+ 257:../../../init/rev3/init.c **** if ( HAL_UARTEx_SetTxFifoThreshold( &(USB_HUART), UART_TXFIFO_THRESHOLD_1_8 ) != HAL_OK )
+ 672              		.loc 1 257 1 is_stmt 1 view .LVU223
+ 673              		.loc 1 257 6 is_stmt 0 view .LVU224
+ 674 002a 0021     		movs	r1, #0
+ 675 002c 0C48     		ldr	r0, .L50
+ 676 002e FFF7FEFF 		bl	HAL_UARTEx_SetTxFifoThreshold
+ 677              	.LVL33:
+ 678              		.loc 1 257 4 discriminator 1 view .LVU225
+ 679 0032 60B9     		cbnz	r0, .L47
+ 680              	.L42:
+ 258:../../../init/rev3/init.c **** 	{
+ 259:../../../init/rev3/init.c **** 	Error_Handler();
+ 260:../../../init/rev3/init.c **** 	}
+ 261:../../../init/rev3/init.c **** if ( HAL_UARTEx_SetRxFifoThreshold( &(USB_HUART), UART_RXFIFO_THRESHOLD_1_8 ) != HAL_OK )
+ 681              		.loc 1 261 1 is_stmt 1 view .LVU226
+ 682              		.loc 1 261 6 is_stmt 0 view .LVU227
+ 683 0034 0021     		movs	r1, #0
+ 684 0036 0A48     		ldr	r0, .L50
+ 685 0038 FFF7FEFF 		bl	HAL_UARTEx_SetRxFifoThreshold
+ 686              	.LVL34:
+ 687              		.loc 1 261 4 discriminator 1 view .LVU228
+ 688 003c 50B9     		cbnz	r0, .L48
+ 689              	.L43:
+ 262:../../../init/rev3/init.c **** 	{
+ 263:../../../init/rev3/init.c **** 	Error_Handler();
+ 264:../../../init/rev3/init.c **** 	}
+ 265:../../../init/rev3/init.c **** if ( HAL_UARTEx_DisableFifoMode( &(USB_HUART) ) != HAL_OK )
+ 690              		.loc 1 265 1 is_stmt 1 view .LVU229
+ 691              		.loc 1 265 6 is_stmt 0 view .LVU230
+ 692 003e 0848     		ldr	r0, .L50
+ 693 0040 FFF7FEFF 		bl	HAL_UARTEx_DisableFifoMode
+ 694              	.LVL35:
+ 695              		.loc 1 265 4 discriminator 1 view .LVU231
+ 696 0044 48B9     		cbnz	r0, .L49
+ 697              	.L40:
+ 266:../../../init/rev3/init.c **** 	{
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 18
+
+
+ 267:../../../init/rev3/init.c **** 	Error_Handler();
+ 268:../../../init/rev3/init.c **** 	}
+ 269:../../../init/rev3/init.c **** } /* USB_UART_Init */
+ 698              		.loc 1 269 1 view .LVU232
+ 699 0046 08BD     		pop	{r3, pc}
+ 700              	.L46:
+ 255:../../../init/rev3/init.c **** 	}
+ 701              		.loc 1 255 2 is_stmt 1 view .LVU233
+ 702 0048 FFF7FEFF 		bl	Error_Handler
+ 703              	.LVL36:
+ 704 004c EDE7     		b	.L41
+ 705              	.L47:
+ 259:../../../init/rev3/init.c **** 	}
+ 706              		.loc 1 259 2 view .LVU234
+ 707 004e FFF7FEFF 		bl	Error_Handler
+ 708              	.LVL37:
+ 709 0052 EFE7     		b	.L42
+ 710              	.L48:
+ 263:../../../init/rev3/init.c **** 	}
+ 711              		.loc 1 263 2 view .LVU235
+ 712 0054 FFF7FEFF 		bl	Error_Handler
+ 713              	.LVL38:
+ 714 0058 F1E7     		b	.L43
+ 715              	.L49:
+ 267:../../../init/rev3/init.c **** 	}
+ 716              		.loc 1 267 2 view .LVU236
+ 717 005a FFF7FEFF 		bl	Error_Handler
+ 718              	.LVL39:
+ 719              		.loc 1 269 1 is_stmt 0 view .LVU237
+ 720 005e F2E7     		b	.L40
+ 721              	.L51:
+ 722              		.align	2
+ 723              	.L50:
+ 724 0060 00000000 		.word	huart1
+ 725 0064 00100140 		.word	1073811456
+ 726              		.cfi_endproc
+ 727              	.LFE147:
+ 729              		.section	.text.Valve_UART_Init,"ax",%progbits
+ 730              		.align	1
+ 731              		.global	Valve_UART_Init
+ 732              		.syntax unified
+ 733              		.thumb
+ 734              		.thumb_func
+ 736              	Valve_UART_Init:
+ 737              	.LFB148:
+ 270:../../../init/rev3/init.c **** 
+ 271:../../../init/rev3/init.c **** 
+ 272:../../../init/rev3/init.c **** /*******************************************************************************
+ 273:../../../init/rev3/init.c **** *                                                                              *
+ 274:../../../init/rev3/init.c **** * PROCEDURE NAME:                                                              *
+ 275:../../../init/rev3/init.c **** * 		Valve_UART_Init                                                        *
+ 276:../../../init/rev3/init.c **** *                                                                              *
+ 277:../../../init/rev3/init.c **** * DESCRIPTION:                                                                 *
+ 278:../../../init/rev3/init.c **** * 		Initializes the UART interface used for processing valve actuation     *
+ 279:../../../init/rev3/init.c **** *       commands from the liquid engine controller                             *
+ 280:../../../init/rev3/init.c **** *                                                                              *
+ 281:../../../init/rev3/init.c **** *******************************************************************************/
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 19
+
+
+ 282:../../../init/rev3/init.c **** void Valve_UART_Init 
+ 283:../../../init/rev3/init.c **** 	(
+ 284:../../../init/rev3/init.c **** 	void
+ 285:../../../init/rev3/init.c **** 	)
+ 286:../../../init/rev3/init.c **** {
+ 738              		.loc 1 286 1 is_stmt 1 view -0
+ 739              		.cfi_startproc
+ 740              		@ args = 0, pretend = 0, frame = 0
+ 741              		@ frame_needed = 0, uses_anonymous_args = 0
+ 742 0000 08B5     		push	{r3, lr}
+ 743              	.LCFI13:
+ 744              		.cfi_def_cfa_offset 8
+ 745              		.cfi_offset 3, -8
+ 746              		.cfi_offset 14, -4
+ 287:../../../init/rev3/init.c **** /* UART handler instance */
+ 288:../../../init/rev3/init.c **** huart3.Instance = USART3;
+ 747              		.loc 1 288 1 view .LVU239
+ 748              		.loc 1 288 17 is_stmt 0 view .LVU240
+ 749 0002 1748     		ldr	r0, .L62
+ 750 0004 174B     		ldr	r3, .L62+4
+ 751 0006 0360     		str	r3, [r0]
+ 289:../../../init/rev3/init.c **** 
+ 290:../../../init/rev3/init.c **** /* Initialization settings */
+ 291:../../../init/rev3/init.c **** huart3.Init.BaudRate               = 921600;
+ 752              		.loc 1 291 1 is_stmt 1 view .LVU241
+ 753              		.loc 1 291 36 is_stmt 0 view .LVU242
+ 754 0008 4FF46123 		mov	r3, #921600
+ 755 000c 4360     		str	r3, [r0, #4]
+ 292:../../../init/rev3/init.c **** huart3.Init.WordLength             = UART_WORDLENGTH_8B;
+ 756              		.loc 1 292 1 is_stmt 1 view .LVU243
+ 757              		.loc 1 292 36 is_stmt 0 view .LVU244
+ 758 000e 0023     		movs	r3, #0
+ 759 0010 8360     		str	r3, [r0, #8]
+ 293:../../../init/rev3/init.c **** huart3.Init.StopBits               = UART_STOPBITS_1;
+ 760              		.loc 1 293 1 is_stmt 1 view .LVU245
+ 761              		.loc 1 293 36 is_stmt 0 view .LVU246
+ 762 0012 C360     		str	r3, [r0, #12]
+ 294:../../../init/rev3/init.c **** huart3.Init.Parity                 = UART_PARITY_NONE;
+ 763              		.loc 1 294 1 is_stmt 1 view .LVU247
+ 764              		.loc 1 294 36 is_stmt 0 view .LVU248
+ 765 0014 0361     		str	r3, [r0, #16]
+ 295:../../../init/rev3/init.c **** huart3.Init.Mode                   = UART_MODE_TX_RX;
+ 766              		.loc 1 295 1 is_stmt 1 view .LVU249
+ 767              		.loc 1 295 36 is_stmt 0 view .LVU250
+ 768 0016 0C22     		movs	r2, #12
+ 769 0018 4261     		str	r2, [r0, #20]
+ 296:../../../init/rev3/init.c **** huart3.Init.HwFlowCtl              = UART_HWCONTROL_NONE;
+ 770              		.loc 1 296 1 is_stmt 1 view .LVU251
+ 771              		.loc 1 296 36 is_stmt 0 view .LVU252
+ 772 001a 8361     		str	r3, [r0, #24]
+ 297:../../../init/rev3/init.c **** huart3.Init.OverSampling           = UART_OVERSAMPLING_16;
+ 773              		.loc 1 297 1 is_stmt 1 view .LVU253
+ 774              		.loc 1 297 36 is_stmt 0 view .LVU254
+ 775 001c C361     		str	r3, [r0, #28]
+ 298:../../../init/rev3/init.c **** huart3.Init.OneBitSampling         = UART_ONE_BIT_SAMPLE_DISABLE;
+ 776              		.loc 1 298 1 is_stmt 1 view .LVU255
+ 777              		.loc 1 298 36 is_stmt 0 view .LVU256
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 20
+
+
+ 778 001e 0362     		str	r3, [r0, #32]
+ 299:../../../init/rev3/init.c **** huart3.Init.ClockPrescaler         = UART_PRESCALER_DIV1;
+ 779              		.loc 1 299 1 is_stmt 1 view .LVU257
+ 780              		.loc 1 299 36 is_stmt 0 view .LVU258
+ 781 0020 4362     		str	r3, [r0, #36]
+ 300:../../../init/rev3/init.c **** huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+ 782              		.loc 1 300 1 is_stmt 1 view .LVU259
+ 783              		.loc 1 300 36 is_stmt 0 view .LVU260
+ 784 0022 8362     		str	r3, [r0, #40]
+ 301:../../../init/rev3/init.c **** 
+ 302:../../../init/rev3/init.c **** /* Write to registers and call error handler if initialization fails */
+ 303:../../../init/rev3/init.c **** if ( HAL_UART_Init( &huart3 ) != HAL_OK )
+ 785              		.loc 1 303 1 is_stmt 1 view .LVU261
+ 786              		.loc 1 303 6 is_stmt 0 view .LVU262
+ 787 0024 FFF7FEFF 		bl	HAL_UART_Init
+ 788              	.LVL40:
+ 789              		.loc 1 303 4 discriminator 1 view .LVU263
+ 790 0028 70B9     		cbnz	r0, .L58
+ 791              	.L53:
+ 304:../../../init/rev3/init.c **** 	{
+ 305:../../../init/rev3/init.c **** 	Error_Handler();
+ 306:../../../init/rev3/init.c **** 	}
+ 307:../../../init/rev3/init.c **** if ( HAL_UARTEx_SetTxFifoThreshold( &huart3, UART_TXFIFO_THRESHOLD_1_8 ) != HAL_OK )
+ 792              		.loc 1 307 1 is_stmt 1 view .LVU264
+ 793              		.loc 1 307 6 is_stmt 0 view .LVU265
+ 794 002a 0021     		movs	r1, #0
+ 795 002c 0C48     		ldr	r0, .L62
+ 796 002e FFF7FEFF 		bl	HAL_UARTEx_SetTxFifoThreshold
+ 797              	.LVL41:
+ 798              		.loc 1 307 4 discriminator 1 view .LVU266
+ 799 0032 60B9     		cbnz	r0, .L59
+ 800              	.L54:
+ 308:../../../init/rev3/init.c **** 	{
+ 309:../../../init/rev3/init.c **** 	Error_Handler();
+ 310:../../../init/rev3/init.c **** 	}
+ 311:../../../init/rev3/init.c **** if ( HAL_UARTEx_SetRxFifoThreshold( &huart3, UART_RXFIFO_THRESHOLD_1_8 ) != HAL_OK )
+ 801              		.loc 1 311 1 is_stmt 1 view .LVU267
+ 802              		.loc 1 311 6 is_stmt 0 view .LVU268
+ 803 0034 0021     		movs	r1, #0
+ 804 0036 0A48     		ldr	r0, .L62
+ 805 0038 FFF7FEFF 		bl	HAL_UARTEx_SetRxFifoThreshold
+ 806              	.LVL42:
+ 807              		.loc 1 311 4 discriminator 1 view .LVU269
+ 808 003c 50B9     		cbnz	r0, .L60
+ 809              	.L55:
+ 312:../../../init/rev3/init.c **** 	{
+ 313:../../../init/rev3/init.c **** 	Error_Handler();
+ 314:../../../init/rev3/init.c **** 	}
+ 315:../../../init/rev3/init.c **** if ( HAL_UARTEx_DisableFifoMode( &huart3 ) != HAL_OK )
+ 810              		.loc 1 315 1 is_stmt 1 view .LVU270
+ 811              		.loc 1 315 6 is_stmt 0 view .LVU271
+ 812 003e 0848     		ldr	r0, .L62
+ 813 0040 FFF7FEFF 		bl	HAL_UARTEx_DisableFifoMode
+ 814              	.LVL43:
+ 815              		.loc 1 315 4 discriminator 1 view .LVU272
+ 816 0044 48B9     		cbnz	r0, .L61
+ 817              	.L52:
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 21
+
+
+ 316:../../../init/rev3/init.c **** 	{
+ 317:../../../init/rev3/init.c **** 	Error_Handler();
+ 318:../../../init/rev3/init.c **** 	}
+ 319:../../../init/rev3/init.c **** } /* USB_UART_Init */
+ 818              		.loc 1 319 1 view .LVU273
+ 819 0046 08BD     		pop	{r3, pc}
+ 820              	.L58:
+ 305:../../../init/rev3/init.c **** 	}
+ 821              		.loc 1 305 2 is_stmt 1 view .LVU274
+ 822 0048 FFF7FEFF 		bl	Error_Handler
+ 823              	.LVL44:
+ 824 004c EDE7     		b	.L53
+ 825              	.L59:
+ 309:../../../init/rev3/init.c **** 	}
+ 826              		.loc 1 309 2 view .LVU275
+ 827 004e FFF7FEFF 		bl	Error_Handler
+ 828              	.LVL45:
+ 829 0052 EFE7     		b	.L54
+ 830              	.L60:
+ 313:../../../init/rev3/init.c **** 	}
+ 831              		.loc 1 313 2 view .LVU276
+ 832 0054 FFF7FEFF 		bl	Error_Handler
+ 833              	.LVL46:
+ 834 0058 F1E7     		b	.L55
+ 835              	.L61:
+ 317:../../../init/rev3/init.c **** 	}
+ 836              		.loc 1 317 2 view .LVU277
+ 837 005a FFF7FEFF 		bl	Error_Handler
+ 838              	.LVL47:
+ 839              		.loc 1 319 1 is_stmt 0 view .LVU278
+ 840 005e F2E7     		b	.L52
+ 841              	.L63:
+ 842              		.align	2
+ 843              	.L62:
+ 844 0060 00000000 		.word	huart3
+ 845 0064 00480040 		.word	1073760256
+ 846              		.cfi_endproc
+ 847              	.LFE148:
+ 849              		.section	.text.GPIO_Init,"ax",%progbits
+ 850              		.align	1
+ 851              		.global	GPIO_Init
+ 852              		.syntax unified
+ 853              		.thumb
+ 854              		.thumb_func
+ 856              	GPIO_Init:
+ 857              	.LFB149:
+ 320:../../../init/rev3/init.c **** 
+ 321:../../../init/rev3/init.c **** 
+ 322:../../../init/rev3/init.c **** /*******************************************************************************
+ 323:../../../init/rev3/init.c **** *                                                                              *
+ 324:../../../init/rev3/init.c **** * PROCEDURE:                                                                   *
+ 325:../../../init/rev3/init.c **** * 		GPIO_Init                                                              *
+ 326:../../../init/rev3/init.c **** *                                                                              *
+ 327:../../../init/rev3/init.c **** * DESCRIPTION:                                                                 *
+ 328:../../../init/rev3/init.c **** * 		Initializes all GPIO pins and sets alternate functions                 *
+ 329:../../../init/rev3/init.c **** *                                                                              *
+ 330:../../../init/rev3/init.c **** *******************************************************************************/
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 22
+
+
+ 331:../../../init/rev3/init.c **** void GPIO_Init
+ 332:../../../init/rev3/init.c **** 	(
+ 333:../../../init/rev3/init.c ****     void
+ 334:../../../init/rev3/init.c **** 	)
+ 335:../../../init/rev3/init.c **** {
+ 858              		.loc 1 335 1 is_stmt 1 view -0
+ 859              		.cfi_startproc
+ 860              		@ args = 0, pretend = 0, frame = 40
+ 861              		@ frame_needed = 0, uses_anonymous_args = 0
+ 862 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 863              	.LCFI14:
+ 864              		.cfi_def_cfa_offset 24
+ 865              		.cfi_offset 4, -24
+ 866              		.cfi_offset 5, -20
+ 867              		.cfi_offset 6, -16
+ 868              		.cfi_offset 7, -12
+ 869              		.cfi_offset 8, -8
+ 870              		.cfi_offset 14, -4
+ 871 0004 8AB0     		sub	sp, sp, #40
+ 872              	.LCFI15:
+ 873              		.cfi_def_cfa_offset 64
+ 336:../../../init/rev3/init.c **** /* GPIO Initialization Struct */
+ 337:../../../init/rev3/init.c **** GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 874              		.loc 1 337 1 view .LVU280
+ 875              		.loc 1 337 18 is_stmt 0 view .LVU281
+ 876 0006 0024     		movs	r4, #0
+ 877 0008 0594     		str	r4, [sp, #20]
+ 878 000a 0694     		str	r4, [sp, #24]
+ 879 000c 0794     		str	r4, [sp, #28]
+ 880 000e 0894     		str	r4, [sp, #32]
+ 881 0010 0994     		str	r4, [sp, #36]
+ 338:../../../init/rev3/init.c **** 
+ 339:../../../init/rev3/init.c **** /* GPIO Ports Clock Enable */
+ 340:../../../init/rev3/init.c **** __HAL_RCC_GPIOA_CLK_ENABLE();
+ 882              		.loc 1 340 1 is_stmt 1 view .LVU282
+ 883              	.LBB3:
+ 884              		.loc 1 340 1 view .LVU283
+ 885              		.loc 1 340 1 view .LVU284
+ 886 0012 694B     		ldr	r3, .L66
+ 887 0014 D3F8E020 		ldr	r2, [r3, #224]
+ 888 0018 42F00102 		orr	r2, r2, #1
+ 889 001c C3F8E020 		str	r2, [r3, #224]
+ 890              		.loc 1 340 1 view .LVU285
+ 891 0020 D3F8E020 		ldr	r2, [r3, #224]
+ 892 0024 02F00102 		and	r2, r2, #1
+ 893 0028 0092     		str	r2, [sp]
+ 894              		.loc 1 340 1 view .LVU286
+ 895 002a 009A     		ldr	r2, [sp]
+ 896              	.LBE3:
+ 897              		.loc 1 340 1 view .LVU287
+ 341:../../../init/rev3/init.c **** __HAL_RCC_GPIOB_CLK_ENABLE();
+ 898              		.loc 1 341 1 view .LVU288
+ 899              	.LBB4:
+ 900              		.loc 1 341 1 view .LVU289
+ 901              		.loc 1 341 1 view .LVU290
+ 902 002c D3F8E020 		ldr	r2, [r3, #224]
+ 903 0030 42F00202 		orr	r2, r2, #2
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 23
+
+
+ 904 0034 C3F8E020 		str	r2, [r3, #224]
+ 905              		.loc 1 341 1 view .LVU291
+ 906 0038 D3F8E020 		ldr	r2, [r3, #224]
+ 907 003c 02F00202 		and	r2, r2, #2
+ 908 0040 0192     		str	r2, [sp, #4]
+ 909              		.loc 1 341 1 view .LVU292
+ 910 0042 019A     		ldr	r2, [sp, #4]
+ 911              	.LBE4:
+ 912              		.loc 1 341 1 view .LVU293
+ 342:../../../init/rev3/init.c **** __HAL_RCC_GPIOC_CLK_ENABLE();
+ 913              		.loc 1 342 1 view .LVU294
+ 914              	.LBB5:
+ 915              		.loc 1 342 1 view .LVU295
+ 916              		.loc 1 342 1 view .LVU296
+ 917 0044 D3F8E020 		ldr	r2, [r3, #224]
+ 918 0048 42F00402 		orr	r2, r2, #4
+ 919 004c C3F8E020 		str	r2, [r3, #224]
+ 920              		.loc 1 342 1 view .LVU297
+ 921 0050 D3F8E020 		ldr	r2, [r3, #224]
+ 922 0054 02F00402 		and	r2, r2, #4
+ 923 0058 0292     		str	r2, [sp, #8]
+ 924              		.loc 1 342 1 view .LVU298
+ 925 005a 029A     		ldr	r2, [sp, #8]
+ 926              	.LBE5:
+ 927              		.loc 1 342 1 view .LVU299
+ 343:../../../init/rev3/init.c **** __HAL_RCC_GPIOD_CLK_ENABLE();
+ 928              		.loc 1 343 1 view .LVU300
+ 929              	.LBB6:
+ 930              		.loc 1 343 1 view .LVU301
+ 931              		.loc 1 343 1 view .LVU302
+ 932 005c D3F8E020 		ldr	r2, [r3, #224]
+ 933 0060 42F00802 		orr	r2, r2, #8
+ 934 0064 C3F8E020 		str	r2, [r3, #224]
+ 935              		.loc 1 343 1 view .LVU303
+ 936 0068 D3F8E020 		ldr	r2, [r3, #224]
+ 937 006c 02F00802 		and	r2, r2, #8
+ 938 0070 0392     		str	r2, [sp, #12]
+ 939              		.loc 1 343 1 view .LVU304
+ 940 0072 039A     		ldr	r2, [sp, #12]
+ 941              	.LBE6:
+ 942              		.loc 1 343 1 view .LVU305
+ 344:../../../init/rev3/init.c **** __HAL_RCC_GPIOE_CLK_ENABLE();
+ 943              		.loc 1 344 1 view .LVU306
+ 944              	.LBB7:
+ 945              		.loc 1 344 1 view .LVU307
+ 946              		.loc 1 344 1 view .LVU308
+ 947 0074 D3F8E020 		ldr	r2, [r3, #224]
+ 948 0078 42F01002 		orr	r2, r2, #16
+ 949 007c C3F8E020 		str	r2, [r3, #224]
+ 950              		.loc 1 344 1 view .LVU309
+ 951 0080 D3F8E030 		ldr	r3, [r3, #224]
+ 952 0084 03F01003 		and	r3, r3, #16
+ 953 0088 0493     		str	r3, [sp, #16]
+ 954              		.loc 1 344 1 view .LVU310
+ 955 008a 049B     		ldr	r3, [sp, #16]
+ 956              	.LBE7:
+ 957              		.loc 1 344 1 view .LVU311
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 24
+
+
+ 345:../../../init/rev3/init.c **** 
+ 346:../../../init/rev3/init.c **** /*--------------------------- LED MCU PINS -----------------------------------*/
+ 347:../../../init/rev3/init.c **** 
+ 348:../../../init/rev3/init.c **** /* Configure GPIO pin Output Levels */
+ 349:../../../init/rev3/init.c **** HAL_GPIO_WritePin( STATUS_GPIO_PORT, 
+ 958              		.loc 1 349 1 view .LVU312
+ 959 008c 4B4F     		ldr	r7, .L66+4
+ 960 008e 0122     		movs	r2, #1
+ 961 0090 4FF4E061 		mov	r1, #1792
+ 962 0094 3846     		mov	r0, r7
+ 963 0096 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 964              	.LVL48:
+ 350:../../../init/rev3/init.c ****                    STATUS_R_PIN |  
+ 351:../../../init/rev3/init.c **** 				   STATUS_G_PIN |
+ 352:../../../init/rev3/init.c **** 				   STATUS_B_PIN   , 
+ 353:../../../init/rev3/init.c **** 				   GPIO_PIN_SET );
+ 354:../../../init/rev3/init.c **** 
+ 355:../../../init/rev3/init.c **** /* Configure Pins */
+ 356:../../../init/rev3/init.c **** GPIO_InitStruct.Pin   = STATUS_R_PIN | STATUS_G_PIN | STATUS_B_PIN;
+ 965              		.loc 1 356 1 view .LVU313
+ 966              		.loc 1 356 23 is_stmt 0 view .LVU314
+ 967 009a 4FF4E063 		mov	r3, #1792
+ 968 009e 0593     		str	r3, [sp, #20]
+ 357:../../../init/rev3/init.c **** GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_OD;
+ 969              		.loc 1 357 1 is_stmt 1 view .LVU315
+ 970              		.loc 1 357 23 is_stmt 0 view .LVU316
+ 971 00a0 1123     		movs	r3, #17
+ 972 00a2 0693     		str	r3, [sp, #24]
+ 358:../../../init/rev3/init.c **** GPIO_InitStruct.Pull  = GPIO_NOPULL;
+ 973              		.loc 1 358 1 is_stmt 1 view .LVU317
+ 974              		.loc 1 358 23 is_stmt 0 view .LVU318
+ 975 00a4 0794     		str	r4, [sp, #28]
+ 359:../../../init/rev3/init.c **** GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 976              		.loc 1 359 1 is_stmt 1 view .LVU319
+ 977              		.loc 1 359 23 is_stmt 0 view .LVU320
+ 978 00a6 0894     		str	r4, [sp, #32]
+ 360:../../../init/rev3/init.c **** HAL_GPIO_Init( STATUS_GPIO_PORT, &GPIO_InitStruct );
+ 979              		.loc 1 360 1 is_stmt 1 view .LVU321
+ 980 00a8 05A9     		add	r1, sp, #20
+ 981 00aa 3846     		mov	r0, r7
+ 982 00ac FFF7FEFF 		bl	HAL_GPIO_Init
+ 983              	.LVL49:
+ 361:../../../init/rev3/init.c **** 
+ 362:../../../init/rev3/init.c **** 
+ 363:../../../init/rev3/init.c **** /*------------------------ SOLENOID MCU PINS ---------------------------------*/
+ 364:../../../init/rev3/init.c **** 
+ 365:../../../init/rev3/init.c **** /* Configure GPIO pin Output Levels */
+ 366:../../../init/rev3/init.c **** HAL_GPIO_WritePin( SOL1_GPIO_PORT, SOL1_PIN|SOL2_PIN|SOL3_PIN, GPIO_PIN_RESET );
+ 984              		.loc 1 366 1 view .LVU322
+ 985 00b0 DFF81081 		ldr	r8, .L66+12
+ 986 00b4 2246     		mov	r2, r4
+ 987 00b6 1C21     		movs	r1, #28
+ 988 00b8 4046     		mov	r0, r8
+ 989 00ba FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 990              	.LVL50:
+ 367:../../../init/rev3/init.c **** HAL_GPIO_WritePin( SOL4_GPIO_PORT, SOL4_PIN|SOL5_PIN|SOL6_PIN, GPIO_PIN_RESET );
+ 991              		.loc 1 367 1 view .LVU323
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 25
+
+
+ 992 00be 404E     		ldr	r6, .L66+8
+ 993 00c0 2246     		mov	r2, r4
+ 994 00c2 0721     		movs	r1, #7
+ 995 00c4 3046     		mov	r0, r6
+ 996 00c6 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 997              	.LVL51:
+ 368:../../../init/rev3/init.c **** 
+ 369:../../../init/rev3/init.c **** /* Configure Solenoid GPIO pins 1-3 */
+ 370:../../../init/rev3/init.c **** GPIO_InitStruct.Pin   = SOL1_PIN | SOL2_PIN | SOL3_PIN;
+ 998              		.loc 1 370 1 view .LVU324
+ 999              		.loc 1 370 23 is_stmt 0 view .LVU325
+ 1000 00ca 1C23     		movs	r3, #28
+ 1001 00cc 0593     		str	r3, [sp, #20]
+ 371:../../../init/rev3/init.c **** GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+ 1002              		.loc 1 371 1 is_stmt 1 view .LVU326
+ 1003              		.loc 1 371 23 is_stmt 0 view .LVU327
+ 1004 00ce 0125     		movs	r5, #1
+ 1005 00d0 0695     		str	r5, [sp, #24]
+ 372:../../../init/rev3/init.c **** GPIO_InitStruct.Pull  = GPIO_NOPULL;
+ 1006              		.loc 1 372 1 is_stmt 1 view .LVU328
+ 1007              		.loc 1 372 23 is_stmt 0 view .LVU329
+ 1008 00d2 0794     		str	r4, [sp, #28]
+ 373:../../../init/rev3/init.c **** GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 1009              		.loc 1 373 1 is_stmt 1 view .LVU330
+ 1010              		.loc 1 373 23 is_stmt 0 view .LVU331
+ 1011 00d4 0894     		str	r4, [sp, #32]
+ 374:../../../init/rev3/init.c **** HAL_GPIO_Init( SOL1_GPIO_PORT, &GPIO_InitStruct);
+ 1012              		.loc 1 374 1 is_stmt 1 view .LVU332
+ 1013 00d6 05A9     		add	r1, sp, #20
+ 1014 00d8 4046     		mov	r0, r8
+ 1015 00da FFF7FEFF 		bl	HAL_GPIO_Init
+ 1016              	.LVL52:
+ 375:../../../init/rev3/init.c **** 
+ 376:../../../init/rev3/init.c **** /* Configure Solenoid GPIO pins 4-6 */
+ 377:../../../init/rev3/init.c **** GPIO_InitStruct.Pin   = SOL4_PIN | SOL5_PIN | SOL6_PIN;
+ 1017              		.loc 1 377 1 view .LVU333
+ 1018              		.loc 1 377 23 is_stmt 0 view .LVU334
+ 1019 00de 0723     		movs	r3, #7
+ 1020 00e0 0593     		str	r3, [sp, #20]
+ 378:../../../init/rev3/init.c **** GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+ 1021              		.loc 1 378 1 is_stmt 1 view .LVU335
+ 1022              		.loc 1 378 23 is_stmt 0 view .LVU336
+ 1023 00e2 0695     		str	r5, [sp, #24]
+ 379:../../../init/rev3/init.c **** GPIO_InitStruct.Pull  = GPIO_NOPULL;
+ 1024              		.loc 1 379 1 is_stmt 1 view .LVU337
+ 1025              		.loc 1 379 23 is_stmt 0 view .LVU338
+ 1026 00e4 0794     		str	r4, [sp, #28]
+ 380:../../../init/rev3/init.c **** GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 1027              		.loc 1 380 1 is_stmt 1 view .LVU339
+ 1028              		.loc 1 380 23 is_stmt 0 view .LVU340
+ 1029 00e6 0894     		str	r4, [sp, #32]
+ 381:../../../init/rev3/init.c **** HAL_GPIO_Init( SOL4_GPIO_PORT, &GPIO_InitStruct);
+ 1030              		.loc 1 381 1 is_stmt 1 view .LVU341
+ 1031 00e8 05A9     		add	r1, sp, #20
+ 1032 00ea 3046     		mov	r0, r6
+ 1033 00ec FFF7FEFF 		bl	HAL_GPIO_Init
+ 1034              	.LVL53:
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 26
+
+
+ 382:../../../init/rev3/init.c **** 
+ 383:../../../init/rev3/init.c **** 
+ 384:../../../init/rev3/init.c **** /*--------------------------- USB MCU PINS ------------------------------------*/
+ 385:../../../init/rev3/init.c **** 
+ 386:../../../init/rev3/init.c **** /* USB Detect pin */
+ 387:../../../init/rev3/init.c **** GPIO_InitStruct.Pin  = USB_DETECT_PIN;
+ 1035              		.loc 1 387 1 view .LVU342
+ 1036              		.loc 1 387 22 is_stmt 0 view .LVU343
+ 1037 00f0 4FF40053 		mov	r3, #8192
+ 1038 00f4 0593     		str	r3, [sp, #20]
+ 388:../../../init/rev3/init.c **** GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+ 1039              		.loc 1 388 1 is_stmt 1 view .LVU344
+ 1040              		.loc 1 388 22 is_stmt 0 view .LVU345
+ 1041 00f6 0694     		str	r4, [sp, #24]
+ 389:../../../init/rev3/init.c **** GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 1042              		.loc 1 389 1 is_stmt 1 view .LVU346
+ 1043              		.loc 1 389 22 is_stmt 0 view .LVU347
+ 1044 00f8 0794     		str	r4, [sp, #28]
+ 390:../../../init/rev3/init.c **** HAL_GPIO_Init( USB_DETECT_GPIO_PORT, &GPIO_InitStruct );
+ 1045              		.loc 1 390 1 is_stmt 1 view .LVU348
+ 1046 00fa 05A9     		add	r1, sp, #20
+ 1047 00fc 3846     		mov	r0, r7
+ 1048 00fe FFF7FEFF 		bl	HAL_GPIO_Init
+ 1049              	.LVL54:
+ 391:../../../init/rev3/init.c ****   
+ 392:../../../init/rev3/init.c **** /*-------------------------- Servo MCU PINS -----------------------------------*/
+ 393:../../../init/rev3/init.c **** 
+ 394:../../../init/rev3/init.c **** /* Main Fuel Valve Encoder */
+ 395:../../../init/rev3/init.c **** GPIO_InitStruct.Pin  = KER_ENC_A_PIN | KER_ENC_B_PIN ;
+ 1050              		.loc 1 395 1 view .LVU349
+ 1051              		.loc 1 395 22 is_stmt 0 view .LVU350
+ 1052 0102 4FF44043 		mov	r3, #49152
+ 1053 0106 0593     		str	r3, [sp, #20]
+ 396:../../../init/rev3/init.c **** GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+ 1054              		.loc 1 396 1 is_stmt 1 view .LVU351
+ 1055              		.loc 1 396 22 is_stmt 0 view .LVU352
+ 1056 0108 4FF44418 		mov	r8, #3211264
+ 1057 010c CDF81880 		str	r8, [sp, #24]
+ 397:../../../init/rev3/init.c **** GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 1058              		.loc 1 397 1 is_stmt 1 view .LVU353
+ 1059              		.loc 1 397 22 is_stmt 0 view .LVU354
+ 1060 0110 0794     		str	r4, [sp, #28]
+ 398:../../../init/rev3/init.c **** HAL_GPIO_Init( KER_ENC_GPIO_PORT, &GPIO_InitStruct);
+ 1061              		.loc 1 398 1 is_stmt 1 view .LVU355
+ 1062 0112 05A9     		add	r1, sp, #20
+ 1063 0114 3846     		mov	r0, r7
+ 1064 0116 FFF7FEFF 		bl	HAL_GPIO_Init
+ 1065              	.LVL55:
+ 399:../../../init/rev3/init.c **** 
+ 400:../../../init/rev3/init.c **** /* Main LOX Valve Encoder */
+ 401:../../../init/rev3/init.c **** GPIO_InitStruct.Pin  = LOX_ENC_A_PIN | LOX_ENC_B_PIN;
+ 1066              		.loc 1 401 1 view .LVU356
+ 1067              		.loc 1 401 22 is_stmt 0 view .LVU357
+ 1068 011a 4FF44073 		mov	r3, #768
+ 1069 011e 0593     		str	r3, [sp, #20]
+ 402:../../../init/rev3/init.c **** GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+ 1070              		.loc 1 402 1 is_stmt 1 view .LVU358
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 27
+
+
+ 1071              		.loc 1 402 22 is_stmt 0 view .LVU359
+ 1072 0120 CDF81880 		str	r8, [sp, #24]
+ 403:../../../init/rev3/init.c **** GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 1073              		.loc 1 403 1 is_stmt 1 view .LVU360
+ 1074              		.loc 1 403 22 is_stmt 0 view .LVU361
+ 1075 0124 0794     		str	r4, [sp, #28]
+ 404:../../../init/rev3/init.c **** HAL_GPIO_Init( LOX_ENC_GPIO_PORT, &GPIO_InitStruct );
+ 1076              		.loc 1 404 1 is_stmt 1 view .LVU362
+ 1077 0126 A7F58067 		sub	r7, r7, #1024
+ 1078 012a 05A9     		add	r1, sp, #20
+ 1079 012c 3846     		mov	r0, r7
+ 1080 012e FFF7FEFF 		bl	HAL_GPIO_Init
+ 1081              	.LVL56:
+ 405:../../../init/rev3/init.c **** 
+ 406:../../../init/rev3/init.c **** /* EXTI interrupt init */
+ 407:../../../init/rev3/init.c **** HAL_NVIC_SetPriority( EXTI9_5_IRQn  , 0, 0 );
+ 1082              		.loc 1 407 1 view .LVU363
+ 1083 0132 2246     		mov	r2, r4
+ 1084 0134 2146     		mov	r1, r4
+ 1085 0136 1720     		movs	r0, #23
+ 1086 0138 FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 1087              	.LVL57:
+ 408:../../../init/rev3/init.c **** HAL_NVIC_EnableIRQ  ( EXTI9_5_IRQn         );
+ 1088              		.loc 1 408 1 view .LVU364
+ 1089 013c 1720     		movs	r0, #23
+ 1090 013e FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 1091              	.LVL58:
+ 409:../../../init/rev3/init.c **** HAL_NVIC_SetPriority( EXTI15_10_IRQn, 0, 0 );
+ 1092              		.loc 1 409 1 view .LVU365
+ 1093 0142 2246     		mov	r2, r4
+ 1094 0144 2146     		mov	r1, r4
+ 1095 0146 2820     		movs	r0, #40
+ 1096 0148 FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 1097              	.LVL59:
+ 410:../../../init/rev3/init.c **** HAL_NVIC_EnableIRQ  ( EXTI15_10_IRQn       );
+ 1098              		.loc 1 410 1 view .LVU366
+ 1099 014c 2820     		movs	r0, #40
+ 1100 014e FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 1101              	.LVL60:
+ 411:../../../init/rev3/init.c **** 
+ 412:../../../init/rev3/init.c **** /* Driver Pins */
+ 413:../../../init/rev3/init.c **** HAL_GPIO_WritePin( LOX_EN_GPIO_PORT , LOX_EN_PIN , GPIO_PIN_SET   );
+ 1102              		.loc 1 413 1 view .LVU367
+ 1103 0152 2A46     		mov	r2, r5
+ 1104 0154 4FF48071 		mov	r1, #256
+ 1105 0158 3046     		mov	r0, r6
+ 1106 015a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1107              	.LVL61:
+ 414:../../../init/rev3/init.c **** HAL_GPIO_WritePin( KER_EN_GPIO_PORT , KER_EN_PIN , GPIO_PIN_SET   );
+ 1108              		.loc 1 414 1 view .LVU368
+ 1109 015e 2A46     		mov	r2, r5
+ 1110 0160 4FF40061 		mov	r1, #2048
+ 1111 0164 3046     		mov	r0, r6
+ 1112 0166 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1113              	.LVL62:
+ 415:../../../init/rev3/init.c **** HAL_GPIO_WritePin( LOX_DIR_GPIO_PORT, LOX_DIR_PIN, GPIO_PIN_RESET );
+ 1114              		.loc 1 415 1 view .LVU369
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 28
+
+
+ 1115 016a 2246     		mov	r2, r4
+ 1116 016c 4FF48051 		mov	r1, #4096
+ 1117 0170 3046     		mov	r0, r6
+ 1118 0172 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1119              	.LVL63:
+ 416:../../../init/rev3/init.c **** HAL_GPIO_WritePin( KER_DIR_GPIO_PORT, KER_DIR_PIN, GPIO_PIN_RESET );
+ 1120              		.loc 1 416 1 view .LVU370
+ 1121 0176 2246     		mov	r2, r4
+ 1122 0178 8021     		movs	r1, #128
+ 1123 017a 3846     		mov	r0, r7
+ 1124 017c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1125              	.LVL64:
+ 417:../../../init/rev3/init.c **** GPIO_InitStruct.Pin  = LOX_DIR_PIN | LOX_EN_PIN | KER_EN_PIN;
+ 1126              		.loc 1 417 1 view .LVU371
+ 1127              		.loc 1 417 22 is_stmt 0 view .LVU372
+ 1128 0180 4FF4C853 		mov	r3, #6400
+ 1129 0184 0593     		str	r3, [sp, #20]
+ 418:../../../init/rev3/init.c **** GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+ 1130              		.loc 1 418 1 is_stmt 1 view .LVU373
+ 1131              		.loc 1 418 22 is_stmt 0 view .LVU374
+ 1132 0186 0695     		str	r5, [sp, #24]
+ 419:../../../init/rev3/init.c **** GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 1133              		.loc 1 419 1 is_stmt 1 view .LVU375
+ 1134              		.loc 1 419 22 is_stmt 0 view .LVU376
+ 1135 0188 0794     		str	r4, [sp, #28]
+ 420:../../../init/rev3/init.c **** HAL_GPIO_Init( LOX_DIR_GPIO_PORT, &GPIO_InitStruct );
+ 1136              		.loc 1 420 1 is_stmt 1 view .LVU377
+ 1137 018a 05A9     		add	r1, sp, #20
+ 1138 018c 3046     		mov	r0, r6
+ 1139 018e FFF7FEFF 		bl	HAL_GPIO_Init
+ 1140              	.LVL65:
+ 421:../../../init/rev3/init.c **** GPIO_InitStruct.Pin  = KER_DIR_PIN; 
+ 1141              		.loc 1 421 1 view .LVU378
+ 1142              		.loc 1 421 22 is_stmt 0 view .LVU379
+ 1143 0192 8023     		movs	r3, #128
+ 1144 0194 0593     		str	r3, [sp, #20]
+ 422:../../../init/rev3/init.c **** GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+ 1145              		.loc 1 422 1 is_stmt 1 view .LVU380
+ 1146              		.loc 1 422 22 is_stmt 0 view .LVU381
+ 1147 0196 0695     		str	r5, [sp, #24]
+ 423:../../../init/rev3/init.c **** GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 1148              		.loc 1 423 1 is_stmt 1 view .LVU382
+ 1149              		.loc 1 423 22 is_stmt 0 view .LVU383
+ 1150 0198 0794     		str	r4, [sp, #28]
+ 424:../../../init/rev3/init.c **** HAL_GPIO_Init( KER_DIR_GPIO_PORT, &GPIO_InitStruct );
+ 1151              		.loc 1 424 1 is_stmt 1 view .LVU384
+ 1152 019a 05A9     		add	r1, sp, #20
+ 1153 019c 3846     		mov	r0, r7
+ 1154 019e FFF7FEFF 		bl	HAL_GPIO_Init
+ 1155              	.LVL66:
+ 425:../../../init/rev3/init.c **** 
+ 426:../../../init/rev3/init.c **** /* Photogate Pins */
+ 427:../../../init/rev3/init.c **** GPIO_InitStruct.Pin = LOX_PHOTOGATE_PIN | FUEL_PHOTOGATE_PIN;
+ 1156              		.loc 1 427 1 view .LVU385
+ 1157              		.loc 1 427 21 is_stmt 0 view .LVU386
+ 1158 01a2 0323     		movs	r3, #3
+ 1159 01a4 0593     		str	r3, [sp, #20]
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 29
+
+
+ 428:../../../init/rev3/init.c **** GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+ 1160              		.loc 1 428 1 is_stmt 1 view .LVU387
+ 1161              		.loc 1 428 22 is_stmt 0 view .LVU388
+ 1162 01a6 0694     		str	r4, [sp, #24]
+ 429:../../../init/rev3/init.c **** GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 1163              		.loc 1 429 1 is_stmt 1 view .LVU389
+ 1164              		.loc 1 429 22 is_stmt 0 view .LVU390
+ 1165 01a8 0794     		str	r4, [sp, #28]
+ 430:../../../init/rev3/init.c **** HAL_GPIO_Init( PHOTOGATE_GPIO_PORT, &GPIO_InitStruct );
+ 1166              		.loc 1 430 1 is_stmt 1 view .LVU391
+ 1167 01aa 05A9     		add	r1, sp, #20
+ 1168 01ac 3846     		mov	r0, r7
+ 1169 01ae FFF7FEFF 		bl	HAL_GPIO_Init
+ 1170              	.LVL67:
+ 431:../../../init/rev3/init.c **** 
+ 432:../../../init/rev3/init.c **** } /* GPIO_Init */
+ 1171              		.loc 1 432 1 is_stmt 0 view .LVU392
+ 1172 01b2 0AB0     		add	sp, sp, #40
+ 1173              	.LCFI16:
+ 1174              		.cfi_def_cfa_offset 24
+ 1175              		@ sp needed
+ 1176 01b4 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 1177              	.L67:
+ 1178              		.align	2
+ 1179              	.L66:
+ 1180 01b8 00440258 		.word	1476543488
+ 1181 01bc 000C0258 		.word	1476529152
+ 1182 01c0 00000258 		.word	1476526080
+ 1183 01c4 00100258 		.word	1476530176
+ 1184              		.cfi_endproc
+ 1185              	.LFE149:
+ 1187              		.text
+ 1188              	.Letext0:
+ 1189              		.file 2 "../../../lib/Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h750xx.h"
+ 1190              		.file 3 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/machine/_defa
+ 1191              		.file 4 "/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/arm-none-eabi/include/sys/_stdint.h
+ 1192              		.file 5 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_def.h"
+ 1193              		.file 6 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h"
+ 1194              		.file 7 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h"
+ 1195              		.file 8 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_dma.h"
+ 1196              		.file 9 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h"
+ 1197              		.file 10 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h"
+ 1198              		.file 11 "../../../lib/sdr_pin_defines_L0005.h"
+ 1199              		.file 12 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_cortex.h"
+ 1200              		.file 13 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h"
+ 1201              		.file 14 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h"
+ 1202              		.file 15 "../../../init/rev3/init.h"
+ 1203              		.file 16 "../../../lib/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h"
+ 1204              		.file 17 "./main.h"
+ 1205              		.file 18 "<built-in>"
+ARM GAS  /var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s 			page 30
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 init.c
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:20     .text.SystemClock_Config:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:26     .text.SystemClock_Config:00000000 SystemClock_Config
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:187    .text.SystemClock_Config:000000ac $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:194    .text.Fuel_Valve_TIM_Init:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:200    .text.Fuel_Valve_TIM_Init:00000000 Fuel_Valve_TIM_Init
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:365    .text.Fuel_Valve_TIM_Init:000000ac $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:370    .text.LOX_Valve_TIM_Init:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:376    .text.LOX_Valve_TIM_Init:00000000 LOX_Valve_TIM_Init
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:604    .text.LOX_Valve_TIM_Init:000000e8 $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:610    .text.USB_UART_Init:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:616    .text.USB_UART_Init:00000000 USB_UART_Init
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:724    .text.USB_UART_Init:00000060 $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:730    .text.Valve_UART_Init:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:736    .text.Valve_UART_Init:00000000 Valve_UART_Init
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:844    .text.Valve_UART_Init:00000060 $d
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:850    .text.GPIO_Init:00000000 $t
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:856    .text.GPIO_Init:00000000 GPIO_Init
+/var/folders/hx/vbfbwrz55n51djycrk6r15qm0000gn/T//ccpOmlLF.s:1180   .text.GPIO_Init:000001b8 $d
+
+UNDEFINED SYMBOLS
+memset
+HAL_PWREx_ConfigSupply
+HAL_RCC_OscConfig
+HAL_RCC_ClockConfig
+Error_Handler
+HAL_TIM_Base_Init
+HAL_TIM_ConfigClockSource
+HAL_TIM_PWM_Init
+HAL_TIMEx_MasterConfigSynchronization
+HAL_TIM_PWM_ConfigChannel
+HAL_TIM_MspPostInit
+htim2
+HAL_TIMEx_ConfigBreakDeadTime
+htim15
+HAL_UART_Init
+HAL_UARTEx_SetTxFifoThreshold
+HAL_UARTEx_SetRxFifoThreshold
+HAL_UARTEx_DisableFifoMode
+huart1
+huart3
+HAL_GPIO_WritePin
+HAL_GPIO_Init
+HAL_NVIC_SetPriority
+HAL_NVIC_EnableIRQ
