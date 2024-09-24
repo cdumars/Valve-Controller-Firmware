@@ -40,30 +40,14 @@ extern "C" {
 	#define HAL_DEFAULT_TIMEOUT    ( 0xFFFFFFFF )  
 #endif /* SDR_DEBUG */
 
-
-/*------------------------------------------------------------------------------
- Typdefs 
-------------------------------------------------------------------------------*/
-
-/* Serial interface source for receiving command data */
-typedef enum _CMD_SOURCE
-	{
-	CMD_SOURCE_USB,
-	CMD_SOURCE_VALVE
-	} CMD_SOURCE;
+/* State with all solenoids turned on */
+#define SOL_ALL_ON ( 0b00111111 )
 
 /*------------------------------------------------------------------------------
  Function prototypes                                                          
 ------------------------------------------------------------------------------*/
 void Error_Handler      ( void                    );
 void HAL_TIM_MspPostInit( TIM_HandleTypeDef *htim );
-
-/* Processes commands from the SDEC terminal */
-void command_handler
-	(
-	uint8_t    command,     /* sdec command                              */
-	CMD_SOURCE cmd_source   /* Determines which serial interface is used */
-	);
 
 
 #ifdef __cplusplus
