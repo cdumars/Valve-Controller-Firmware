@@ -43,6 +43,15 @@ extern "C" {
 /* State with all solenoids turned on */
 #define SOL_ALL_ON ( 0b00111111 )
 
+
+
+/* Serial interface source for receiving command data */
+typedef enum _CMD_SOURCE
+	{
+	CMD_SOURCE_USB,
+	CMD_SOURCE_VALVE
+	} CMD_SOURCE;
+
 /*------------------------------------------------------------------------------
  Function prototypes                                                          
 ------------------------------------------------------------------------------*/

@@ -14,8 +14,6 @@
  Project Includes
 ------------------------------------------------------------------------------*/
 
-/* standard library */
-#include <stdbool.h>
 
 /* Application Layer */
 #include "sdr_pin_defines_L0005.h"
@@ -30,6 +28,14 @@
 #include "usb.h"
 #include "valve.h"
 
+
+/*------------------------------------------------------------------------------
+ Global Variables
+------------------------------------------------------------------------------*/
+TIM_HandleTypeDef  htim2;  /* Fuel main valve control PWM signals */
+TIM_HandleTypeDef  htim15; /* LOX main valve control PWM signals  */
+UART_HandleTypeDef huart1; /* UART to USB                         */
+UART_HandleTypeDef huart3; /* UART to engine controller           */
 
 
 /*------------------------------------------------------------------------------
@@ -87,6 +93,25 @@ while (1)
 		HAL_Delay(2000);
 	}
 } /* main */
+
+/*******************************************************************************
+*                                                                              *
+* PROCEDURE:                                                                   *
+* 		Error_Handler                                                          *
+*                                                                              *
+* DESCRIPTION:                                                                 *
+* 		Handles software errors by turing the status LED red                   *
+*                                                                              *
+*******************************************************************************/
+void Error_Handler(void)
+{
+  __disable_irq();
+  led_error_assert();
+  while (1)
+	{
+	/* Application hangs */
+	}
+} /* Error_Handler */
 
 /*******************************************************************************
 * END OF FILE                                                                  *
